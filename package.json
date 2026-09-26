@@ -1,0 +1,18 @@
+{
+  "name": "deltagroup-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue.bold,green.bold\" \"yarn --cwd backend start:dev\" \"yarn --cwd frontend dev\"",
+    "build": "yarn --cwd backend build && yarn --cwd frontend build",
+    "install:all": "yarn --cwd backend install && yarn --cwd frontend install",
+    "db:migrate": "yarn --cwd backend db:migrate",
+    "db:migrate:rollback": "yarn --cwd backend db:migrate:rollback",
+    "db:seed": "yarn --cwd backend db:seed",
+    "db:refresh": "yarn --cwd backend db:refresh"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "pdf-parse": "1.1.1"
+  }
+}
