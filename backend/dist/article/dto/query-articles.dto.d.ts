@@ -6,4 +6,5 @@ export declare class QueryArticlesDto {
     category?: string;
     status?: ArticleStatus;
     isFeatured?: boolean;
+    lang?: string;
 }

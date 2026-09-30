@@ -11,6 +11,10 @@ export declare class Article {
     slug: string;
     summary: string;
     content: string;
+    lang: string;
+    titleEn: string;
+    summaryEn: string;
+    contentEn: string;
     thumbnail: string;
     status: ArticleStatus;
     viewCount: number;

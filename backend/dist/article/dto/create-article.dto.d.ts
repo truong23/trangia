@@ -4,6 +4,10 @@ export declare class CreateArticleDto {
     slug?: string;
     summary: string;
     content: string;
+    lang?: string;
+    titleEn?: string;
+    summaryEn?: string;
+    contentEn?: string;
     thumbnail?: string;
     status?: ArticleStatus;
     isFeatured?: boolean;

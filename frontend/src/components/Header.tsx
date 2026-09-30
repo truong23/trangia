@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Download, Search, Menu, X, ChevronDown, Shield, FileText } from 'lucide-react';
+import { Phone, Mail, MapPin, Download, Search, Menu, X, ChevronDown, Shield, FileText, Globe } from 'lucide-react';
 import { SiteSettings } from '../types';
 import { TRAN_GIA_INFO } from '../services/tranGiaData';
+import { Language, translations } from '../services/i18n';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -9,6 +10,8 @@ interface HeaderProps {
   activeSection: string;
   onNavigateSection: (sectionId: string) => void;
   onOpenProfileModal: () => void;
+  currentLang?: Language;
+  onToggleLang?: (lang: Language) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -17,11 +20,14 @@ export const Header: React.FC<HeaderProps> = ({
   activeSection,
   onNavigateSection,
   onOpenProfileModal,
+  currentLang = 'vi',
+  onToggleLang,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [headerSearch, setHeaderSearch] = useState('');
 
+  const t = translations[currentLang];
   const company = settings?.company;
   const companyName = company?.name || TRAN_GIA_INFO.companyName;
   const hotline = company?.hotline || TRAN_GIA_INFO.hotline;
@@ -29,40 +35,40 @@ export const Header: React.FC<HeaderProps> = ({
   const address = company?.address || TRAN_GIA_INFO.address;
 
   const navLinks = [
-    { id: 'home', label: 'TRANG CHỦ' },
+    { id: 'home', label: t.nav.home },
     {
       id: 'about',
-      label: 'GIỚI THIỆU',
+      label: t.nav.about,
       children: [
-        { id: 'letter', label: 'Thư ngỏ Giám đốc' },
-        { id: 'about-overview', label: 'Tổng quan doanh nghiệp' },
-        { id: 'vision-values', label: 'Tầm nhìn & Giá trị cốt lõi' },
-        { id: 'principles', label: 'Nguyên tắc hoạt động' },
+        { id: 'letter', label: t.nav.aboutLetter },
+        { id: 'about-overview', label: t.nav.aboutOverview },
+        { id: 'vision-values', label: t.nav.aboutVision },
+        { id: 'principles', label: t.nav.aboutPrinciples },
       ],
     },
     {
       id: 'services',
-      label: 'LĨNH VỰC',
+      label: t.nav.services,
       children: [
-        { id: 'services-ceiling', label: 'Thi công Trần thạch cao & Kim loại' },
-        { id: 'services-partition', label: 'Thi công Vách ngăn chống cháy' },
-        { id: 'services-painting', label: 'Sơn bả hoàn thiện & Phào GFRC' },
-        { id: 'services-fitout', label: 'Nội thất Fit-out & Cơ điện M&E' },
+        { id: 'services-ceiling', label: t.nav.servicesCeiling },
+        { id: 'services-partition', label: t.nav.servicesPartition },
+        { id: 'services-painting', label: t.nav.servicesPainting },
+        { id: 'services-fitout', label: t.nav.servicesFitout },
       ],
     },
     {
       id: 'capacity',
-      label: 'NĂNG LỰC',
+      label: t.nav.capacity,
       children: [
-        { id: 'capacity-org', label: 'Sơ đồ tổ chức' },
-        { id: 'capacity-personnel', label: 'Năng lực nhân sự (50+ CNV)' },
-        { id: 'capacity-equipment', label: 'Năng lực máy móc thiết bị' },
+        { id: 'capacity-org', label: t.nav.capacityOrg },
+        { id: 'capacity-personnel', label: t.nav.capacityPersonnel },
+        { id: 'capacity-equipment', label: t.nav.capacityEquipment },
       ],
     },
-    { id: 'projects', label: 'DỰ ÁN' },
-    { id: 'partners', label: 'ĐỐI TÁC' },
-    { id: 'news', label: 'TIN TỨC' },
-    { id: 'contact', label: 'LIÊN HỆ' },
+    { id: 'projects', label: t.nav.projects },
+    { id: 'partners', label: t.nav.partners },
+    { id: 'news', label: t.nav.news },
+    { id: 'contact', label: t.nav.contact },
   ];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -79,9 +85,15 @@ export const Header: React.FC<HeaderProps> = ({
     setMobileMenuOpen(false);
   };
 
+  const handleSwitchLanguage = (lang: Language) => {
+    if (onToggleLang) {
+      onToggleLang(lang);
+    }
+  };
+
   return (
     <header className="tg-header-wrapper">
-      {/* 1. Top Bar: Contact Info & Hotline */}
+      {/* 1. Top Bar: Contact Info, Hotline & Language Toggle */}
       <div className="tg-topbar">
         <div className="container tg-topbar-inner">
           <div className="tg-topbar-left">
@@ -96,9 +108,31 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           <div className="tg-topbar-right">
+            {/* Language Switcher Button in Topbar */}
+            <div className="tg-lang-switcher">
+              <Globe size={13} className="text-amber" />
+              <button
+                type="button"
+                onClick={() => handleSwitchLanguage('vi')}
+                className={`tg-lang-btn ${currentLang === 'vi' ? 'active' : ''}`}
+                title="Tiếng Việt"
+              >
+                🇻🇳 VI
+              </button>
+              <span className="lang-divider">/</span>
+              <button
+                type="button"
+                onClick={() => handleSwitchLanguage('en')}
+                className={`tg-lang-btn ${currentLang === 'en' ? 'active' : ''}`}
+                title="English"
+              >
+                🇬🇧 EN
+              </button>
+            </div>
+
             <div className="tg-topbar-item hotline-highlight">
               <Phone size={13} className="phone-pulse" />
-              <span>Hotline: <strong>{hotline}</strong></span>
+              <span>{t.header.hotline}: <strong>{hotline}</strong></span>
             </div>
             <button
               onClick={onOpenProfileModal}
@@ -106,11 +140,11 @@ export const Header: React.FC<HeaderProps> = ({
               title="Xem & Tải Hồ Sơ Năng Lực PDF"
             >
               <FileText size={13} />
-              <span>Hồ Sơ Năng Lực</span>
+              <span>{t.header.profilePdf}</span>
             </button>
             <a href="/admin" className="tg-admin-link" title="Đăng nhập Trang Quản Trị CMS">
               <Shield size={13} />
-              <span>Admin CMS</span>
+              <span>{t.header.adminCms}</span>
             </a>
           </div>
         </div>
@@ -181,7 +215,7 @@ export const Header: React.FC<HeaderProps> = ({
             </ul>
           </nav>
 
-          {/* Right Action Tools: Search, Download Profile Button & Mobile Menu Toggle */}
+          {/* Right Action Tools: Search, Language Switcher, Download Profile Button & Mobile Menu Toggle */}
           <div className="tg-header-actions">
             {/* Search Box Trigger */}
             <div className="tg-search-wrapper">
@@ -197,7 +231,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <form onSubmit={handleSearchSubmit} className="tg-search-dropdown-form">
                   <input
                     type="text"
-                    placeholder="Tìm kiếm dự án, tin tức..."
+                    placeholder={t.header.searchPlaceholder}
                     value={headerSearch}
                     onChange={(e) => setHeaderSearch(e.target.value)}
                     autoFocus
@@ -215,7 +249,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onOpenProfileModal}
             >
               <Download size={15} />
-              <span>Tải HSNL (PDF)</span>
+              <span>{t.header.downloadProfile}</span>
             </button>
 
             {/* Mobile Hamburger Toggle */}
@@ -239,6 +273,24 @@ export const Header: React.FC<HeaderProps> = ({
               <X size={20} />
             </button>
           </div>
+
+          <div className="mobile-lang-bar">
+            <button
+              type="button"
+              onClick={() => handleSwitchLanguage('vi')}
+              className={`mobile-lang-btn ${currentLang === 'vi' ? 'active' : ''}`}
+            >
+              🇻🇳 Tiếng Việt
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSwitchLanguage('en')}
+              className={`mobile-lang-btn ${currentLang === 'en' ? 'active' : ''}`}
+            >
+              🇬🇧 English
+            </button>
+          </div>
+
           <ul className="tg-mobile-menu">
             {navLinks.map((item) => (
               <li key={item.id}>
@@ -260,10 +312,10 @@ export const Header: React.FC<HeaderProps> = ({
               }}
             >
               <FileText size={16} />
-              <span>Xem Hồ Sơ Năng Lực PDF</span>
+              <span>{t.header.profilePdf} (PDF)</span>
             </button>
             <div className="tg-mobile-contact">
-              <p>Hotline: <strong>{hotline}</strong></p>
+              <p>{t.header.hotline}: <strong>{hotline}</strong></p>
               <p>Email: {email}</p>
             </div>
           </div>

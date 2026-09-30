@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Loader2, Download, FileText, ArrowUp } from 'lucide-react';
 import { Article, Category, SiteSettings, Project } from './types';
 import { api } from './services/api';
+import { Language, translations } from './services/i18n';
 import { Header } from './components/Header';
 import { HeroBanner } from './components/HeroBanner';
 import { AboutSection } from './components/AboutSection';
@@ -14,17 +15,34 @@ import { CategoryNav } from './components/CategoryNav';
 import { NewsCard } from './components/NewsCard';
 import { Sidebar } from './components/Sidebar';
 import { Pagination } from './components/Pagination';
-import { ArticleDetailModal } from './components/ArticleDetailModal';
+import { ArticleDetailPage } from './components/ArticleDetailPage';
 import { ContactSection } from './components/ContactSection';
 import { ProfileViewerModal } from './components/ProfileViewerModal';
 import { AdminPage } from './components/AdminPage';
 import { Footer } from './components/Footer';
-import { TRAN_GIA_INFO } from './services/tranGiaData';
+
+/**
+ * Trích xuất slug bài viết từ URL path (ví dụ: /bai-viet/:slug, /tin-tuc/:slug)
+ * hoặc query param (ví dụ: ?article=:slug)
+ */
+const getArticleSlugFromLocation = (path: string, search: string): string | null => {
+  const params = new URLSearchParams(search);
+  const articleParam = params.get('article');
+  if (articleParam) return articleParam;
+
+  const match = path.match(/^\/(?:bai-viet|tin-tuc|article)\/([^/?#]+)/i);
+  if (match && match[1]) {
+    return decodeURIComponent(match[1]);
+  }
+  return null;
+};
 
 export const App: React.FC = () => {
   // Routing state based on URL path or hash
   const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname);
+  const [currentSearch, setCurrentSearch] = useState<string>(() => window.location.search);
   const [activeSection, setActiveSection] = useState<string>('home');
+  const [currentLang, setCurrentLang] = useState<Language>('vi');
 
   // Site Settings & News data
   const [siteSettings, setSiteSettings] = useState<SiteSettings | undefined>(undefined);
@@ -44,35 +62,35 @@ export const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Modals state
-  const [activeArticle, setActiveArticle] = useState<Article | null>(null);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
+
+  const t = translations[currentLang];
 
   // Handle URL changes & back/forward navigation
   useEffect(() => {
     const handleLocationChange = () => {
       setCurrentPath(window.location.pathname);
+      setCurrentSearch(window.location.search);
       const params = new URLSearchParams(window.location.search);
       const catParam = params.get('category') || 'all';
       const searchParam = params.get('search') || '';
-      const articleParam = params.get('article');
+      const langParam = params.get('lang') as Language;
+
+      if (langParam === 'en' || langParam === 'vi') {
+        setCurrentLang(langParam);
+      }
 
       setSelectedCategory(catParam);
       setSearchQuery(searchParam);
-
-      if (articleParam) {
-        api.getArticleBySlug(articleParam).then(setActiveArticle).catch(() => {});
-      } else {
-        setActiveArticle(null);
-      }
     };
 
     window.addEventListener('popstate', handleLocationChange);
     const initialParams = new URLSearchParams(window.location.search);
-    const initialArticle = initialParams.get('article');
-    if (initialArticle) {
-      api.getArticleBySlug(initialArticle).then(setActiveArticle).catch(() => {});
+    const initialLang = initialParams.get('lang') as Language;
+    if (initialLang === 'en' || initialLang === 'vi') {
+      setCurrentLang(initialLang);
     }
 
     const handleScroll = () => {
@@ -102,21 +120,37 @@ export const App: React.FC = () => {
 
   const navigate = (path: string) => {
     window.history.pushState({}, '', path);
-    setCurrentPath(path);
+    setCurrentPath(window.location.pathname);
+    setCurrentSearch(window.location.search);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const navigateSection = (sectionId: string) => {
     setActiveSection(sectionId);
-    if (currentPath !== '/') {
-      navigate('/');
+    if (currentPath !== '/' && !currentPath.startsWith('/#')) {
+      navigate(`/#${sectionId}`);
+    } else {
+      const url = new URL(window.location.href);
+      url.hash = sectionId;
+      window.history.pushState({}, '', url.toString());
     }
     setTimeout(() => {
       const el = document.getElementById(sectionId);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 50);
+    }, 60);
+  };
+
+  const handleToggleLang = (lang: Language) => {
+    setCurrentLang(lang);
+    const url = new URL(window.location.href);
+    if (lang === 'en') {
+      url.searchParams.set('lang', 'en');
+    } else {
+      url.searchParams.delete('lang');
+    }
+    window.history.pushState({}, '', url.toString());
   };
 
   // Fetch settings, categories, and recent news from API
@@ -177,6 +211,7 @@ export const App: React.FC = () => {
       url.searchParams.delete('search');
     }
     window.history.pushState({}, '', url.toString());
+    setCurrentSearch(url.search);
   };
 
   const handleCategorySelect = (slug: string) => {
@@ -191,30 +226,11 @@ export const App: React.FC = () => {
       url.searchParams.delete('category');
     }
     window.history.pushState({}, '', url.toString());
+    setCurrentSearch(url.search);
   };
 
-  const handleArticleClick = async (article: Article) => {
-    setActiveArticle(article);
-    const url = new URL(window.location.href);
-    url.searchParams.set('article', article.slug);
-    window.history.pushState({}, '', url.toString());
-
-    try {
-      const detail = await api.getArticleBySlug(article.slug);
-      setActiveArticle(detail);
-      setArticles((prev) =>
-        prev.map((a) => (a.id === detail.id ? { ...a, viewCount: detail.viewCount } : a)),
-      );
-    } catch {
-      // Keep existing article
-    }
-  };
-
-  const handleCloseModal = () => {
-    setActiveArticle(null);
-    const url = new URL(window.location.href);
-    url.searchParams.delete('article');
-    window.history.pushState({}, '', url.toString());
+  const handleArticleClick = (article: Article) => {
+    navigate(`/bai-viet/${article.slug}`);
   };
 
   // ==========================================================
@@ -225,20 +241,42 @@ export const App: React.FC = () => {
   }
 
   // ==========================================================
-  // ROUTE 2: PUBLIC TRAN GIA PROFILE & CORPORATE PORTAL (/)
+  // ROUTE 2: DEDICATED ARTICLE DETAIL PAGE (/bai-viet/:slug, /tin-tuc/:slug, ?article=:slug)
+  // ==========================================================
+  const articleSlug = getArticleSlugFromLocation(currentPath, currentSearch);
+  if (articleSlug) {
+    return (
+      <ArticleDetailPage
+        slug={articleSlug}
+        currentLang={currentLang}
+        onToggleLang={handleToggleLang}
+        siteSettings={siteSettings}
+        categories={categories}
+        recentArticles={recentArticles}
+        onNavigate={navigate}
+        onNavigateSection={navigateSection}
+        onSelectArticle={handleArticleClick}
+      />
+    );
+  }
+
+  // ==========================================================
+  // ROUTE 3: PUBLIC TRAN GIA PROFILE & CORPORATE PORTAL (/)
   // ==========================================================
   const currentCategoryObj = categories.find((c) => c.slug === selectedCategory);
-  const currentCategoryName = currentCategoryObj ? currentCategoryObj.name : 'Tất cả tin tức & bài viết';
+  const currentCategoryName = currentCategoryObj ? currentCategoryObj.name : t.news.allArticles;
 
   return (
     <div className="tg-page-wrapper">
-      {/* 1. Header with Logo, Navigation, Search, PDF Profile Quick Action */}
+      {/* 1. Header with Logo, Navigation, Language Switcher, Search, PDF Profile Quick Action */}
       <Header
         onSearch={handleSearch}
         settings={siteSettings}
         activeSection={activeSection}
         onNavigateSection={navigateSection}
         onOpenProfileModal={() => setIsProfileModalOpen(true)}
+        currentLang={currentLang}
+        onToggleLang={handleToggleLang}
       />
 
       {/* 2. Hero Section with Key Metrics & Brand Statement */}
@@ -270,12 +308,10 @@ export const App: React.FC = () => {
       <section className="tg-section tg-news-section" id="news">
         <div className="container">
           <div className="tg-section-header text-center">
-            <span className="tg-section-badge">TRUYỀN THÔNG & TIẾN ĐỘ</span>
-            <h2 className="tg-section-title">TIN TỨC & HOẠT ĐỘNG TRẦN GIA</h2>
+            <span className="tg-section-badge">{t.news.badge}</span>
+            <h2 className="tg-section-title">{t.news.title}</h2>
             <div className="tg-divider"></div>
-            <p className="tg-section-desc">
-              Cập nhật tin tức mới nhất về tiến độ các công trình, công nghệ thi công hiện đại và văn hóa doanh nghiệp Trần Gia.
-            </p>
+            <p className="tg-section-desc">{t.news.desc}</p>
           </div>
 
           <div className="main-content-layout">
@@ -293,14 +329,14 @@ export const App: React.FC = () => {
               {/* Active Category Filter Header */}
               <div className="category-filter-header">
                 <h3 className="current-category-title">
-                  {searchQuery ? `Kết quả tìm kiếm: "${searchQuery}"` : currentCategoryName}
+                  {searchQuery ? `${t.news.searchResult}: "${searchQuery}"` : currentCategoryName}
                 </h3>
                 {(selectedCategory !== 'all' || searchQuery) && (
                   <button
                     className="clear-filter-btn"
                     onClick={() => handleCategorySelect('all')}
                   >
-                    ✕ Xem tất cả tin
+                    {t.news.clearFilter}
                   </button>
                 )}
               </div>
@@ -309,17 +345,17 @@ export const App: React.FC = () => {
               {isLoading ? (
                 <div className="tg-loading-box">
                   <Loader2 size={36} className="animate-spin text-amber" />
-                  <span>Đang tải danh sách bài viết từ hệ thống...</span>
+                  <span>{t.news.loading}</span>
                 </div>
               ) : articles.length === 0 ? (
                 <div className="tg-empty-news-box">
-                  <h3>Không tìm thấy bài viết</h3>
-                  <p>Không có bài viết nào khớp với chuyên mục hoặc từ khóa tìm kiếm.</p>
+                  <h3>{t.news.noArticles}</h3>
+                  <p>{t.news.noArticlesDesc}</p>
                   <button
                     onClick={() => handleCategorySelect('all')}
                     className="tg-btn primary-solid small mt-3"
                   >
-                    Xem tất cả bài viết
+                    {t.news.viewAll}
                   </button>
                 </div>
               ) : (
@@ -330,6 +366,7 @@ export const App: React.FC = () => {
                         key={article.id}
                         article={article}
                         onClick={handleArticleClick}
+                        currentLang={currentLang}
                       />
                     ))}
                   </div>
@@ -376,7 +413,7 @@ export const App: React.FC = () => {
           title="Xem & Tải Hồ sơ năng lực PDF (36 trang)"
         >
           <FileText size={18} />
-          <span>HỒ SƠ NĂNG LỰC PDF</span>
+          <span>{t.header.profilePdf} PDF</span>
         </button>
 
         {showScrollTop && (
@@ -392,11 +429,6 @@ export const App: React.FC = () => {
       </div>
 
       {/* Modals */}
-      <ArticleDetailModal
-        article={activeArticle}
-        onClose={handleCloseModal}
-      />
-
       <ProjectDetailModal
         project={activeProject}
         onClose={() => setActiveProject(null)}

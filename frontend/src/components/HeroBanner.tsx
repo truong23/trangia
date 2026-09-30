@@ -20,10 +20,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const hotline = company?.hotline || TRAN_GIA_INFO.hotline;
 
   const stats = [
-    { number: '50+', label: 'Cán bộ - Kỹ sư & CNV', icon: Users },
-    { number: '15+', label: 'Dự án trọng điểm toàn quốc', icon: Building2 },
-    { number: '300+', label: 'Trang thiết bị máy móc', icon: Wrench },
-    { number: '100%', label: 'Đạt chuẩn ISO & Tiến độ', icon: CheckCircle2 },
+    { number: '50+', label: 'Cán bộ Kỹ sư & Thợ lành nghề', icon: Users },
+    { number: '15+', label: 'Dự án cho tập đoàn lớn', icon: Building2 },
+    { number: '300+', label: 'Máy móc thiết bị chuyên dụng', icon: Wrench },
+    { number: '100%', label: 'Đạt chuẩn ISO & Đúng tiến độ', icon: CheckCircle2 },
   ];
 
   return (
@@ -33,18 +33,20 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         {/* Slogan Pill */}
         <div className="tg-hero-badge">
           <ShieldCheck size={16} className="text-amber animate-pulse" />
-          <span>HỒ SƠ NĂNG LỰC DOANH NGHIỆP • {slogan.toUpperCase()}</span>
+          <span>CHUYÊN THI CÔNG TRẦN THẠCH CAO CHO CÁC TẬP ĐOÀN LỚN • {slogan.toUpperCase()}</span>
         </div>
 
-        {/* Main Title */}
+        {/* Main Title - SEO H1 */}
         <h1 className="tg-hero-title">
-          {companyName}
+          Thi Công Trần Thạch Cao Cho Các Tập Đoàn Lớn
         </h1>
 
-        {/* Subtitle */}
+        {/* Subtitle - SEO Rich */}
         <p className="tg-hero-subtitle">
-          Đơn vị hàng đầu trong lĩnh vực thiết kế – thi công nội thất, trần vách thạch cao tiêu chuẩn ISO,
-          sơn bả hoàn thiện công trình và phào chỉ GFRC nghệ thuật cho các tập đoàn & tổng thầu lớn nhất Việt Nam.
+          <strong>Trần Gia</strong> – Đối tác thi công trần thạch cao tin cậy của <strong>VinGroup</strong>, <strong>Vinhomes</strong>, <strong>VinFast</strong>, <strong>DELTA Group</strong>, <strong>Viettel Construction</strong> và <strong>Masterise Homes</strong>. Chuyên thi công trần vách thạch cao tiêu chuẩn ISO, trần kim loại, vách chống cháy, sơn bả hoàn thiện & phào GFRC cho khách sạn 5 sao, TTTM và chung cư cao cấp trên toàn quốc.
+        </p>
+        <p className="tg-hero-company-name">
+          {companyName}
         </p>
 
         {/* CTA Buttons */}

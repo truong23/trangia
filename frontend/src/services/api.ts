@@ -3,12 +3,14 @@ import { categoryService } from './category/category.service';
 import { authService } from './auth/auth.service';
 import { settingsService } from './settings/settings.service';
 import { userService } from './user/user.service';
+import { uploadService } from './upload/upload.service';
 
 export * from './article/article.service';
 export * from './category/category.service';
 export * from './auth/auth.service';
 export * from './settings/settings.service';
 export * from './user/user.service';
+export * from './upload/upload.service';
 
 // Hợp nhất export api đối tượng tiện lợi cho các component
 export const api = {
@@ -29,6 +31,12 @@ export const api = {
   createArticle: articleService.createArticle.bind(articleService),
   updateArticle: articleService.updateArticle.bind(articleService),
   deleteArticle: articleService.deleteArticle.bind(articleService),
+
+  // Upload Service
+  uploadImage: uploadService.uploadImage.bind(uploadService),
+  uploadMultiple: uploadService.uploadMultiple.bind(uploadService),
+  getUploadedFiles: uploadService.getUploadedFiles.bind(uploadService),
+  deleteFile: uploadService.deleteFile.bind(uploadService),
 
   // Auth Service
   login: authService.login.bind(authService),

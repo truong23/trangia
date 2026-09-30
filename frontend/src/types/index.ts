@@ -17,9 +17,13 @@ export interface Category {
 export interface Article {
   id: string;
   title: string;
+  titleEn?: string;
   slug: string;
   summary: string;
+  summaryEn?: string;
   content: string;
+  contentEn?: string;
+  lang?: string;
   thumbnail?: string;
   status: 'published' | 'draft' | 'archived';
   viewCount: number;
@@ -31,6 +35,16 @@ export interface Article {
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface UploadedFile {
+  url: string;
+  location?: string;
+  filename: string;
+  originalname: string;
+  mimetype: string;
+  size: number;
+  uploadedAt: string;
 }
 
 export interface Project {

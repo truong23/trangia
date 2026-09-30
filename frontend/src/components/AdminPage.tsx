@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Shield,
   LayoutDashboard,
@@ -13,9 +13,7 @@ import {
   AlertCircle,
   Search,
   Lock,
-  UserCheck,
   TrendingUp,
-  Layers,
   ArrowLeft,
   Sparkles,
   RefreshCw,
@@ -23,15 +21,20 @@ import {
   Users,
   KeyRound,
   Mail,
-  Eye,
-  EyeOff,
   UserPlus,
   ShieldAlert,
   Send,
   CheckCircle2,
+  Globe,
+  Upload,
+  Image as ImageIcon,
+  Copy,
+  Check,
+  Eye,
 } from 'lucide-react';
-import { Article, Category, User, SiteSettings } from '../types';
+import { Article, Category, User, SiteSettings, UploadedFile } from '../types';
 import { api } from '../services/api';
+import { TinyEditor } from './TinyEditor';
 
 interface AdminPageProps {
   onNavigate: (path: string) => void;
@@ -40,7 +43,7 @@ interface AdminPageProps {
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(() => api.getCurrentUser());
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'articles' | 'editor' | 'categories' | 'users' | 'security' | 'settings'
+    'overview' | 'articles' | 'editor' | 'categories' | 'media' | 'users' | 'security' | 'settings'
   >('overview');
 
   // Login form state
@@ -65,22 +68,37 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
+  // Media Library states
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [isLoadingMedia, setIsLoadingMedia] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
+  const [isUploadingThumb, setIsUploadingThumb] = useState(false);
+  const thumbFileInputRef = useRef<HTMLInputElement>(null);
+  const mediaFileInputRef = useRef<HTMLInputElement>(null);
+
   // Filter & Search in articles list
   const [articleSearch, setArticleSearch] = useState('');
   const [articleCategoryFilter, setArticleCategoryFilter] = useState('all');
+  const [articleLangFilter, setArticleLangFilter] = useState('all');
 
   // Filter in users list
   const [userSearch, setUserSearch] = useState('');
 
-  // Editor Form State (Create or Edit Article)
+  // Editor Form State (Bilingual & TinyMCE)
   const [editingArticleId, setEditingArticleId] = useState<string | null>(null);
+  const [editorLangTab, setEditorLangTab] = useState<'vi' | 'en'>('vi');
   const [formTitle, setFormTitle] = useState('');
+  const [formTitleEn, setFormTitleEn] = useState('');
   const [formCategoryId, setFormCategoryId] = useState('');
   const [formThumbnail, setFormThumbnail] = useState(
     'https://images.unsplash.com/photo-1541888946425-d0fbb186c5f3?auto=format&fit=crop&w=1200&q=80',
   );
   const [formSummary, setFormSummary] = useState('');
+  const [formSummaryEn, setFormSummaryEn] = useState('');
   const [formContent, setFormContent] = useState('');
+  const [formContentEn, setFormContentEn] = useState('');
+  const [formLang, setFormLang] = useState<string>('vi');
   const [formStatus, setFormStatus] = useState<'published' | 'draft'>('published');
   const [formIsFeatured, setFormIsFeatured] = useState(false);
   const [isSavingArticle, setIsSavingArticle] = useState(false);
@@ -138,7 +156,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   });
   const [isSavingSettings, setIsSavingSettings] = useState(false);
 
-  // Success / Error alert message
+  // Toast alert message
   const [toastMessage, setToastMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const showToast = (type: 'success' | 'error', text: string) => {
@@ -152,15 +170,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const loadAdminData = async () => {
     setIsLoadingData(true);
     try {
-      const [cats, artsRes, cfg, users] = await Promise.all([
+      const [cats, artsRes, cfg, users, media] = await Promise.all([
         api.getCategories().catch(() => []),
         api.getArticles({ limit: 100 }).catch(() => ({ items: [], pagination: { total: 0, page: 1, limit: 100, totalPages: 1 } })),
         api.getSettings().catch(() => null),
         api.getUsers().catch(() => []),
+        api.getUploadedFiles().catch(() => []),
       ]);
       setCategories(cats);
       setArticles(artsRes.items);
       setUsersList(users);
+      setUploadedFiles(media);
       if (cats.length > 0 && !formCategoryId) {
         setFormCategoryId(cats[0].id);
       }
@@ -202,6 +222,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     }
   };
 
+  const loadMediaFiles = async () => {
+    setIsLoadingMedia(true);
+    try {
+      const files = await api.getUploadedFiles();
+      setUploadedFiles(files);
+    } catch (err) {
+      console.error('Lỗi tải media:', err);
+    } finally {
+      setIsLoadingMedia(false);
+    }
+  };
+
   useEffect(() => {
     if (currentUser) {
       loadAdminData();
@@ -232,7 +264,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     showToast('success', 'Đã đăng xuất khỏi phiên làm việc');
   };
 
-  // Forgot Password: Request OTP
+  // Request OTP for forgot password
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!forgotEmail.trim()) {
@@ -244,7 +276,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
       const res = await api.forgotPassword(forgotEmail.trim());
       setOtpSentMessage(res.message);
       if (res.otp) {
-        setForgotOtp(res.otp); // Pre-fill OTP for test convenience
+        setForgotOtp(res.otp);
       }
       setAuthMode('reset-otp');
       showToast('success', 'Mã xác nhận OTP đã được gửi đến email!');
@@ -320,6 +352,68 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     }
   };
 
+  // Thumbnail Image Upload Handler
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingThumb(true);
+    try {
+      const res = await api.uploadImage(file);
+      setFormThumbnail(res.url);
+      showToast('success', `Đã tải lên ảnh đại diện: ${res.filename}`);
+      loadMediaFiles();
+    } catch (err: any) {
+      showToast('error', err.message || 'Lỗi khi tải ảnh đại diện');
+    } finally {
+      setIsUploadingThumb(false);
+      if (thumbFileInputRef.current) {
+        thumbFileInputRef.current.value = '';
+      }
+    }
+  };
+
+  // Media Library Upload Multiple Handler
+  const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsLoadingMedia(true);
+    try {
+      const fileList = Array.from(files);
+      await api.uploadMultiple(fileList);
+      showToast('success', `Đã tải lên thành công ${fileList.length} hình ảnh!`);
+      loadMediaFiles();
+    } catch (err: any) {
+      showToast('error', err.message || 'Lỗi khi tải ảnh');
+    } finally {
+      setIsLoadingMedia(false);
+      if (mediaFileInputRef.current) {
+        mediaFileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleDeleteMedia = async (filename: string) => {
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa ảnh "${filename}"?`)) return;
+    try {
+      await api.deleteFile(filename);
+      showToast('success', 'Đã xóa ảnh thành công');
+      setUploadedFiles((prev) => prev.filter((f) => f.filename !== filename));
+    } catch (err: any) {
+      showToast('error', err.message || 'Lỗi khi xóa ảnh');
+    }
+  };
+
+  const handleCopyUrl = (url: string) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url);
+      setCopiedUrl(url);
+      showToast('success', 'Đã sao chép đường dẫn ảnh vào Clipboard!');
+      setTimeout(() => setCopiedUrl(null), 3000);
+    }
+  };
+
   // User CRUD handlers
   const handleOpenCreateUser = () => {
     setEditingUserId(null);
@@ -357,7 +451,6 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     setIsSavingUser(true);
     try {
       if (editingUserId) {
-        // Update user
         const updatePayload: any = {
           fullName: userFormFullName,
           username: userFormUsername,
@@ -371,7 +464,6 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         await api.updateUser(editingUserId, updatePayload);
         showToast('success', 'Đã cập nhật tài khoản thành công!');
       } else {
-        // Create user
         await api.createUser({
           fullName: userFormFullName,
           username: userFormUsername,
@@ -412,36 +504,34 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     }
   };
 
-  // Article Save handler
+  // Article Save handler with Bilingual Support
   const handleSaveArticle = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formTitle || !formContent) {
-      showToast('error', 'Vui lòng nhập tiêu đề và nội dung bài viết');
+    if (!formTitle.trim() || !formContent.trim()) {
+      showToast('error', 'Vui lòng nhập tiêu đề và nội dung bài viết (Tiếng Việt)');
       return;
     }
     setIsSavingArticle(true);
     try {
+      const articlePayload = {
+        title: formTitle,
+        titleEn: formTitleEn.trim() || undefined,
+        summary: formSummary,
+        summaryEn: formSummaryEn.trim() || undefined,
+        content: formContent,
+        contentEn: formContentEn.trim() || undefined,
+        lang: formLang,
+        thumbnail: formThumbnail,
+        categoryId: formCategoryId || undefined,
+        status: formStatus,
+        isFeatured: formIsFeatured,
+      };
+
       if (editingArticleId) {
-        await api.updateArticle(editingArticleId, {
-          title: formTitle,
-          summary: formSummary,
-          content: formContent,
-          thumbnail: formThumbnail,
-          categoryId: formCategoryId || undefined,
-          status: formStatus,
-          isFeatured: formIsFeatured,
-        });
+        await api.updateArticle(editingArticleId, articlePayload);
         showToast('success', 'Cập nhật bài viết thành công!');
       } else {
-        await api.createArticle({
-          title: formTitle,
-          summary: formSummary,
-          content: formContent,
-          thumbnail: formThumbnail,
-          categoryId: formCategoryId || undefined,
-          status: formStatus,
-          isFeatured: formIsFeatured,
-        });
+        await api.createArticle(articlePayload);
         showToast('success', 'Tạo bài viết mới thành công!');
       }
       const artsRes = await api.getArticles({ limit: 100 });
@@ -490,7 +580,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
             <h2>TRẦN GIA CMS ADMIN</h2>
             <p className="login-subtitle">
               {authMode === 'login'
-                ? 'Hệ thống Quản trị Nội dung & Tài khoản Trần Gia Construction'
+                ? 'Hệ thống Quản trị Nội dung & Truyền thông Trần Gia Construction'
                 : authMode === 'forgot'
                 ? 'Khôi phục & Đặt lại mật khẩu qua Email'
                 : 'Nhập mã OTP & Tạo mật khẩu mới'}
@@ -568,7 +658,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
             </form>
           )}
 
-          {/* 1.2 FORGOT PASSWORD FORM (STEP 1: REQUEST OTP) */}
+          {/* 1.2 FORGOT PASSWORD FORM */}
           {authMode === 'forgot' && (
             <form onSubmit={handleRequestOtp} className="login-form">
               <div className="form-group">
@@ -607,7 +697,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
             </form>
           )}
 
-          {/* 1.3 RESET PASSWORD FORM (STEP 2: ENTER OTP & NEW PASSWORD) */}
+          {/* 1.3 RESET PASSWORD FORM */}
           {authMode === 'reset-otp' && (
             <form onSubmit={handleResetPassword} className="login-form">
               {otpSentMessage && (
@@ -679,9 +769,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     const matchSearch =
       !articleSearch ||
       a.title.toLowerCase().includes(articleSearch.toLowerCase()) ||
+      (a.titleEn && a.titleEn.toLowerCase().includes(articleSearch.toLowerCase())) ||
       a.summary.toLowerCase().includes(articleSearch.toLowerCase());
     const matchCat = articleCategoryFilter === 'all' || a.categoryId === articleCategoryFilter;
-    return matchSearch && matchCat;
+    const matchLang =
+      articleLangFilter === 'all' ||
+      (articleLangFilter === 'en' && Boolean(a.titleEn)) ||
+      (articleLangFilter === 'bilingual' && Boolean(a.titleEn && a.contentEn)) ||
+      (articleLangFilter === 'vi' && !a.titleEn);
+    return matchSearch && matchCat && matchLang;
   });
 
   const filteredUsers = usersList.filter((u) => {
@@ -710,7 +806,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           <Shield size={28} color="#FE7B00" />
           <div className="admin-brand-text">
             <h3>TRẦN GIA CMS</h3>
-            <span>Quản trị hệ thống</span>
+            <span>Quản trị truyền thông & tin bài</span>
           </div>
         </div>
 
@@ -746,8 +842,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
             onClick={() => {
               setEditingArticleId(null);
               setFormTitle('');
+              setFormTitleEn('');
               setFormSummary('');
+              setFormSummaryEn('');
               setFormContent('');
+              setFormContentEn('');
+              setEditorLangTab('vi');
               setActiveTab('editor');
             }}
             className={`admin-nav-btn ${activeTab === 'editor' ? 'active' : ''}`}
@@ -763,6 +863,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
             <FolderPlus size={18} />
             <span>Quản lý chuyên mục</span>
             <span className="nav-badge-count">{categories.length}</span>
+          </button>
+
+          <button
+            onClick={() => {
+              loadMediaFiles();
+              setActiveTab('media');
+            }}
+            className={`admin-nav-btn ${activeTab === 'media' ? 'active' : ''}`}
+          >
+            <ImageIcon size={18} />
+            <span>Kho hình ảnh & Media</span>
+            <span className="nav-badge-count">{uploadedFiles.length}</span>
           </button>
 
           <button
@@ -816,12 +928,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                 ? 'Danh sách bài viết'
                 : activeTab === 'editor'
                 ? editingArticleId
-                  ? 'Sửa bài viết'
-                  : 'Thêm bài mới'
+                  ? 'Sửa bài viết (TinyMCE & Đa ngôn ngữ)'
+                  : 'Thêm bài mới (TinyMCE & Đa ngôn ngữ)'
                 : activeTab === 'categories'
                 ? 'Chuyên mục'
+                : activeTab === 'media'
+                ? 'Quản lý hình ảnh & Tải lên'
                 : activeTab === 'users'
-                ? 'Quản lý tài khoản Admin & Nhân viên'
+                ? 'Quản lý tài khoản'
                 : activeTab === 'security'
                 ? 'Đổi mật khẩu cá nhân'
                 : 'Cài đặt thông tin công ty'}
@@ -862,11 +976,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
 
               <div className="stat-box">
                 <div className="stat-icon-wrap" style={{ background: '#DCFCE7', color: '#16A34A' }}>
-                  <Users size={24} />
+                  <ImageIcon size={24} />
                 </div>
                 <div className="stat-val-wrap">
-                  <span className="stat-number">{usersList.length}</span>
-                  <span className="stat-label">Tài khoản quản trị viên</span>
+                  <span className="stat-number">{uploadedFiles.length}</span>
+                  <span className="stat-label">Hình ảnh trong hệ thống</span>
                 </div>
               </div>
 
@@ -910,7 +1024,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     <div key={a.id} className="recent-item-row">
                       <div className="item-info">
                         <strong>{a.title}</strong>
-                        <span>{a.category?.name || 'Chưa phân loại'} • {a.viewCount} lượt xem</span>
+                        <span>
+                          {a.category?.name || 'Chưa phân loại'} • {a.viewCount} lượt xem
+                          {a.titleEn && <strong className="text-amber"> • [Song ngữ EN]</strong>}
+                        </span>
                       </div>
                       <span className={`status-badge ${a.status}`}>
                         {a.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}
@@ -934,7 +1051,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                 <Search size={16} />
                 <input
                   type="text"
-                  placeholder="Tìm bài viết..."
+                  placeholder="Tìm bài viết (Tiếng Việt / English)..."
                   value={articleSearch}
                   onChange={(e) => setArticleSearch(e.target.value)}
                 />
@@ -953,12 +1070,26 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   ))}
                 </select>
 
+                <select
+                  value={articleLangFilter}
+                  onChange={(e) => setArticleLangFilter(e.target.value)}
+                >
+                  <option value="all">Tất cả ngôn ngữ</option>
+                  <option value="bilingual">🌐 Song ngữ (VI + EN)</option>
+                  <option value="en">🇬🇧 Có bản dịch Tiếng Anh</option>
+                  <option value="vi">🇻🇳 Chỉ Tiếng Việt</option>
+                </select>
+
                 <button
                   onClick={() => {
                     setEditingArticleId(null);
                     setFormTitle('');
+                    setFormTitleEn('');
                     setFormSummary('');
+                    setFormSummaryEn('');
                     setFormContent('');
+                    setFormContentEn('');
+                    setEditorLangTab('vi');
                     setActiveTab('editor');
                   }}
                   className="btn-primary"
@@ -975,94 +1106,143 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   <tr>
                     <th>Bài viết</th>
                     <th>Chuyên mục</th>
+                    <th>Ngôn ngữ</th>
                     <th>Lượt xem</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredArticles.map((art) => (
-                    <tr key={art.id}>
-                      <td>
-                        <div className="article-cell-info">
-                          <img src={art.thumbnail} alt="" className="table-thumb" />
-                          <div>
-                            <strong className="table-article-title">{art.title}</strong>
-                            <span className="table-article-slug">{art.slug}</span>
+                  {filteredArticles.map((art) => {
+                    const hasBilingual = Boolean(art.titleEn && art.contentEn);
+                    return (
+                      <tr key={art.id}>
+                        <td>
+                          <div className="article-cell-info">
+                            <img src={art.thumbnail} alt="" className="table-thumb" />
+                            <div>
+                              <strong className="table-article-title">{art.title}</strong>
+                              {art.titleEn && (
+                                <span className="table-article-slug" style={{ color: '#FE7B00' }}>
+                                  EN: {art.titleEn}
+                                </span>
+                              )}
+                              <span className="table-article-slug">slug: {art.slug}</span>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td>{art.category?.name || '—'}</td>
-                      <td>{art.viewCount}</td>
-                      <td>
-                        <span className={`status-badge ${art.status}`}>
-                          {art.status === 'published' ? 'Xuất bản' : 'Bản nháp'}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="table-actions">
-                          <button
-                            onClick={() => {
-                              setEditingArticleId(art.id);
-                              setFormTitle(art.title);
-                              setFormSummary(art.summary);
-                              setFormContent(art.content);
-                              setFormThumbnail(art.thumbnail || '');
-                              setFormCategoryId(art.categoryId || '');
-                              setFormStatus((art.status as any) || 'published');
-                              setFormIsFeatured(art.isFeatured);
-                              setActiveTab('editor');
-                            }}
-                            className="btn-icon edit"
-                            title="Chỉnh sửa"
-                          >
-                            <Edit size={16} />
-                          </button>
-                          <button
-                            onClick={async () => {
-                              if (window.confirm(`Xóa bài viết "${art.title}"?`)) {
-                                await api.deleteArticle(art.id);
-                                showToast('success', 'Đã xóa bài viết');
-                                setArticles((prev) => prev.filter((a) => a.id !== art.id));
-                              }
-                            }}
-                            className="btn-icon delete"
-                            title="Xóa"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td>{art.category?.name || '—'}</td>
+                        <td>
+                          {hasBilingual ? (
+                            <span className="role-badge admin" style={{ fontSize: '11px' }}>
+                              🌐 VI + EN
+                            </span>
+                          ) : art.titleEn ? (
+                            <span className="role-badge editor" style={{ fontSize: '11px' }}>
+                              🇬🇧 EN
+                            </span>
+                          ) : (
+                            <span className="role-badge user" style={{ fontSize: '11px' }}>
+                              🇻🇳 VI
+                            </span>
+                          )}
+                        </td>
+                        <td>{art.viewCount}</td>
+                        <td>
+                          <span className={`status-badge ${art.status}`}>
+                            {art.status === 'published' ? 'Xuất bản' : 'Bản nháp'}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="table-actions">
+                            <button
+                              onClick={() => window.open(`/bai-viet/${art.slug}`, '_blank')}
+                              className="btn-icon view"
+                              title="Xem chi tiết bài viết trên trang web"
+                            >
+                              <ExternalLink size={16} />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingArticleId(art.id);
+                                setFormTitle(art.title || '');
+                                setFormTitleEn(art.titleEn || '');
+                                setFormSummary(art.summary || '');
+                                setFormSummaryEn(art.summaryEn || '');
+                                setFormContent(art.content || '');
+                                setFormContentEn(art.contentEn || '');
+                                setFormThumbnail(art.thumbnail || '');
+                                setFormCategoryId(art.categoryId || '');
+                                setFormStatus((art.status as any) || 'published');
+                                setFormIsFeatured(art.isFeatured);
+                                setFormLang(art.lang || 'vi');
+                                setEditorLangTab('vi');
+                                setActiveTab('editor');
+                              }}
+                              className="btn-icon edit"
+                              title="Chỉnh sửa bài viết với TinyMCE"
+                            >
+                              <Edit size={16} />
+                            </button>
+                            <button
+                              onClick={async () => {
+                                if (window.confirm(`Xóa bài viết "${art.title}"?`)) {
+                                  await api.deleteArticle(art.id);
+                                  showToast('success', 'Đã xóa bài viết');
+                                  setArticles((prev) => prev.filter((a) => a.id !== art.id));
+                                }
+                              }}
+                              className="btn-icon delete"
+                              title="Xóa"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           </div>
         )}
 
-        {/* Tab 3: ARTICLE EDITOR */}
+        {/* Tab 3: ARTICLE EDITOR (WITH TINYMCE & MULTILINGUAL TABS) */}
         {activeTab === 'editor' && (
           <div className="admin-tab-pane">
             <div className="admin-card">
-              <h3 className="card-title">
-                {editingArticleId ? 'Chỉnh sửa bài viết' : 'Soạn thảo bài viết mới'}
-              </h3>
-              <form onSubmit={handleSaveArticle} className="editor-form">
-                <div className="form-group">
-                  <label>Tiêu đề bài viết *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nhập tiêu đề tin tức, sự kiện..."
-                    value={formTitle}
-                    onChange={(e) => setFormTitle(e.target.value)}
-                  />
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h3 className="card-title" style={{ margin: 0 }}>
+                  {editingArticleId ? 'Chỉnh sửa bài viết (TinyMCE Rich-Text)' : 'Soạn thảo bài viết mới (TinyMCE Rich-Text)'}
+                </h3>
 
+                {/* Multilingual Switcher Tabs in Editor */}
+                <div className="editor-lang-tabs" style={{ margin: 0, border: 'none' }}>
+                  <button
+                    type="button"
+                    onClick={() => setEditorLangTab('vi')}
+                    className={`editor-lang-tab-btn ${editorLangTab === 'vi' ? 'active' : ''}`}
+                  >
+                    <span>🇻🇳 Nội dung Tiếng Việt</span>
+                    {formTitle && <Check size={14} className="text-emerald-500" />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditorLangTab('en')}
+                    className={`editor-lang-tab-btn ${editorLangTab === 'en' ? 'active' : ''}`}
+                  >
+                    <span>🇬🇧 English Content</span>
+                    {formTitleEn && <Check size={14} className="text-emerald-500" />}
+                  </button>
+                </div>
+              </div>
+
+              <form onSubmit={handleSaveArticle} className="editor-form">
+                {/* Meta Settings Row: Category, Status, Featured */}
                 <div className="form-row-2col">
                   <div className="form-group">
-                    <label>Chuyên mục</label>
+                    <label>Chuyên mục bài viết *</label>
                     <select
                       value={formCategoryId}
                       onChange={(e) => setFormCategoryId(e.target.value)}
@@ -1076,52 +1256,147 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   </div>
 
                   <div className="form-group">
-                    <label>Trạng thái</label>
+                    <label>Trạng thái xuất bản</label>
                     <select
                       value={formStatus}
                       onChange={(e) => setFormStatus(e.target.value as any)}
                     >
-                      <option value="published">Xuất bản ngay</option>
-                      <option value="draft">Lưu bản nháp</option>
+                      <option value="published">Xuất bản ngay (Published)</option>
+                      <option value="draft">Lưu bản nháp (Draft)</option>
                     </select>
                   </div>
                 </div>
 
+                {/* Thumbnail Image Uploader Box */}
                 <div className="form-group">
-                  <label>Ảnh đại diện (URL)</label>
-                  <input
-                    type="url"
-                    placeholder="https://images.unsplash.com/..."
-                    value={formThumbnail}
-                    onChange={(e) => setFormThumbnail(e.target.value)}
-                  />
+                  <label>Ảnh đại diện bài viết (Thumbnail Image)</label>
+                  <div className="thumb-uploader-box">
+                    <div className="thumb-preview-wrap">
+                      {formThumbnail ? (
+                        <img src={formThumbnail} alt="Thumbnail preview" className="thumb-preview-img" />
+                      ) : (
+                        <span style={{ fontSize: '12px', color: '#94A3B8' }}>Chưa có ảnh</span>
+                      )}
+                    </div>
+
+                    <div className="thumb-actions-content">
+                      <div className="thumb-actions-row">
+                        <button
+                          type="button"
+                          onClick={() => thumbFileInputRef.current?.click()}
+                          disabled={isUploadingThumb}
+                          className="btn-upload-thumb"
+                        >
+                          <Upload size={14} />
+                          <span>{isUploadingThumb ? 'Đang tải lên...' : 'Tải ảnh từ máy tính'}</span>
+                        </button>
+                        <input
+                          ref={thumbFileInputRef}
+                          type="file"
+                          accept="image/*"
+                          style={{ display: 'none' }}
+                          onChange={handleThumbnailUpload}
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            loadMediaFiles();
+                            setIsMediaPickerOpen(true);
+                          }}
+                          className="btn-media-browse"
+                        >
+                          <ImageIcon size={14} />
+                          <span>Chọn từ kho ảnh máy chủ</span>
+                        </button>
+                      </div>
+
+                      <input
+                        type="url"
+                        placeholder="Hoặc dán trực tiếp đường dẫn URL ảnh (https://...)"
+                        value={formThumbnail}
+                        onChange={(e) => setFormThumbnail(e.target.value)}
+                        style={{ fontSize: '13px' }}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="form-group">
-                  <label>Tóm tắt ngắn</label>
-                  <textarea
-                    rows={3}
-                    placeholder="Đoạn văn ngắn giới thiệu nội dung bài viết..."
-                    value={formSummary}
-                    onChange={(e) => setFormSummary(e.target.value)}
-                  />
-                </div>
+                {/* 1. VIETNAMESE TAB CONTENT */}
+                {editorLangTab === 'vi' && (
+                  <div className="lang-tab-content-panel">
+                    <div className="form-group">
+                      <label>Tiêu đề bài viết (Tiếng Việt) *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="VD: Trần Gia hoàn thành xuất sắc hạng mục trần thạch cao..."
+                        value={formTitle}
+                        onChange={(e) => setFormTitle(e.target.value)}
+                      />
+                    </div>
 
-                <div className="form-group">
-                  <label>Nội dung chi tiết (Hỗ trợ định dạng HTML/Văn bản) *</label>
-                  <textarea
-                    rows={12}
-                    required
-                    placeholder="Nội dung bài viết..."
-                    value={formContent}
-                    onChange={(e) => setFormContent(e.target.value)}
-                  />
-                </div>
+                    <div className="form-group">
+                      <label>Tóm tắt ngắn (Excerpt - Tiếng Việt)</label>
+                      <textarea
+                        rows={2}
+                        placeholder="Đoạn văn ngắn giới thiệu nội dung hiển thị trên thẻ tin..."
+                        value={formSummary}
+                        onChange={(e) => setFormSummary(e.target.value)}
+                      />
+                    </div>
 
-                <div className="editor-actions">
+                    <div className="form-group">
+                      <label>Nội dung bài viết chi tiết (Tiếng Việt - Soạn thảo TinyMCE) *</label>
+                      <TinyEditor
+                        value={formContent}
+                        onChange={(newVal) => setFormContent(newVal)}
+                        placeholder="Soạn thảo nội dung bài viết tiếng Việt tại đây..."
+                        height={460}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. ENGLISH TAB CONTENT */}
+                {editorLangTab === 'en' && (
+                  <div className="lang-tab-content-panel">
+                    <div className="form-group">
+                      <label>Article Title (English)</label>
+                      <input
+                        type="text"
+                        placeholder="Ex: Tran Gia successfully delivers Gypsum Ceiling package..."
+                        value={formTitleEn}
+                        onChange={(e) => setFormTitleEn(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Short Summary (English Excerpt)</label>
+                      <textarea
+                        rows={2}
+                        placeholder="Brief summary displayed on cards when English is selected..."
+                        value={formSummaryEn}
+                        onChange={(e) => setFormSummaryEn(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Full Content (English - TinyMCE Editor)</label>
+                      <TinyEditor
+                        value={formContentEn}
+                        onChange={(newVal) => setFormContentEn(newVal)}
+                        placeholder="Type English article content with rich formatting, photos, tables..."
+                        height={460}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="editor-actions mt-4">
                   <button type="submit" disabled={isSavingArticle} className="btn-primary">
                     <CheckCircle size={16} />
-                    <span>{isSavingArticle ? 'Đang lưu...' : 'Lưu bài viết'}</span>
+                    <span>{isSavingArticle ? 'Đang lưu bài viết...' : 'Lưu & Xuất bản bài viết'}</span>
                   </button>
                   <button
                     type="button"
@@ -1136,7 +1411,102 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           </div>
         )}
 
-        {/* Tab 4: CATEGORIES MANAGEMENT */}
+        {/* Tab 4: MEDIA GALLERY & UPLOADS (KHO HÌNH ẢNH MÁY CHỦ) */}
+        {activeTab === 'media' && (
+          <div className="admin-tab-pane">
+            <div className="admin-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <div>
+                  <h3 className="card-title" style={{ margin: 0 }}>
+                    Kho hình ảnh & Quản lý tệp tin tải lên ({uploadedFiles.length})
+                  </h3>
+                  <p className="card-sub" style={{ margin: '4px 0 0' }}>
+                    Tất cả hình ảnh được lưu trữ an toàn tại máy chủ NestJS và phục vụ tĩnh tại <code>/uploads</code>.
+                  </p>
+                </div>
+
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => mediaFileInputRef.current?.click()}
+                    disabled={isLoadingMedia}
+                    className="btn-primary"
+                  >
+                    <Upload size={16} />
+                    <span>{isLoadingMedia ? 'Đang tải lên...' : 'Tải thêm ảnh từ máy tính'}</span>
+                  </button>
+                  <input
+                    ref={mediaFileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleMediaUpload}
+                  />
+                </div>
+              </div>
+
+              {/* Drag-and-drop / Click Upload Zone */}
+              <div
+                className="media-upload-dropzone"
+                onClick={() => mediaFileInputRef.current?.click()}
+              >
+                <Upload size={32} color="#FE7B00" style={{ margin: '0 auto 8px' }} />
+                <h4>Nhấn vào đây hoặc kéo thả ảnh vào khu vực này để tải lên</h4>
+                <p style={{ fontSize: '13px', color: '#64748B', marginTop: '4px' }}>
+                  Hỗ trợ định dạng JPG, PNG, WEBP, GIF, SVG (Tối đa 15MB/ảnh)
+                </p>
+              </div>
+
+              {/* Media Grid */}
+              {uploadedFiles.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '40px', color: '#94A3B8' }}>
+                  <ImageIcon size={48} style={{ margin: '0 auto 12px', opacity: 0.5 }} />
+                  <p>Chưa có hình ảnh nào được tải lên máy chủ.</p>
+                </div>
+              ) : (
+                <div className="media-grid-view">
+                  {uploadedFiles.map((file) => (
+                    <div key={file.filename} className="media-card-item">
+                      <div className="media-card-thumb-wrap">
+                        <img src={file.url} alt={file.originalname} loading="lazy" />
+                      </div>
+                      <div className="media-card-details">
+                        <div className="media-card-filename" title={file.filename}>
+                          {file.originalname || file.filename}
+                        </div>
+                        <div className="media-card-meta">
+                          {(file.size / 1024).toFixed(1)} KB
+                        </div>
+                        <div className="media-card-actions">
+                          <button
+                            type="button"
+                            onClick={() => handleCopyUrl(file.url)}
+                            className="btn-copy-url"
+                            title="Sao chép URL ảnh để chèn vào bài viết"
+                          >
+                            {copiedUrl === file.url ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
+                            <span>{copiedUrl === file.url ? 'Đã chép' : 'Sao chép URL'}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteMedia(file.filename)}
+                            className="btn-delete-media"
+                            title="Xóa tệp tin"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: CATEGORIES MANAGEMENT */}
         {activeTab === 'categories' && (
           <div className="admin-tab-pane">
             <div className="admin-card">
@@ -1253,7 +1623,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           </div>
         )}
 
-        {/* Tab 5: USERS & ADMIN ACCOUNTS MANAGEMENT (QUẢN LÝ TÀI KHOẢN) */}
+        {/* Tab 6: USERS & ACCOUNTS MANAGEMENT */}
         {activeTab === 'users' && (
           <div className="admin-tab-pane">
             <div className="table-controls-bar">
@@ -1341,7 +1711,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           </div>
         )}
 
-        {/* Tab 6: SECURITY / CHANGE PASSWORD (ĐỔI MẬT KHẨU CÁ NHÂN) */}
+        {/* Tab 7: SECURITY / CHANGE PASSWORD */}
         {activeTab === 'security' && (
           <div className="admin-tab-pane">
             <div className="admin-card" style={{ maxWidth: '600px' }}>
@@ -1405,7 +1775,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           </div>
         )}
 
-        {/* Tab 7: SETTINGS (CÀI ĐẶT THÔNG TIN TRẦN GIA) */}
+        {/* Tab 8: SETTINGS */}
         {activeTab === 'settings' && (
           <div className="admin-tab-pane">
             <div className="admin-card">
@@ -1496,7 +1866,57 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         )}
       </main>
 
-      {/* MODAL: THÊM / SỬA TÀI KHOẢN NGƯỜI DÙNG */}
+      {/* MODAL 1: CHỌN ẢNH TỪ KHO MÁY CHỦ (MEDIA PICKER) */}
+      {isMediaPickerOpen && (
+        <div className="admin-modal-overlay" onClick={() => setIsMediaPickerOpen(false)}>
+          <div className="admin-modal-dialog" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '850px' }}>
+            <div className="modal-header">
+              <h3>Chọn hình ảnh từ kho máy chủ</h3>
+              <button onClick={() => setIsMediaPickerOpen(false)} className="modal-close-btn">
+                ✕
+              </button>
+            </div>
+            <div className="modal-body" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+              {uploadedFiles.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '30px', color: '#94A3B8' }}>
+                  Chưa có ảnh nào trên máy chủ. Hãy tải ảnh lên từ máy tính trước.
+                </div>
+              ) : (
+                <div className="media-grid-view">
+                  {uploadedFiles.map((f) => (
+                    <div
+                      key={f.filename}
+                      className="media-card-item"
+                      style={{ cursor: 'pointer', border: formThumbnail === f.url ? '2px solid #FE7B00' : undefined }}
+                      onClick={() => {
+                        setFormThumbnail(f.url);
+                        setIsMediaPickerOpen(false);
+                        showToast('success', 'Đã chọn ảnh đại diện!');
+                      }}
+                    >
+                      <div className="media-card-thumb-wrap">
+                        <img src={f.url} alt="" />
+                      </div>
+                      <div className="media-card-details">
+                        <div className="media-card-filename">{f.originalname || f.filename}</div>
+                        <button
+                          type="button"
+                          className="btn-primary"
+                          style={{ width: '100%', fontSize: '12px', padding: '4px' }}
+                        >
+                          Chọn ảnh này
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: THÊM / SỬA TÀI KHOẢN NGƯỜI DÙNG */}
       {isUserModalOpen && (
         <div className="admin-modal-overlay" onClick={() => setIsUserModalOpen(false)}>
           <div className="admin-modal-dialog" onClick={(e) => e.stopPropagation()}>

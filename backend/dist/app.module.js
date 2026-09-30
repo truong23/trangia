@@ -15,6 +15,7 @@ const auth_module_1 = require("./auth/auth.module");
 const category_module_1 = require("./category/category.module");
 const article_module_1 = require("./article/article.module");
 const settings_module_1 = require("./settings/settings.module");
+const upload_module_1 = require("./upload/upload.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,6 +32,7 @@ exports.AppModule = AppModule = __decorate([
             category_module_1.CategoryModule,
             article_module_1.ArticleModule,
             settings_module_1.SettingsModule,
+            upload_module_1.UploadModule,
         ],
     })
 ], AppModule);

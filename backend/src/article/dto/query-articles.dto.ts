@@ -36,4 +36,9 @@ export class QueryArticlesDto {
   @ApiPropertyOptional({ description: 'Lọc bài viết nổi bật' })
   @IsOptional()
   isFeatured?: boolean;
+
+  @ApiPropertyOptional({ example: 'vi', description: 'Lọc theo ngôn ngữ bài viết (vi, en, all)' })
+  @IsOptional()
+  @IsString()
+  lang?: string;
 }

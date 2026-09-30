@@ -2,10 +2,23 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as express from 'express';
+import * as path from 'path';
+import * as fs from 'fs';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
+
+  // Đảm bảo thư mục uploads tồn tại
+  const uploadDir = path.join(process.cwd(), 'uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    logger.log(`📁 Thư mục lưu trữ hình ảnh: ${uploadDir}`);
+  }
+
+  // Phục vụ tĩnh thư mục uploads cho frontend xem ảnh
+  app.use('/uploads', express.static(uploadDir));
 
   // Cho phép CORS cho frontend kết nối
   app.enableCors({
@@ -24,8 +37,8 @@ async function bootstrap() {
 
   // Tích hợp Swagger Documentation
   const config = new DocumentBuilder()
-    .setTitle('Delta Group News API')
-    .setDescription('Tài liệu API hệ thống tin tức & quản trị nội dung DELTA Group')
+    .setTitle('Trần Gia Construction & Media Portal API')
+    .setDescription('Tài liệu API hệ thống tin tức, truyền thông & quản trị nội dung Trần Gia Construction')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -37,5 +50,6 @@ async function bootstrap() {
 
   logger.log(`🚀 Backend NestJS is running on: http://localhost:${port}`);
   logger.log(`📚 Swagger API Docs available at: http://localhost:${port}/api/docs`);
+  logger.log(`🖼️ Static Uploads available at: http://localhost:${port}/uploads/`);
 }
 bootstrap();
