@@ -92,7 +92,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [partnerFormRole, setPartnerFormRole] = useState('');
   const [partnerFormCategory, setPartnerFormCategory] = useState<'developer' | 'contractor' | 'manufacturer'>('developer');
   const [partnerFormBadge, setPartnerFormBadge] = useState('');
-  const [partnerFormBrandColor, setPartnerFormBrandColor] = useState('#FE7B00');
+  const [partnerFormBrandColor, setPartnerFormBrandColor] = useState('#0284C7');
   const [partnerFormThumbnail, setPartnerFormThumbnail] = useState('');
   const [partnerFormProjects, setPartnerFormProjects] = useState('');
   const [partnerFormDescription, setPartnerFormDescription] = useState('');
@@ -517,7 +517,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
       setPartnerFormRole(p.role || '');
       setPartnerFormCategory(p.category || 'developer');
       setPartnerFormBadge(p.badge || '');
-      setPartnerFormBrandColor(p.brandColor || '#FE7B00');
+      setPartnerFormBrandColor(p.brandColor || '#0284C7');
       setPartnerFormThumbnail(p.thumbnail || '');
       setPartnerFormProjects(Array.isArray(p.projects) ? p.projects.join(', ') : (p.projects || ''));
       setPartnerFormDescription(p.description || '');
@@ -530,7 +530,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
       setPartnerFormRole('');
       setPartnerFormCategory('developer');
       setPartnerFormBadge('');
-      setPartnerFormBrandColor('#FE7B00');
+      setPartnerFormBrandColor('#0284C7');
       setPartnerFormThumbnail('');
       setPartnerFormProjects('');
       setPartnerFormDescription('');
@@ -958,7 +958,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         <div className="login-card">
           <div className="login-header">
             <div className="login-logo-box">
-              <Shield size={32} color="#FE7B00" />
+              <Shield size={32} color="#0284C7" />
             </div>
             <h2>TRẦN GIA CMS ADMIN</h2>
             <p className="login-subtitle">
@@ -1695,7 +1695,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                             <div>
                               <strong className="table-article-title">{art.title}</strong>
                               {art.titleEn && (
-                                <span className="table-article-slug" style={{ color: '#FE7B00' }}>
+                                <span className="table-article-slug" style={{ color: '#0284C7' }}>
                                   EN: {art.titleEn}
                                 </span>
                               )}
@@ -2023,7 +2023,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                 className="media-upload-dropzone"
                 onClick={() => mediaFileInputRef.current?.click()}
               >
-                <Upload size={32} color="#FE7B00" style={{ margin: '0 auto 8px' }} />
+                <Upload size={32} color="#0284C7" style={{ margin: '0 auto 8px' }} />
                 <h4>Nhấn vào đây hoặc kéo thả ảnh vào khu vực này để tải lên</h4>
                 <p style={{ fontSize: '13px', color: '#64748B', marginTop: '4px' }}>
                   Hỗ trợ định dạng JPG, PNG, WEBP, GIF, SVG (Tối đa 15MB/ảnh)
@@ -2508,7 +2508,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                                   width: '8px',
                                   height: '8px',
                                   borderRadius: '50%',
-                                  background: p.brandColor || '#FE7B00',
+                                  background: p.brandColor || '#0284C7',
                                 }}
                               />
                               {p.badge}
@@ -2987,7 +2987,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     <div
                       key={f.filename}
                       className="media-card-item"
-                      style={{ cursor: 'pointer', border: formThumbnail === f.url ? '2px solid #FE7B00' : undefined }}
+                      style={{ cursor: 'pointer', border: formThumbnail === f.url ? '2px solid #0284C7' : undefined }}
                       onClick={() => {
                         setFormThumbnail(f.url);
                         setIsMediaPickerOpen(false);
@@ -3293,7 +3293,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     />
                     <input
                       type="text"
-                      placeholder="#FE7B00"
+                      placeholder="#0284C7"
                       value={partnerFormBrandColor}
                       onChange={(e) => setPartnerFormBrandColor(e.target.value)}
                       style={{ flex: 1 }}

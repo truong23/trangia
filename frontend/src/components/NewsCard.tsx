@@ -64,7 +64,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({ article, onClick, currentLan
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#FE7B00',
+              color: '#0284C7',
               fontWeight: 700,
               fontSize: '14px',
             }}

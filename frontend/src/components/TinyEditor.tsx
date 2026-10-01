@@ -45,7 +45,7 @@ export const TinyEditor: React.FC<TinyEditorProps> = ({
     <div className="tiny-editor-container">
       <div className="tiny-editor-quick-bar">
         <span className="tiny-bar-label">
-          <Sparkles size={15} color="#FE7B00" />
+          <Sparkles size={15} color="#0284C7" />
           <span>Trình soạn thảo TinyMCE Rich-Text Trần Gia</span>
         </span>
         <button
@@ -142,7 +142,7 @@ export const TinyEditor: React.FC<TinyEditorProps> = ({
               display: block;
             }
             blockquote {
-              border-left: 4px solid #FE7B00;
+              border-left: 4px solid #0284C7;
               padding-left: 16px;
               margin: 16px 0;
               color: #4A5568;
@@ -172,7 +172,7 @@ export const TinyEditor: React.FC<TinyEditorProps> = ({
               margin-bottom: 0.4em;
             }
             a {
-              color: #FE7B00;
+              color: #0284C7;
               text-decoration: underline;
             }
           `,

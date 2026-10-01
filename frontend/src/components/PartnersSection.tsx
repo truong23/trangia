@@ -168,13 +168,13 @@ export const PartnersSection: React.FC = () => {
                     />
                   ) : (
                     <div className="partner-card-thumb-placeholder">
-                      <Building size={32} style={{ color: p.brandColor || '#FE7B00' }} />
+                      <Building size={32} style={{ color: p.brandColor || '#0284C7' }} />
                     </div>
                   )}
                   <div className="partner-thumb-overlay">
                     <div
                       className="partner-monogram-badge"
-                      style={{ borderColor: p.brandColor || '#FE7B00', color: p.brandColor || '#0B2240' }}
+                      style={{ borderColor: p.brandColor || '#0284C7', color: p.brandColor || '#0B2240' }}
                     >
                       {getPartnerInitials(p.name)}
                     </div>
@@ -182,7 +182,7 @@ export const PartnersSection: React.FC = () => {
                       <span
                         className="partner-tier-badge"
                         style={{
-                          backgroundColor: `${p.brandColor || '#FE7B00'}EE`,
+                          backgroundColor: `${p.brandColor || '#0284C7'}EE`,
                           color: '#FFFFFF',
                         }}
                       >

@@ -6,8 +6,8 @@
   --tg-primary: #0B2240;      /* Deep Architectural Navy */
   --tg-primary-light: #162D61;/* Royal Construction Blue */
   --tg-secondary: #0284C7;    /* Modern Sky Blue */
-  --tg-accent: #FE7B00;       /* High-visibility Amber / Orange */
-  --tg-gold: #E5A93C;         /* Premium Gold Accent */
+  --tg-accent: #0284C7;       /* Modern Sky Blue Accent */
+  --tg-gold: #38BDF8;         /* Light Sky Blue Accent */
   --tg-dark: #0F172A;
   --tg-gray-bg: #F8FAFC;
   --tg-slate-100: #F1F5F9;
@@ -85,7 +85,7 @@ button {
 .tg-section-badge {
   display: inline-block;
   padding: 5px 14px;
-  background-color: rgba(254, 123, 0, 0.12);
+  background-color: rgba(2, 132, 199, 0.12);
   color: var(--tg-accent);
   font-size: 12px;
   font-weight: 700;
@@ -289,8 +289,8 @@ button {
 
 .tg-admin-link:hover {
   color: #FFFFFF;
-  background: rgba(254, 123, 0, 0.2);
-  border-color: rgba(254, 123, 0, 0.4);
+  background: rgba(2, 132, 199, 0.2);
+  border-color: rgba(2, 132, 199, 0.4);
 }
 
 /* Main Navbar */
@@ -460,13 +460,13 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, var(--tg-accent), #d96900);
+  background: linear-gradient(135deg, var(--tg-accent), #0B2240);
   color: #FFFFFF;
   padding: 9px 16px;
   border-radius: 6px;
   font-size: 13px;
   font-weight: 700;
-  box-shadow: 0 3px 8px rgba(254, 123, 0, 0.3);
+  box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3);
 }
 
 .tg-cta-button:hover {
@@ -715,7 +715,7 @@ button {
 }
 
 .mobile-hotline-call strong {
-  color: #FE7B00;
+  color: #0284C7;
 }
 
 .tg-mobile-contact {
@@ -768,12 +768,13 @@ button {
 }
 
 .tg-hero-title {
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 900;
   line-height: 1.25;
   margin-bottom: 16px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   letter-spacing: -0.5px;
+  white-space: nowrap;
 }
 
 .tg-hero-subtitle {
@@ -805,14 +806,14 @@ button {
 }
 
 .tg-hero-btn.primary {
-  background: linear-gradient(135deg, var(--tg-accent), #d96900);
+  background: linear-gradient(135deg, var(--tg-secondary), var(--tg-primary));
   color: #FFFFFF;
-  box-shadow: 0 4px 15px rgba(254, 123, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
 }
 
 .tg-hero-btn.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(254, 123, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
 }
 
 .tg-hero-btn.secondary {
@@ -866,7 +867,7 @@ button {
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background: rgba(254, 123, 0, 0.2);
+  background: rgba(2, 132, 199, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -922,7 +923,7 @@ button {
   font-size: 11.5px;
   font-weight: 700;
   color: var(--tg-accent);
-  background: rgba(254, 123, 0, 0.1);
+  background: rgba(2, 132, 199, 0.1);
   padding: 4px 12px;
   border-radius: 4px;
   margin-bottom: 12px;
@@ -1215,7 +1216,7 @@ button {
   font-size: 11px;
   font-weight: 800;
   color: var(--tg-accent);
-  background: rgba(254, 123, 0, 0.1);
+  background: rgba(2, 132, 199, 0.1);
   padding: 2px 8px;
   border-radius: 10px;
 }
@@ -1391,7 +1392,7 @@ button {
   font-size: 10.5px;
   font-weight: 800;
   color: var(--tg-accent);
-  background: rgba(254, 123, 0, 0.1);
+  background: rgba(2, 132, 199, 0.1);
   padding: 2px 8px;
   border-radius: 3px;
   margin-bottom: 6px;
@@ -1640,7 +1641,7 @@ button {
 }
 
 .eq-qty-badge {
-  background: rgba(254, 123, 0, 0.12);
+  background: rgba(2, 132, 199, 0.12);
   padding: 4px 10px;
   border-radius: 6px;
   display: flex;
@@ -2066,9 +2067,9 @@ button {
 }
 
 .featured-vingroup-partner {
-  border: 1.5px solid #FE7B00;
+  border: 1.5px solid #0284C7;
   background: linear-gradient(180deg, #FFFDFB 0%, #FFFFFF 100%);
-  box-shadow: 0 4px 16px rgba(254, 123, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.08);
 }
 
 /* Partner Card Media Box with Thumbnail */
@@ -2264,7 +2265,7 @@ button {
   width: 48px;
   height: 48px;
   border-radius: 10px;
-  background: rgba(254, 123, 0, 0.12);
+  background: rgba(2, 132, 199, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2692,7 +2693,7 @@ button {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(254, 123, 0, 0.1);
+  background: rgba(2, 132, 199, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2864,7 +2865,7 @@ button {
 
 .footer-slogan-text {
   font-size: 13px;
-  color: var(--tg-gold);
+  color: var(--tg-accent);
   margin-bottom: 18px;
 }
 
@@ -2959,18 +2960,18 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, var(--tg-accent), #d96900);
+  background: linear-gradient(135deg, var(--tg-accent), #0B2240);
   color: #FFFFFF;
   padding: 12px 18px;
   border-radius: 30px;
   font-size: 13px;
   font-weight: 800;
-  box-shadow: 0 4px 15px rgba(254, 123, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
 }
 
 .tg-floating-profile-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(254, 123, 0, 0.6);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
 }
 
 .tg-scroll-top-btn {
@@ -3065,7 +3066,7 @@ button {
   font-size: 12px;
   font-weight: 700;
   color: var(--tg-accent);
-  background: rgba(254, 123, 0, 0.2);
+  background: rgba(2, 132, 199, 0.2);
   padding: 3px 10px;
   border-radius: 4px;
 }
@@ -3109,7 +3110,7 @@ button {
 }
 
 .project-scope-box {
-  background: #FFFBEB;
+  background: #EFF6FF;
   border: 1px solid #FDE68A;
   border-radius: 8px;
   padding: 18px;
@@ -3128,7 +3129,7 @@ button {
 
 .scope-desc {
   font-size: 14px;
-  color: #78350F;
+  color: #1E40AF;
   line-height: 1.5;
 }
 
@@ -3208,7 +3209,7 @@ button {
   width: 38px;
   height: 38px;
   border-radius: 8px;
-  background: rgba(254, 123, 0, 0.12);
+  background: rgba(2, 132, 199, 0.12);
   color: var(--tg-accent);
   display: flex;
   align-items: center;
@@ -3287,7 +3288,7 @@ button {
 }
 
 .eprofile-tab-btn.eprofile-tab-pdf {
-  border-color: rgba(254, 123, 0, 0.4);
+  border-color: rgba(2, 132, 199, 0.4);
   color: var(--tg-accent);
 }
 
@@ -3381,7 +3382,7 @@ button {
 
 /* Letter Box */
 .eprofile-letter-box {
-  background: #FFFBEB;
+  background: #EFF6FF;
   border-left: 4px solid var(--tg-accent);
   padding: 14px 18px;
   border-radius: 0 8px 8px 0;
@@ -3390,7 +3391,7 @@ button {
 
 .eprofile-letter-quote .lead-text {
   font-size: 13.5px;
-  color: #78350F;
+  color: #1E40AF;
   line-height: 1.6;
   font-style: italic;
   margin: 0;
@@ -3403,7 +3404,7 @@ button {
 }
 
 .eprofile-letter-signature .sig-role {
-  color: #92400E;
+  color: #1E3A5F;
   margin-right: 6px;
 }
 
@@ -3587,7 +3588,7 @@ button {
 }
 
 .personnel-card.highlight {
-  background: #FFFBEB;
+  background: #EFF6FF;
   border-color: #FDE68A;
 }
 
@@ -3723,7 +3724,7 @@ button {
   font-size: 11px;
   font-weight: 700;
   color: var(--tg-accent);
-  background: rgba(254, 123, 0, 0.1);
+  background: rgba(2, 132, 199, 0.1);
   padding: 2px 8px;
   border-radius: 4px;
   white-space: nowrap;
@@ -3801,10 +3802,10 @@ button {
   align-items: center;
   justify-content: space-between;
   padding: 10px 24px;
-  background: #FEF3C7;
+  background: #DBEAFE;
   border-bottom: 1px solid #FDE68A;
   font-size: 12.5px;
-  color: #92400E;
+  color: #1E3A5F;
 }
 
 .eprofile-pdf-iframe {
@@ -3944,7 +3945,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(254, 123, 0, 0.12);
+  background: rgba(2, 132, 199, 0.12);
   color: var(--tg-accent);
   padding: 5px 12px;
   border-radius: 20px;
@@ -4141,12 +4142,12 @@ button {
 
 .article-content-body blockquote {
   border-left: 4px solid var(--tg-accent);
-  background: #FFFBEB;
+  background: #EFF6FF;
   padding: 14px 20px;
   margin: 20px 0;
   border-radius: 0 6px 6px 0;
   font-style: italic;
-  color: #92400E;
+  color: #1E3A5F;
 }
 
 .article-content-body ul,
@@ -4361,7 +4362,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(254, 123, 0, 0.12);
+  background: rgba(2, 132, 199, 0.12);
   color: var(--tg-accent);
   padding: 5px 14px;
   border-radius: 20px;
@@ -4642,7 +4643,7 @@ button {
   align-items: center;
   justify-content: center;
   margin: 0 auto 14px;
-  box-shadow: 0 4px 10px rgba(254, 123, 0, 0.15);
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.15);
 }
 
 .login-header h2 {
@@ -5361,7 +5362,7 @@ button {
 }
 
 .role-badge.admin {
-  background: #FEF3C7;
+  background: #DBEAFE;
   color: #B45309;
 }
 
@@ -5445,7 +5446,7 @@ button {
 }
 
 .contact-status-tag.contacted {
-  background: #FEF3C7;
+  background: #DBEAFE;
   color: #B45309;
   border: 1px solid #FDE68A;
 }
@@ -5608,7 +5609,7 @@ button {
 }
 
 .security-notice-box {
-  background: #FFFBEB;
+  background: #EFF6FF;
   border: 1px solid #FDE68A;
   border-radius: 6px;
   padding: 12px 16px;
@@ -5616,7 +5617,7 @@ button {
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: #92400E;
+  color: #1E3A5F;
 }
 
 /* Admin Modals */
@@ -5769,7 +5770,7 @@ button {
   }
 
   /* General Grid Layouts */
-  .tg-hero-title { font-size: 28px; }
+  .tg-hero-title { font-size: 20px; }
   .tg-hero-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .tg-overview-grid { grid-template-columns: 1fr; }
   .tg-services-tab-bar { grid-template-columns: repeat(2, 1fr); }
@@ -5882,7 +5883,7 @@ button {
   }
 
   .tg-hero-title {
-    font-size: 24px;
+    font-size: 16px;
     line-height: 1.3;
     margin-bottom: 12px;
   }
@@ -6312,7 +6313,7 @@ button {
   }
 
   .tg-hero-title {
-    font-size: 21px;
+    font-size: 14px;
     line-height: 1.3;
   }
 
@@ -6552,7 +6553,7 @@ button {
   .tg-floating-profile-btn {
     padding: 9px 13px;
     font-size: 12px;
-    box-shadow: 0 4px 14px rgba(254, 123, 0, 0.4);
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
   }
 
   .tg-scroll-top-btn {
@@ -6631,7 +6632,7 @@ button {
   }
 
   .tg-hero-title {
-    font-size: 19px;
+    font-size: 12px;
   }
 
   .tg-partner-stats-strip {
@@ -6711,7 +6712,7 @@ button {
   bottom: 12px;
   right: 12px;
   background: rgba(11, 34, 64, 0.85);
-  color: #FE7B00;
+  color: #0284C7;
   font-size: 10.5px;
   font-weight: 700;
   padding: 3px 8px;
@@ -6720,7 +6721,7 @@ button {
   align-items: center;
   gap: 4px;
   backdrop-filter: blur(4px);
-  border: 1px solid rgba(254, 123, 0, 0.3);
+  border: 1px solid rgba(2, 132, 199, 0.3);
   z-index: 2;
 }
 
@@ -7062,7 +7063,7 @@ button {
 /* VinGroup Special Trust Crest Banner */
 .tg-vingroup-crest-banner {
   background: linear-gradient(135deg, #0B2240 0%, #163660 60%, #1E467D 100%);
-  border: 1px solid rgba(254, 123, 0, 0.4);
+  border: 1px solid rgba(2, 132, 199, 0.4);
   border-radius: 14px;
   padding: 22px 28px;
   margin: 32px auto 0;
@@ -7091,19 +7092,19 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(254, 123, 0, 0.15);
-  border: 1.5px solid #FE7B00;
+  background: rgba(2, 132, 199, 0.15);
+  border: 1.5px solid #0284C7;
   border-radius: 12px;
   padding: 10px 14px;
   min-width: 100px;
-  box-shadow: 0 0 15px rgba(254, 123, 0, 0.2);
+  box-shadow: 0 0 15px rgba(2, 132, 199, 0.2);
 }
 
 .crest-emblem-text {
   font-size: 9.5px;
   font-weight: 800;
   letter-spacing: 0.8px;
-  color: #FE7B00;
+  color: #0284C7;
   margin-top: 4px;
 }
 
@@ -7169,7 +7170,7 @@ button {
   width: 54px;
   height: 54px;
   margin: 0 auto 12px;
-  background: rgba(254, 123, 0, 0.1);
+  background: rgba(2, 132, 199, 0.1);
   color: var(--tg-accent);
   border-radius: 12px;
   display: flex;
@@ -7359,9 +7360,9 @@ button {
 }
 
 .tg-corp-project-card.is-vingroup {
-  border: 1.5px solid #FE7B00;
+  border: 1.5px solid #0284C7;
   background: linear-gradient(180deg, #FFFDFB 0%, #FFFFFF 100%);
-  box-shadow: 0 4px 16px rgba(254, 123, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.08);
 }
 
 .project-card-media {
@@ -7668,8 +7669,8 @@ button {
 
 .tg-comparison-table th.highlight-col {
   background: #0B2240;
-  color: #FE7B00;
-  border-bottom: 2px solid #FE7B00;
+  color: #0284C7;
+  border-bottom: 2px solid #0284C7;
 }
 
 .tg-comparison-table td {
@@ -7718,7 +7719,7 @@ button {
 .step-card:hover {
   transform: translateY(-3px);
   border-color: var(--tg-accent);
-  box-shadow: 0 6px 15px rgba(254, 123, 0, 0.1);
+  box-shadow: 0 6px 15px rgba(2, 132, 199, 0.1);
 }
 
 .step-number {
@@ -7834,8 +7835,8 @@ button {
 .cta-badge {
   display: inline-block;
   padding: 4px 12px;
-  background: rgba(254, 123, 0, 0.2);
-  color: #FE7B00;
+  background: rgba(2, 132, 199, 0.2);
+  color: #0284C7;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
@@ -7866,7 +7867,7 @@ button {
 }
 
 .cta-hotline-info strong {
-  color: #FE7B00;
+  color: #0284C7;
   font-size: 18px;
 }
 

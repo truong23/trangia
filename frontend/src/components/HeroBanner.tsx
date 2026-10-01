@@ -21,10 +21,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const company = settings?.company;
   const companyName = company?.name || TRAN_GIA_INFO.companyName;
 
-  const heroTitle = isEn
-    ? 'Gypsum Ceiling Contractor For Major Corporations'
-    : (settings?.heroBanner?.title || 'Thi Công Trần Thạch Cao Cho Các Tập Đoàn Lớn');
-
   const heroSubtitle = !isEn && settings?.heroBanner?.subtitle
     ? settings.heroBanner.subtitle
     : null;
@@ -63,9 +59,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
     <section className="tg-hero-section" id="home">
       <div className="tg-hero-bg-overlay"></div>
       <div className="container tg-hero-content">
-        {/* Main Title - SEO H1 */}
+        {/* Company Name - SEO H1 */}
         <h1 className="tg-hero-title">
-          {heroTitle}
+          {companyName}
         </h1>
 
         {/* Subtitle - SEO Rich */}
@@ -91,9 +87,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               cấp trên toàn quốc.
             </>
           )}
-        </p>
-        <p className="tg-hero-company-name">
-          {companyName}
         </p>
 
         {/* CTA Buttons */}
