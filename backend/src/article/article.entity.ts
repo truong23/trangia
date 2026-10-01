@@ -82,17 +82,6 @@ export class Article {
   @Column({ nullable: true })
   authorId: string;
 
-  @Column({ default: 'vi' })
-  lang: string;
-
-  @Column({ type: 'text', nullable: true })
-  titleEn: string;
-
-  @Column({ type: 'text', nullable: true })
-  summaryEn: string;
-
-  @Column({ type: 'text', nullable: true })
-  contentEn: string;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   publishedAt: Date;
