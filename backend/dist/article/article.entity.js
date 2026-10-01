@@ -104,22 +104,6 @@ __decorate([
     __metadata("design:type", String)
 ], Article.prototype, "authorId", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 'vi' }),
-    __metadata("design:type", String)
-], Article.prototype, "lang", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
-    __metadata("design:type", String)
-], Article.prototype, "titleEn", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
-    __metadata("design:type", String)
-], Article.prototype, "summaryEn", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
-    __metadata("design:type", String)
-], Article.prototype, "contentEn", void 0);
-__decorate([
     (0, typeorm_1.Column)({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' }),
     __metadata("design:type", Date)
 ], Article.prototype, "publishedAt", void 0);

@@ -18,7 +18,20 @@ const settings_entity_1 = require("../settings/settings.entity");
 const contact_entity_1 = require("../contact/contact.entity");
 const partner_entity_1 = require("../partner/partner.entity");
 const project_entity_1 = require("../project/project.entity");
+const job_entity_1 = require("../job/entities/job.entity");
+const application_entity_1 = require("../application/entities/application.entity");
 const seed_service_1 = require("./seed.service");
+const allEntities = [
+    user_entity_1.User,
+    category_entity_1.Category,
+    article_entity_1.Article,
+    settings_entity_1.Setting,
+    contact_entity_1.Contact,
+    partner_entity_1.Partner,
+    project_entity_1.Project,
+    job_entity_1.JobPosting,
+    application_entity_1.JobApplication,
+];
 let DatabaseModule = class DatabaseModule {
 };
 exports.DatabaseModule = DatabaseModule;
@@ -30,7 +43,7 @@ exports.DatabaseModule = DatabaseModule = __decorate([
                 inject: [config_1.ConfigService],
                 useFactory: (configService) => {
                     const dbType = configService.get('DB_TYPE', 'sqlite');
-                    const entities = [user_entity_1.User, category_entity_1.Category, article_entity_1.Article, settings_entity_1.Setting, contact_entity_1.Contact, partner_entity_1.Partner, project_entity_1.Project];
+                    const entities = allEntities;
                     const migrations = [path.join(__dirname, 'migrations/*{.ts,.js}')];
                     if (dbType === 'mysql') {
                         return {
@@ -57,7 +70,7 @@ exports.DatabaseModule = DatabaseModule = __decorate([
                     };
                 },
             }),
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, category_entity_1.Category, article_entity_1.Article, settings_entity_1.Setting, contact_entity_1.Contact, partner_entity_1.Partner, project_entity_1.Project]),
+            typeorm_1.TypeOrmModule.forFeature(allEntities),
         ],
         providers: [seed_service_1.SeedService],
         exports: [typeorm_1.TypeOrmModule, seed_service_1.SeedService],

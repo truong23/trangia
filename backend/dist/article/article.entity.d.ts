@@ -23,10 +23,6 @@ export declare class Article {
     categoryId: string;
     author: User;
     authorId: string;
-    lang: string;
-    titleEn: string;
-    summaryEn: string;
-    contentEn: string;
     publishedAt: Date;
     createdAt: Date;
     updatedAt: Date;
