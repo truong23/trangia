@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Building2, MapPin, Eye, Filter, Search, ArrowRight, ExternalLink } from 'lucide-react';
 import { Project } from '../types';
+import { projectService } from '../services/project/project.service';
 import { PROJECTS_DATA } from '../services/tranGiaData';
 
 interface ProjectsSectionProps {
@@ -12,9 +13,28 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   onSelectProject,
   onNavigateSection,
 }) => {
+  const [projects, setProjects] = useState<Project[]>(PROJECTS_DATA);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchProjects = async () => {
+      try {
+        const data = await projectService.getProjects();
+        if (isMounted && data && data.length > 0) {
+          setProjects(data);
+        }
+      } catch (err) {
+        console.error('Failed to load projects from DB', err);
+      }
+    };
+    fetchProjects();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const categories = [
     { id: 'all', label: 'Tất cả loại hình' },
@@ -32,7 +52,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   ];
 
   const filteredProjects = useMemo(() => {
-    return PROJECTS_DATA.filter((p) => {
+    return projects.filter((p) => {
       const matchCat = selectedCategory === 'all' || p.category === selectedCategory;
       const matchReg = selectedRegion === 'all' || p.region === selectedRegion;
       const matchSearch =
@@ -43,7 +63,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
         p.scope.toLowerCase().includes(searchQuery.toLowerCase());
       return matchCat && matchReg && matchSearch;
     });
-  }, [selectedCategory, selectedRegion, searchQuery]);
+  }, [projects, selectedCategory, selectedRegion, searchQuery]);
 
   return (
     <section className="tg-section tg-projects-section" id="projects">
@@ -155,11 +175,6 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   <span className="tg-project-cat-tag">
                     {project.categoryLabel || 'Dự án'}
                   </span>
-                  {project.pageInPdf && (
-                    <span className="tg-project-pdf-page">
-                      Trang {project.pageInPdf} PDF
-                    </span>
-                  )}
                 </div>
 
                 {/* Content */}

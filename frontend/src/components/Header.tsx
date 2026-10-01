@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Download, Search, Menu, X, ChevronDown, Shield, FileText, Globe } from 'lucide-react';
+import { Phone, Mail, MapPin, Menu, X, ChevronDown, Shield, FileText, Globe } from 'lucide-react';
 import { SiteSettings } from '../types';
 import { TRAN_GIA_INFO } from '../services/tranGiaData';
 import { Language, translations } from '../services/i18n';
 
 interface HeaderProps {
-  onSearch: (query: string) => void;
+  onSearch?: (query: string) => void;
   settings?: SiteSettings;
   activeSection: string;
   onNavigateSection: (sectionId: string) => void;
@@ -15,7 +15,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  onSearch,
   settings,
   activeSection,
   onNavigateSection,
@@ -24,8 +23,16 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleLang,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showSearchBox, setShowSearchBox] = useState(false);
-  const [headerSearch, setHeaderSearch] = useState('');
+  const [expandedMobileItems, setExpandedMobileItems] = useState<{ [key: string]: boolean }>({
+    services: false,
+    capacity: false,
+    about: false,
+  });
+
+  const toggleMobileExpand = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedMobileItems((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const t = translations[currentLang];
   const company = settings?.company;
@@ -72,14 +79,6 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'contact', label: t.nav.contact },
   ];
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (headerSearch.trim()) {
-      onSearch(headerSearch.trim());
-      setShowSearchBox(false);
-      onNavigateSection('news');
-    }
-  };
 
   const handleLinkClick = (id: string) => {
     onNavigateSection(id);
@@ -99,11 +98,11 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="container tg-topbar-inner">
           <div className="tg-topbar-left">
             <div className="tg-topbar-item">
-              <MapPin size={13} className="text-amber" />
+              <MapPin size={13} color="#00A3E0" />
               <span>{address}</span>
             </div>
             <div className="tg-topbar-item hide-sm">
-              <Mail size={13} className="text-amber" />
+              <Mail size={13} color="#00A3E0" />
               <a href={`mailto:${email}`}>{email}</a>
             </div>
           </div>
@@ -111,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="tg-topbar-right">
             {/* Language Switcher Button in Topbar */}
             <div className="tg-lang-switcher">
-              <Globe size={13} className="text-amber" />
+              <Globe size={13} color="#00A3E0" />
               <button
                 type="button"
                 onClick={() => handleSwitchLanguage('vi')}
@@ -144,7 +143,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span>{t.header.profilePdf}</span>
             </button>
             <a href="/admin" className="tg-admin-link" title="Đăng nhập Trang Quản Trị CMS">
-              <Shield size={13} />
+              <Shield size={11} />
               <span>{t.header.adminCms}</span>
             </a>
           </div>
@@ -154,16 +153,13 @@ export const Header: React.FC<HeaderProps> = ({
       {/* 2. Main Navigation Bar */}
       <div className="tg-navbar-container">
         <div className="container tg-navbar-inner">
-          {/* Logo with Brand Name */}
-          <div className="tg-logo-brand" onClick={() => handleLinkClick('home')} style={{ cursor: 'pointer' }}>
-            <div className="tg-logo-symbol">
-              <span className="logo-t">T</span>
-              <span className="logo-g">G</span>
-            </div>
-            <div className="tg-logo-text">
-              <span className="tg-brand-name">TRẦN GIA</span>
-              <span className="tg-brand-tagline">CONSTRUCTION & PROFILE</span>
-            </div>
+          {/* Logo Brand */}
+          <div className="tg-logo-brand" onClick={() => handleLinkClick('home')} style={{ cursor: 'pointer' }} title="TRẦN GIA">
+            <img
+              src="/images/logo-trangia.png"
+              alt="TRẦN GIA"
+              className="tg-header-logo-img"
+            />
           </div>
 
           {/* Desktop Navigation Menu */}
@@ -216,44 +212,8 @@ export const Header: React.FC<HeaderProps> = ({
             </ul>
           </nav>
 
-          {/* Right Action Tools: Search, Language Switcher, Download Profile Button & Mobile Menu Toggle */}
+          {/* Mobile Menu Toggle */}
           <div className="tg-header-actions">
-            {/* Search Box Trigger */}
-            <div className="tg-search-wrapper">
-              <button
-                className="tg-icon-btn"
-                onClick={() => setShowSearchBox(!showSearchBox)}
-                aria-label="Tìm kiếm tin tức và dự án"
-              >
-                <Search size={18} />
-              </button>
-
-              {showSearchBox && (
-                <form onSubmit={handleSearchSubmit} className="tg-search-dropdown-form">
-                  <input
-                    type="text"
-                    placeholder={t.header.searchPlaceholder}
-                    value={headerSearch}
-                    onChange={(e) => setHeaderSearch(e.target.value)}
-                    autoFocus
-                  />
-                  <button type="submit">
-                    <Search size={16} />
-                  </button>
-                </form>
-              )}
-            </div>
-
-            {/* Download / View PDF Profile CTA */}
-            <button
-              className="tg-cta-button hide-md"
-              onClick={onOpenProfileModal}
-            >
-              <Download size={15} />
-              <span>{t.header.downloadProfile}</span>
-            </button>
-
-            {/* Mobile Hamburger Toggle */}
             <button
               className="tg-mobile-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -267,60 +227,111 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="tg-mobile-drawer">
-          <div className="tg-mobile-drawer-header">
-            <span className="tg-brand-name">TRẦN GIA PROFILE</span>
-            <button onClick={() => setMobileMenuOpen(false)} aria-label="Đóng">
-              <X size={20} />
-            </button>
-          </div>
+        <>
+          {/* Backdrop overlay */}
+          <div
+            className="tg-mobile-backdrop"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
 
-          <div className="mobile-lang-bar">
-            <button
-              type="button"
-              onClick={() => handleSwitchLanguage('vi')}
-              className={`mobile-lang-btn ${currentLang === 'vi' ? 'active' : ''}`}
-            >
-              🇻🇳 Tiếng Việt
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSwitchLanguage('en')}
-              className={`mobile-lang-btn ${currentLang === 'en' ? 'active' : ''}`}
-            >
-              🇬🇧 English
-            </button>
-          </div>
+          <div className="tg-mobile-drawer">
+            <div className="tg-mobile-drawer-header">
+              <img
+                src="/images/logo-trangia.png"
+                alt="TRẦN GIA"
+                style={{ height: '38px', width: 'auto', objectFit: 'contain' }}
+              />
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Đóng menu"
+                className="tg-mobile-drawer-close"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
-          <ul className="tg-mobile-menu">
-            {navLinks.map((item) => (
-              <li key={item.id}>
-                <button
-                  className={`tg-mobile-link ${activeSection === item.id ? 'active' : ''}`}
-                  onClick={() => handleLinkClick(item.id)}
-                >
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div className="tg-mobile-drawer-footer">
-            <button
-              className="tg-cta-button w-full"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenProfileModal();
-              }}
-            >
-              <FileText size={16} />
-              <span>{t.header.profilePdf} (PDF)</span>
-            </button>
-            <div className="tg-mobile-contact">
-              <p>{t.header.hotline}: <strong>{hotline}</strong></p>
-              <p>Email: {email}</p>
+            <div className="mobile-lang-bar">
+              <button
+                type="button"
+                onClick={() => handleSwitchLanguage('vi')}
+                className={`mobile-lang-btn ${currentLang === 'vi' ? 'active' : ''}`}
+              >
+                🇻🇳 Tiếng Việt
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSwitchLanguage('en')}
+                className={`mobile-lang-btn ${currentLang === 'en' ? 'active' : ''}`}
+              >
+                🇬🇧 English
+              </button>
+            </div>
+
+            <ul className="tg-mobile-menu">
+              {navLinks.map((item) => {
+                const isActive = activeSection === item.id;
+                const isExpanded = !!expandedMobileItems[item.id];
+                return (
+                  <li key={item.id} className="tg-mobile-item">
+                    <div className="tg-mobile-link-row">
+                      <button
+                        className={`tg-mobile-link ${isActive ? 'active' : ''}`}
+                        onClick={() => handleLinkClick(item.id)}
+                      >
+                        {item.label}
+                      </button>
+                      {item.children && (
+                        <button
+                          type="button"
+                          className={`tg-mobile-expand-btn ${isExpanded ? 'expanded' : ''}`}
+                          onClick={(e) => toggleMobileExpand(item.id, e)}
+                          aria-label={`Mở rộng ${item.label}`}
+                        >
+                          <ChevronDown size={18} />
+                        </button>
+                      )}
+                    </div>
+                    {item.children && isExpanded && (
+                      <ul className="tg-mobile-sublist">
+                        {item.children.map((child) => (
+                          <li key={child.id}>
+                            <button
+                              className={`tg-mobile-sublink ${activeSection === child.id ? 'active' : ''}`}
+                              onClick={() => handleLinkClick(child.id)}
+                            >
+                              {child.label}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+
+            <div className="tg-mobile-drawer-footer">
+              <button
+                className="tg-cta-button w-full"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenProfileModal();
+                }}
+              >
+                <FileText size={16} />
+                <span>{t.header.profilePdf} (PDF)</span>
+              </button>
+              <div className="tg-mobile-contact">
+                <a href={`tel:${hotline.replace(/\D/g, '')}`} className="mobile-hotline-call">
+                  <Phone size={14} />
+                  <span>{t.header.hotline}: <strong>{hotline}</strong></span>
+                </a>
+                <p>Email: {email}</p>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );

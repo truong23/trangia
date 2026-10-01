@@ -4,6 +4,9 @@ import { authService } from './auth/auth.service';
 import { settingsService } from './settings/settings.service';
 import { userService } from './user/user.service';
 import { uploadService } from './upload/upload.service';
+import { contactService } from './contact/contact.service';
+import { partnerService } from './partner/partner.service';
+import { projectService } from './project/project.service';
 
 export * from './article/article.service';
 export * from './category/category.service';
@@ -11,6 +14,9 @@ export * from './auth/auth.service';
 export * from './settings/settings.service';
 export * from './user/user.service';
 export * from './upload/upload.service';
+export * from './contact/contact.service';
+export * from './partner/partner.service';
+export * from './project/project.service';
 
 // Hợp nhất export api đối tượng tiện lợi cho các component
 export const api = {
@@ -51,7 +57,28 @@ export const api = {
   createUser: userService.createUser.bind(userService),
   updateUser: userService.updateUser.bind(userService),
   deleteUser: userService.deleteUser.bind(userService),
+
+  // Contact & Quotations Service
+  getContacts: contactService.getContacts.bind(contactService),
+  submitContact: contactService.submitContact.bind(contactService),
+  updateContact: contactService.updateContact.bind(contactService),
+  deleteContact: contactService.deleteContact.bind(contactService),
+
+  // Partner & Clients Service
+  getPartners: partnerService.getPartners.bind(partnerService),
+  getAllPartnersAdmin: partnerService.getAllAdmin.bind(partnerService),
+  createPartner: partnerService.createPartner.bind(partnerService),
+  updatePartner: partnerService.updatePartner.bind(partnerService),
+  deletePartner: partnerService.deletePartner.bind(partnerService),
+
+  // Project Service
+  getProjects: projectService.getProjects.bind(projectService),
+  getProject: projectService.getProject.bind(projectService),
+  createProject: projectService.createProject.bind(projectService),
+  updateProject: projectService.updateProject.bind(projectService),
+  deleteProject: projectService.deleteProject.bind(projectService),
 };
 
 export default api;
+
 

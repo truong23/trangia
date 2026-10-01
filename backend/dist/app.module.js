@@ -16,6 +16,9 @@ const category_module_1 = require("./category/category.module");
 const article_module_1 = require("./article/article.module");
 const settings_module_1 = require("./settings/settings.module");
 const upload_module_1 = require("./upload/upload.module");
+const contact_module_1 = require("./contact/contact.module");
+const partner_module_1 = require("./partner/partner.module");
+const project_module_1 = require("./project/project.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -33,6 +36,9 @@ exports.AppModule = AppModule = __decorate([
             article_module_1.ArticleModule,
             settings_module_1.SettingsModule,
             upload_module_1.UploadModule,
+            contact_module_1.ContactModule,
+            partner_module_1.PartnerModule,
+            project_module_1.ProjectModule,
         ],
     })
 ], AppModule);

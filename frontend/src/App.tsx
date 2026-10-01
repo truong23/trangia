@@ -300,7 +300,10 @@ export const App: React.FC = () => {
       />
 
       {/* 3. Giới thiệu & Triết lý: Thư ngỏ, Tầm nhìn, Sứ mệnh, 6 Giá trị cốt lõi, Nguyên tắc hoạt động */}
-      <AboutSection onOpenProfileModal={() => setIsProfileModalOpen(true)} />
+      <AboutSection
+        onOpenProfileModal={() => setIsProfileModalOpen(true)}
+        settings={siteSettings}
+      />
 
       {/* 4. Lĩnh vực hoạt động: Trần thạch cao ISO & kim loại, Vách ngăn chống cháy, Sơn bả & GFRC, Fit-out/M&E */}
       <ServicesSection onNavigateSection={navigateSection} />
@@ -417,7 +420,7 @@ export const App: React.FC = () => {
       </section>
 
       {/* 9. Liên hệ & Yêu cầu báo giá thi công */}
-      <ContactSection />
+      <ContactSection settings={siteSettings} />
 
       {/* 10. Footer Trần Gia */}
       <Footer

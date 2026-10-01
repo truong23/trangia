@@ -20,12 +20,14 @@ const typeorm_2 = require("typeorm");
 const user_entity_1 = require("../user/user.entity");
 const category_entity_1 = require("../category/category.entity");
 const article_entity_1 = require("../article/article.entity");
+const partner_entity_1 = require("../partner/partner.entity");
 const bcrypt = require("bcryptjs");
 let SeedService = SeedService_1 = class SeedService {
-    constructor(userRepository, categoryRepository, articleRepository) {
+    constructor(userRepository, categoryRepository, articleRepository, partnerRepository) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.articleRepository = articleRepository;
+        this.partnerRepository = partnerRepository;
         this.logger = new common_1.Logger(SeedService_1.name);
     }
     async onApplicationBootstrap() {
@@ -313,6 +315,148 @@ let SeedService = SeedService_1 = class SeedService {
             }
         }
         this.logger.log('✅ Đã nạp thành công các bài viết thật (Đa ngôn ngữ VI/EN) của Trần Gia vào Database');
+        const partnersCount = await this.partnerRepository.count();
+        if (partnersCount === 0) {
+            const defaultPartners = [
+                {
+                    name: 'TẬP ĐOÀN VINGROUP',
+                    role: 'Tập đoàn BĐS, Công nghiệp & Dịch vụ số 1 Việt Nam',
+                    category: 'developer',
+                    badge: 'Chủ đầu tư Chiến lược',
+                    brandColor: '#B91C1C',
+                    thumbnail: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Vinhomes Grand Park, Chuỗi Showroom VinFast QS 3, Vincom Dĩ An, Khách sạn 5 sao Nam Hội An',
+                    description: 'Trần Gia vinh dự được lựa chọn thi công trần vách thạch cao và hoàn thiện cho nhiều dự án trọng điểm trong hệ sinh thái VinGroup.',
+                    sortOrder: 1,
+                    isActive: true,
+                },
+                {
+                    name: 'MASTERISE HOMES',
+                    role: 'Nhà phát triển BĐS Hàng hiệu & Hạng sang Quốc tế',
+                    category: 'developer',
+                    badge: 'Chủ đầu tư Hạng sang',
+                    brandColor: '#B45309',
+                    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Masteri Hưng Yên (Ocean Park 2/3)',
+                    description: 'Đối tác thi công trần vách thạch cao sảnh đón và căn hộ mẫu với tiêu chuẩn hoàn thiện khắt khe chuẩn Masterise quốc tế.',
+                    sortOrder: 2,
+                    isActive: true,
+                },
+                {
+                    name: 'TẬP ĐOÀN XÂY DỰNG DELTA',
+                    role: 'Tổng thầu Xây dựng Dân dụng & Công nghiệp Top đầu Việt Nam',
+                    category: 'contractor',
+                    badge: 'Tổng thầu Chiến lược',
+                    brandColor: '#0369A1',
+                    thumbnail: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
+                    projects: 'TTTM Phức hợp Hải Dương, Sentosa Sky Park Hải Phòng',
+                    description: 'Đồng hành cùng Tổng thầu DELTA qua hàng loạt gói thầu thi công trần thạch cao, sơn bả hoàn thiện các tòa cao ốc quy mô lớn.',
+                    sortOrder: 3,
+                    isActive: true,
+                },
+                {
+                    name: 'VIETTEL CONSTRUCTION',
+                    role: 'Tổng công ty Cổ phần Công trình Viettel (Viettel Group)',
+                    category: 'contractor',
+                    badge: 'Tổng thầu Quốc gia',
+                    brandColor: '#DC2626',
+                    thumbnail: 'https://images.unsplash.com/photo-1541888946425-d0fbb186c5f3?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Khách sạn 5 sao Đồng Gia Hạ Long',
+                    description: 'Đối tác chiến lược cùng Tổng công ty Công trình Viettel thi công hệ trần kim loại kỹ thuật cao cho khách sạn 5 sao tại Hạ Long.',
+                    sortOrder: 4,
+                    isActive: true,
+                },
+                {
+                    name: 'CÔNG TY CỔ PHẦN XÂY DỰNG CDC',
+                    role: 'Công ty Cổ phần Xây dựng CDC',
+                    category: 'contractor',
+                    badge: 'Tổng thầu Uy tín',
+                    brandColor: '#4338CA',
+                    thumbnail: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Chung cư cao cấp A&T Sky Garden',
+                    description: 'Tổng thầu xây dựng dự án A&T Sky Garden, Trần Gia trực tiếp đảm nhận toàn bộ gói thầu trần thạch cao khối căn hộ cao cấp.',
+                    sortOrder: 5,
+                    isActive: true,
+                },
+                {
+                    name: 'MBLAND HOLDINGS',
+                    role: 'Tổng công ty Cổ phần MBLAND (MB Group)',
+                    category: 'developer',
+                    badge: 'Chủ đầu tư Đô thị',
+                    brandColor: '#1D4ED8',
+                    thumbnail: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80',
+                    projects: 'KĐT Nam Ngạn Đại Lộ Bắc Nam Thanh Hóa',
+                    description: 'Chủ đầu tư đại dự án KĐT Nam Ngạn, Trần Gia đảm nhiệm hạng mục bả sơn mặt ngoài và lắp dựng phào chỉ nghệ thuật GFRC.',
+                    sortOrder: 6,
+                    isActive: true,
+                },
+                {
+                    name: 'TẬP ĐOÀN CHARM GROUP',
+                    role: 'Tập đoàn Đầu tư & Phát triển BĐS Nghỉ dưỡng',
+                    category: 'developer',
+                    badge: 'Chủ đầu tư',
+                    brandColor: '#047857',
+                    thumbnail: 'https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Tòa nhà ở cao tầng Charm Group Dĩ An',
+                    description: 'Chủ đầu tư tổ hợp căn hộ biểu tượng tại Bình Dương với hệ thống trần thạch cao và vách ngăn chống cháy chất lượng cao.',
+                    sortOrder: 7,
+                    isActive: true,
+                },
+                {
+                    name: 'COGNIPLUS INTERIORS',
+                    role: 'Tổng thầu Nội thất & Fit-out Công nghiệp Quốc tế',
+                    category: 'contractor',
+                    badge: 'Tổng thầu Fit-out',
+                    brandColor: '#D97706',
+                    thumbnail: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Fit-out Nhà xưởng Jinyu Tây Ninh',
+                    description: 'Hợp tác trong các gói thầu Fit-out, vách thạch cao ngăn phòng sạch và trần tiêu âm cho các dự án nhà máy công nghiệp FDI.',
+                    sortOrder: 8,
+                    isActive: true,
+                },
+                {
+                    name: 'VĨNH TƯỜNG - GYPROC (SAINT-GOBAIN)',
+                    role: 'Tập đoàn Giải pháp Trần & Vách Thạch cao Hàng đầu',
+                    category: 'manufacturer',
+                    badge: 'Nhà sản xuất Chính hãng',
+                    brandColor: '#0284C7',
+                    thumbnail: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Toàn bộ các dự án trọng điểm toàn quốc',
+                    description: 'Đối tác cung ứng vật tư khung xương, tấm thạch cao tiêu chuẩn & chống cháy với đầy đủ chứng chỉ chất lượng CO/CQ.',
+                    sortOrder: 9,
+                    isActive: true,
+                },
+                {
+                    name: 'KNAUF VIỆT NAM',
+                    role: 'Tập đoàn Vật liệu Thạch cao Tiêu chuẩn Đức (CHLB Đức)',
+                    category: 'manufacturer',
+                    badge: 'Nhà sản xuất Quốc tế',
+                    brandColor: '#0D9488',
+                    thumbnail: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Dự án tiêu chuẩn tiêu âm & chống ẩm đặc biệt',
+                    description: 'Đối tác cung cấp hệ thống tấm thạch cao kỹ thuật cao, tấm tiêu âm Danoline và giải pháp vách ngăn chịu ẩm cao cấp.',
+                    sortOrder: 10,
+                    isActive: true,
+                },
+                {
+                    name: 'JOTUN & DULUX (AKZONOBEL)',
+                    role: 'Thương hiệu Sơn & Bột bả Kiến trúc Cao cấp Thế giới',
+                    category: 'manufacturer',
+                    badge: 'Vật tư Sơn bả',
+                    brandColor: '#E11D48',
+                    thumbnail: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80',
+                    projects: 'Các khối tháp căn hộ & TTTM',
+                    description: 'Đối tác cung cấp bột bả và sơn hoàn thiện bề mặt trần vách thạch cao cao cấp cho các công trình cấp tập đoàn.',
+                    sortOrder: 11,
+                    isActive: true,
+                },
+            ];
+            for (const p of defaultPartners) {
+                const item = this.partnerRepository.create(p);
+                await this.partnerRepository.save(item);
+            }
+            this.logger.log(`✅ Đã khởi tạo thành công ${defaultPartners.length} đối tác chiến lược & khách hàng vào Database`);
+        }
     }
 };
 exports.SeedService = SeedService;
@@ -321,7 +465,9 @@ exports.SeedService = SeedService = SeedService_1 = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __param(1, (0, typeorm_1.InjectRepository)(category_entity_1.Category)),
     __param(2, (0, typeorm_1.InjectRepository)(article_entity_1.Article)),
+    __param(3, (0, typeorm_1.InjectRepository)(partner_entity_1.Partner)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository])
 ], SeedService);

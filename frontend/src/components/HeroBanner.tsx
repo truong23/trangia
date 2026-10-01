@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Download, ArrowRight, Building2, Users, Wrench, CheckCircle2 } from 'lucide-react';
+import { Download, ArrowRight, Building2, Users, Wrench, CheckCircle2 } from 'lucide-react';
 import { SiteSettings } from '../types';
 import { TRAN_GIA_INFO } from '../services/tranGiaData';
 import { Language } from '../services/i18n';
@@ -20,56 +20,59 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const isEn = currentLang === 'en';
   const company = settings?.company;
   const companyName = company?.name || TRAN_GIA_INFO.companyName;
-  const slogan = company?.slogan || TRAN_GIA_INFO.slogan;
-  const hotline = company?.hotline || TRAN_GIA_INFO.hotline;
 
-  const stats = [
-    {
-      number: '50+',
-      label: isEn ? 'Engineers & Skilled Craftsmen' : 'Cán bộ Kỹ sư & Thợ lành nghề',
-      icon: Users,
-    },
-    {
-      number: '15+',
-      label: isEn ? 'Projects for Major Corporations' : 'Dự án cho tập đoàn lớn',
-      icon: Building2,
-    },
-    {
-      number: '300+',
-      label: isEn ? 'Specialized Machinery Units' : 'Máy móc thiết bị chuyên dụng',
-      icon: Wrench,
-    },
-    {
-      number: '100%',
-      label: isEn ? 'ISO Standard & On-Time Delivery' : 'Đạt chuẩn ISO & Đúng tiến độ',
-      icon: CheckCircle2,
-    },
-  ];
+  const heroTitle = isEn
+    ? 'Gypsum Ceiling Contractor For Major Corporations'
+    : (settings?.heroBanner?.title || 'Thi Công Trần Thạch Cao Cho Các Tập Đoàn Lớn');
+
+  const heroSubtitle = !isEn && settings?.heroBanner?.subtitle
+    ? settings.heroBanner.subtitle
+    : null;
+
+  const statIcons = [Users, Building2, Wrench, CheckCircle2];
+  const stats = (settings?.heroBanner?.stats && settings.heroBanner.stats.length === 4)
+    ? settings.heroBanner.stats.map((s, idx) => ({
+        number: s.number,
+        label: s.label,
+        icon: statIcons[idx] || Users,
+      }))
+    : [
+        {
+          number: '50+',
+          label: isEn ? 'Engineers & Skilled Craftsmen' : 'Cán bộ Kỹ sư & Thợ lành nghề',
+          icon: Users,
+        },
+        {
+          number: '15+',
+          label: isEn ? 'Projects for Major Corporations' : 'Dự án cho tập đoàn lớn',
+          icon: Building2,
+        },
+        {
+          number: '300+',
+          label: isEn ? 'Specialized Machinery Units' : 'Máy móc thiết bị chuyên dụng',
+          icon: Wrench,
+        },
+        {
+          number: '100%',
+          label: isEn ? 'ISO Standard & On-Time Delivery' : 'Đạt chuẩn ISO & Đúng tiến độ',
+          icon: CheckCircle2,
+        },
+      ];
 
   return (
     <section className="tg-hero-section" id="home">
       <div className="tg-hero-bg-overlay"></div>
       <div className="container tg-hero-content">
-        {/* Slogan Pill */}
-        <div className="tg-hero-badge">
-          <ShieldCheck size={16} className="text-amber animate-pulse" />
-          <span>
-            {isEn
-              ? `SPECIALIZED GYPSUM CEILING CONTRACTOR FOR MAJOR CORPORATIONS • ${slogan.toUpperCase()}`
-              : `CHUYÊN THI CÔNG TRẦN THẠCH CAO CHO CÁC TẬP ĐOÀN LỚN • ${slogan.toUpperCase()}`}
-          </span>
-        </div>
-
         {/* Main Title - SEO H1 */}
         <h1 className="tg-hero-title">
-          {isEn
-            ? 'Gypsum Ceiling Contractor For Major Corporations'
-            : 'Thi Công Trần Thạch Cao Cho Các Tập Đoàn Lớn'}
+          {heroTitle}
         </h1>
 
         {/* Subtitle - SEO Rich */}
         <p className="tg-hero-subtitle">
-          {isEn ? (
+          {heroSubtitle ? (
+            heroSubtitle
+          ) : isEn ? (
             <>
               <strong>Tran Gia Construction</strong> – Trusted gypsum ceiling and drywall partner of{' '}
               <strong>VinGroup</strong>, <strong>Vinhomes</strong>, <strong>VinFast</strong>,{' '}

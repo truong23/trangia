@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Building2,
   ShieldCheck,
@@ -14,9 +14,13 @@ import {
   Users,
   ChevronDown,
   ChevronUp,
+  Sparkles,
+  MapPin,
+  Layers,
 } from 'lucide-react';
 import { Project } from '../types';
 import { PROJECTS_DATA, TRAN_GIA_INFO } from '../services/tranGiaData';
+import { projectService } from '../services/project/project.service';
 import { Language } from '../services/i18n';
 
 interface CorporateCeilingSectionProps {
@@ -34,14 +38,42 @@ export const CorporateCeilingSection: React.FC<CorporateCeilingSectionProps> = (
 }) => {
   const isEn = currentLang === 'en';
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [filterCategory, setFilterCategory] = useState<'all' | 'vingroup' | 'enterprise'>('all');
+  const [allProjects, setAllProjects] = useState<Project[]>(PROJECTS_DATA);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadProjects = async () => {
+      try {
+        const data = await projectService.getProjects();
+        if (isMounted && data && data.length > 0) {
+          setAllProjects(data);
+        }
+      } catch (e) {
+        console.error('Error loading projects for CorporateCeilingSection', e);
+      }
+    };
+    loadProjects();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Filter specific corporate & VinGroup projects
-  const corporateProjects = PROJECTS_DATA.filter((p) =>
-    ['vinhomes-grand-park', 'vinfast-showrooms', 'vincom-dian', 'nam-hoi-an-5star', 'masteri-hung-yen', 'sentosa-sky-park', 'dong-gia-5star-hotel'].includes(p.id)
+  const corporateProjects = allProjects.filter((p) =>
+    ['vinhomes-grand-park', 'vinfast-showrooms', 'vincom-dian', 'nam-hoi-an-5star', 'masteri-hung-yen', 'sentosa-sky-park', 'dong-gia-5star-hotel', 'viettel-office-building', 'vincom-mega-mall-ocean-park'].includes(p.id) ||
+    p.client?.includes('VINGROUP') ||
+    p.client?.includes('DELTA') ||
+    p.client?.includes('VIETTEL') ||
+    p.client?.includes('MASTERISE')
   );
 
-  const [activeProjectTab, setActiveProjectTab] = useState<string>(corporateProjects[0]?.id || 'vinhomes-grand-park');
-  const selectedProject = corporateProjects.find((p) => p.id === activeProjectTab) || corporateProjects[0];
+  const displayedProjects = corporateProjects.filter((p) => {
+    const isVingroup = p.client?.includes('VINGROUP') || p.title.includes('Vin') || p.title.includes('VIN');
+    if (filterCategory === 'vingroup') return isVingroup;
+    if (filterCategory === 'enterprise') return !isVingroup;
+    return true;
+  });
 
   const standardsComparison = isEn
     ? [
@@ -165,43 +197,74 @@ export const CorporateCeilingSection: React.FC<CorporateCeilingSectionProps> = (
               {isEn ? 'CONGLOMERATE CONTRACTOR CAPACITY' : 'NĂNG LỰC NHÀ THẦU CẤP TẬP ĐOÀN'}
             </span>
             <span className="tg-highlight-pill">
-              {isEn ? 'PARTNER OF VINGROUP • DELTA • VIETTEL' : 'ĐỐI TÁC VINGROUP • DELTA • VIETTEL'}
+              {isEn ? 'PARTNER OF VINGROUP • DELTA • VIETTEL • MASTERISE' : 'ĐỐI TÁC VINGROUP • DELTA • VIETTEL • MASTERISE'}
             </span>
           </div>
 
-          {/* Target Keyword H2 */}
           <h2 className="tg-section-title">
             {isEn
-              ? 'GYPSUM CEILING CONTRACTOR FOR MAJOR CORPORATIONS'
-              : 'THI CÔNG TRẦN THẠCH CAO CHO CÁC TẬP ĐOÀN LỚN'}
+              ? 'GYPSUM CEILING PROJECTS FOR VINGROUP & MAJOR CORPORATIONS'
+              : 'DỰ ÁN THI CÔNG TRẦN THẠCH CAO CHO VINGROUP & CÁC TẬP ĐOÀN LỚN'}
           </h2>
           <div className="tg-divider"></div>
           <p className="tg-section-desc tg-corporate-lead">
             {isEn ? (
               <>
-                <strong>Tran Gia Construction</strong> is a premier contractor specializing in{' '}
-                <strong>gypsum ceiling and drywall systems for major corporations</strong> across Vietnam. Proud to
-                partner with <strong>VinGroup</strong> (Vinhomes Grand Park, VinFast Showroom chain, Vincom),{' '}
-                <strong>DELTA Group</strong>, <strong>Viettel Construction</strong>, and{' '}
-                <strong>Masterise Homes</strong> to create landmark projects meeting international standards.
+                <strong>Tran Gia Construction</strong> is the premier contractor specializing in{' '}
+                <strong>gypsum ceiling and drywall systems for VinGroup and leading conglomerates</strong> in Vietnam.
+                Directly executing landmark projects: <strong>Vinhomes Grand Park</strong>,{' '}
+                <strong>VinFast Southern Showroom Chain</strong>, <strong>Vincom Plaza</strong>,{' '}
+                <strong>Masteri Homes</strong>, <strong>Sentosa Sky Park (Delta)</strong>, and{' '}
+                <strong>5-Star Dong Gia Hotel (Viettel)</strong>.
               </>
             ) : (
               <>
-                <strong>Trần Gia Construction</strong> khẳng định vị thế nhà thầu hàng đầu chuyên{' '}
-                <strong>thi công trần thạch cao cho các tập đoàn lớn</strong> tại Việt Nam. Tự hào đồng hành cùng{' '}
-                <strong>Tập đoàn Vingroup</strong> (Vinhomes Grand Park, chuỗi Showroom VinFast, Vincom),{' '}
-                <strong>DELTA Group</strong>, <strong>Viettel Construction</strong>,{' '}
-                <strong>Masterise Homes</strong> kiến tạo những công trình quy mô biểu tượng đạt chuẩn quốc tế.
+                <strong>Trần Gia Construction</strong> khẳng định vị thế nhà thầu chuyên sâu hàng đầu trong lĩnh vực{' '}
+                <strong>thi công trần vách thạch cao cho Tập đoàn Vingroup và các tập đoàn lớn</strong> tại Việt Nam.
+                Trực tiếp thi công các đại dự án: <strong>Vinhomes Grand Park</strong>,{' '}
+                <strong>Chuỗi Showroom VinFast QS 3</strong>, <strong>TTTM Vincom Dĩ An</strong>,{' '}
+                <strong>Masteri Hưng Yên</strong>, <strong>Sentosa Sky Park (Delta)</strong> và{' '}
+                <strong>Khách sạn 5 sao Đồng Gia (Viettel)</strong>.
               </>
             )}
           </p>
+        </div>
+
+        {/* VinGroup Special Trust Crest Banner */}
+        <div className="tg-vingroup-crest-banner">
+          <div className="crest-banner-inner">
+            <div className="crest-left">
+              <div className="crest-emblem">
+                <Sparkles size={24} className="text-amber" />
+                <span className="crest-emblem-text">VINGROUP PARTNER</span>
+              </div>
+              <div className="crest-text-block">
+                <h4 className="crest-title">
+                  {isEn
+                    ? 'Verified Turnkey Ceiling Contractor for VinGroup Ecosystem'
+                    : 'Nhà Thầu Thi Công Trần Thạch Cao Chuẩn Hóa Cho Hệ Sinh Thái Vingroup'}
+                </h4>
+                <p className="crest-sub">
+                  {isEn
+                    ? '100% acceptance compliance across residential, commercial, and high-tech automotive showroom chains.'
+                    : '100% gói thầu đạt tiêu chuẩn nghiệm thu khắt khe của Vingroup từ đô thị thông minh, TTTM đến chuỗi showroom ô tô điện VinFast.'}
+                </p>
+              </div>
+            </div>
+            <div className="crest-badges-group">
+              <span className="crest-tag">Vinhomes Grand Park</span>
+              <span className="crest-tag">Showroom VinFast QS 3</span>
+              <span className="crest-tag">Vincom Dĩ An</span>
+              <span className="crest-tag">Vinpearl Nam Hội An</span>
+            </div>
+          </div>
         </div>
 
         {/* Key Corporate Metrics */}
         <div className="tg-corporate-metrics-grid">
           <div className="tg-corp-metric-card">
             <div className="corp-metric-icon">
-              <Building2 size={28} />
+              <Building2 size={26} />
             </div>
             <div className="corp-metric-val">15+</div>
             <div className="corp-metric-name">
@@ -214,7 +277,7 @@ export const CorporateCeilingSection: React.FC<CorporateCeilingSectionProps> = (
 
           <div className="corp-metric-card">
             <div className="corp-metric-icon">
-              <Users size={28} />
+              <Users size={26} />
             </div>
             <div className="corp-metric-val">50 - 200</div>
             <div className="corp-metric-name">
@@ -227,7 +290,7 @@ export const CorporateCeilingSection: React.FC<CorporateCeilingSectionProps> = (
 
           <div className="corp-metric-card">
             <div className="corp-metric-icon">
-              <Wrench size={28} />
+              <Wrench size={26} />
             </div>
             <div className="corp-metric-val">300+</div>
             <div className="corp-metric-name">
@@ -240,7 +303,7 @@ export const CorporateCeilingSection: React.FC<CorporateCeilingSectionProps> = (
 
           <div className="corp-metric-card">
             <div className="corp-metric-icon">
-              <ShieldCheck size={28} />
+              <ShieldCheck size={26} />
             </div>
             <div className="corp-metric-val">100%</div>
             <div className="corp-metric-name">
@@ -252,7 +315,7 @@ export const CorporateCeilingSection: React.FC<CorporateCeilingSectionProps> = (
           </div>
         </div>
 
-        {/* Featured Showcase: VinGroup & Major Corporate Projects */}
+        {/* Featured Projects Grid Showcase - Dễ nhìn, trực quan, không bị cuộn ngang */}
         <div className="tg-corp-showcase-box mt-4">
           <div className="tg-showcase-header">
             <div className="tg-showcase-title-wrap">
@@ -261,122 +324,117 @@ export const CorporateCeilingSection: React.FC<CorporateCeilingSectionProps> = (
               </span>
               <h3 className="tg-showcase-title">
                 {isEn
-                  ? 'Gypsum Ceiling Projects For VinGroup & Major Corporations'
-                  : 'Dự Án Thi Công Trần Thạch Cao Cho VinGroup & Các Tập Đoàn Lớn'}
+                  ? 'Featured Projects For VinGroup & Conglomerates'
+                  : 'Các Dự Án Tiêu Biểu Cho VinGroup & Các Tập Đoàn Lớn'}
               </h3>
             </div>
-            <div className="tg-showcase-actions">
+
+            {/* Filter Category Switches */}
+            <div className="tg-corp-filter-bar">
               <button
-                onClick={() => onNavigateSection('projects')}
-                className="tg-link-btn"
+                onClick={() => setFilterCategory('all')}
+                className={`corp-filter-btn ${filterCategory === 'all' ? 'active' : ''}`}
               >
-                <span>{isEn ? 'View all projects' : 'Xem tất cả dự án'}</span>
-                <ChevronRight size={16} />
+                <Building2 size={15} />
+                <span>{isEn ? 'All Projects' : 'Tất Cả Dự Án'} ({corporateProjects.length})</span>
+              </button>
+              <button
+                onClick={() => setFilterCategory('vingroup')}
+                className={`corp-filter-btn vingroup-btn ${filterCategory === 'vingroup' ? 'active' : ''}`}
+              >
+                <Sparkles size={15} />
+                <span>⭐ {isEn ? 'VinGroup Ecosystem' : 'Hệ Sinh Thái VinGroup'} (4)</span>
+              </button>
+              <button
+                onClick={() => setFilterCategory('enterprise')}
+                className={`corp-filter-btn ${filterCategory === 'enterprise' ? 'active' : ''}`}
+              >
+                <Layers size={15} />
+                <span>🏢 {isEn ? 'Other Conglomerates' : 'Tập Đoàn & Tổng Thầu Khác'} (3)</span>
               </button>
             </div>
           </div>
 
-          {/* Project Selector Pills */}
-          <div className="tg-corp-project-tabs">
-            {corporateProjects.map((p) => {
-              const isActive = p.id === activeProjectTab;
+          {/* Direct Project Cards Grid - Hiển thị trực tiếp dạng lưới, không cần cuộn ngang */}
+          <div className="tg-corp-projects-grid">
+            {displayedProjects.map((p) => {
               const isVingroup = p.client?.includes('VINGROUP') || p.title.includes('Vin') || p.title.includes('VIN');
               return (
-                <button
+                <div
                   key={p.id}
-                  onClick={() => setActiveProjectTab(p.id)}
-                  className={`tg-corp-tab-btn ${isActive ? 'active' : ''} ${isVingroup ? 'vingroup-pill' : ''}`}
+                  className={`tg-corp-project-card ${isVingroup ? 'is-vingroup' : ''}`}
                 >
-                  {isVingroup && <span className="vingroup-badge">VinGroup</span>}
-                  <span>{p.title.replace('Dự án ', '')}</span>
-                </button>
+                  <div className="project-card-media">
+                    <img
+                      src={p.image}
+                      alt={p.title}
+                      loading="lazy"
+                    />
+                    <div className="project-card-overlay">
+                      {isVingroup ? (
+                        <span className="badge-vingroup-tag">⭐ VINGROUP</span>
+                      ) : (
+                        <span className="badge-enterprise-tag">{p.client?.split(' ')[0] || 'TẬP ĐOÀN'}</span>
+                      )}
+                      <span className="badge-location-tag">
+                        <MapPin size={11} className="inline mr-1" />
+                        {p.location.split(',')[0]}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="project-card-content">
+                    <div className="project-card-meta">
+                      <span className="meta-category-tag">{p.categoryLabel}</span>
+                    </div>
+
+                    <h4 className="project-card-title">{p.title}</h4>
+
+                    <div className="project-card-scope">
+                      <strong>{isEn ? 'Scope:' : 'Hạng mục:'}</strong> {p.scope}
+                    </div>
+
+                    <p className="project-card-desc">
+                      {p.description}
+                    </p>
+
+                    <div className="project-card-highlights">
+                      <div className="highlight-item">
+                        <CheckCircle2 size={14} className="text-emerald-500 flex-shrink-0" />
+                        <span>Laser 3D sai số &lt; 1mm</span>
+                      </div>
+                      <div className="highlight-item">
+                        <CheckCircle2 size={14} className="text-emerald-500 flex-shrink-0" />
+                        <span>Khung xương ISO</span>
+                      </div>
+                      <div className="highlight-item">
+                        <CheckCircle2 size={14} className="text-emerald-500 flex-shrink-0" />
+                        <span>Xử lý mối nối 3 lớp</span>
+                      </div>
+                    </div>
+
+                    <div className="project-card-actions">
+                      <button
+                        onClick={() => onSelectProject(p)}
+                        className="btn-card-primary"
+                      >
+                        <span>{isEn ? 'View Details' : 'Xem Chi Tiết'}</span>
+                        <ChevronRight size={15} />
+                      </button>
+                      <button
+                        onClick={onOpenProfileModal}
+                        className="btn-card-outline"
+                        title={isEn ? 'View Profile PDF' : 'Xem Hồ sơ năng lực PDF'}
+                      >
+                        <Download size={14} />
+                        <span>{isEn ? 'View Profile PDF' : 'Xem Profile PDF'}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               );
             })}
           </div>
-
-          {/* Active Project Card */}
-          {selectedProject && (
-            <div className="tg-corp-project-display">
-              <div className="display-media-col">
-                <img
-                  src={selectedProject.image}
-                  alt={selectedProject.title}
-                  className="display-img"
-                  loading="lazy"
-                />
-                <div className="display-badge-overlay">
-                  <span className="badge-location">{selectedProject.location}</span>
-                  {selectedProject.client && (
-                    <span className="badge-client">
-                      {isEn ? `Client: ${selectedProject.client}` : `CĐT: ${selectedProject.client}`}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="display-content-col">
-                <div className="display-meta-top">
-                  <span className="meta-category">{selectedProject.categoryLabel}</span>
-                  <span className="meta-year">{selectedProject.year || '2022 - 2024'}</span>
-                  <span className="meta-pdf">
-                    {isEn ? `Page ${selectedProject.pageInPdf} in Profile PDF` : `Trang ${selectedProject.pageInPdf} trong Hồ Sơ Năng Lực`}
-                  </span>
-                </div>
-
-                <h4 className="display-title">{selectedProject.title}</h4>
-                <p className="display-scope">
-                  <strong>{isEn ? 'Scope of Work:' : 'Hạng mục thi công:'}</strong> {selectedProject.scope}
-                </p>
-
-                <p className="display-desc">
-                  {selectedProject.description}{' '}
-                  {isEn
-                    ? 'A benchmark project executed by Tran Gia delivering turnkey gypsum ceilings, fire-rated drywalls, and specialized architectural finishes under stringent specifications.'
-                    : 'Đây là một trong những công trình quy mô tiêu biểu mà Trần Gia đã đảm nhận thi công trọn gói hệ thống trần thạch cao, vách ngăn và hoàn thiện với yêu cầu khắt khe về kỹ thuật và tiến độ bàn giao.'}
-                </p>
-
-                <div className="display-tech-highlights">
-                  <div className="tech-item">
-                    <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
-                    <span>{isEn ? 'ISO-compliant high-strength framing system' : 'Hệ khung xương chịu tải cao cấp tiêu chuẩn ISO'}</span>
-                  </div>
-                  <div className="tech-item">
-                    <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
-                    <span>{isEn ? '3D laser elevation leveling with < 1mm tolerance' : 'Định vị cao độ bằng máy Laser chuyên dụng sai số < 1mm'}</span>
-                  </div>
-                  <div className="tech-item">
-                    <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
-                    <span>{isEn ? '3-layer anti-crack joint treatment with fiberglass mesh' : 'Xử lý mối nối chống rạn nứt bằng 3 lớp chuyên sâu'}</span>
-                  </div>
-                  <div className="tech-item">
-                    <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0" />
-                    <span>{isEn ? '100% occupational safety compliance & on-time delivery' : 'Đảm bảo 100% an toàn lao động và tiến độ bàn giao cho Tổng thầu'}</span>
-                  </div>
-                </div>
-
-                <div className="display-actions">
-                  <button
-                    onClick={() => onSelectProject(selectedProject)}
-                    className="tg-btn primary-solid"
-                  >
-                    <span>{isEn ? 'View Project Details' : 'Xem chi tiết dự án này'}</span>
-                    <ChevronRight size={16} />
-                  </button>
-                  <button
-                    onClick={onOpenProfileModal}
-                    className="tg-btn outline-btn"
-                  >
-                    <Download size={16} />
-                    <span>
-                      {isEn
-                        ? `View Page ${selectedProject.pageInPdf} in PDF`
-                        : `Xem trang ${selectedProject.pageInPdf} trong PDF Profile`}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* 4 Pillars of Excellence for Corporations */}

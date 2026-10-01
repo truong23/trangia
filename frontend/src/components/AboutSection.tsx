@@ -15,6 +15,7 @@ import {
   FileCheck2,
 } from 'lucide-react';
 import { CEO_LETTER, VISION_MISSION_VALUES, OPERATING_PRINCIPLES, TRAN_GIA_INFO } from '../services/tranGiaData';
+import { SiteSettings } from '../types';
 
 const iconMap: Record<string, React.ElementType> = {
   ShieldCheck,
@@ -31,9 +32,14 @@ const iconMap: Record<string, React.ElementType> = {
 
 interface AboutSectionProps {
   onOpenProfileModal: () => void;
+  settings?: SiteSettings;
 }
 
-export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenProfileModal }) => {
+export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenProfileModal, settings }) => {
+  const company = settings?.company;
+  const companyName = company?.name || TRAN_GIA_INFO.companyName;
+  const director = company?.director || CEO_LETTER.author;
+  const slogan = company?.slogan || CEO_LETTER.sloganHighlight;
   return (
     <section className="tg-section tg-about-section" id="about">
       <div className="container">
@@ -66,12 +72,12 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenProfileModal }
             <div className="tg-letter-footer">
               <div className="tg-letter-slogan-box">
                 <span className="slogan-label">Phương châm hành động:</span>
-                <span className="slogan-text">"{CEO_LETTER.sloganHighlight}"</span>
+                <span className="slogan-text">"{slogan}"</span>
               </div>
               <div className="tg-letter-signature">
                 <p className="sign-title">Giám đốc công ty</p>
-                <div className="sign-name">{CEO_LETTER.author}</div>
-                <p className="sign-company">{TRAN_GIA_INFO.companyName}</p>
+                <div className="sign-name">{director}</div>
+                <p className="sign-company">{companyName}</p>
               </div>
             </div>
           </div>

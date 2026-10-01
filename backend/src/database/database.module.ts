@@ -6,6 +6,9 @@ import { User } from '../user/user.entity';
 import { Category } from '../category/category.entity';
 import { Article } from '../article/article.entity';
 import { Setting } from '../settings/settings.entity';
+import { Contact } from '../contact/contact.entity';
+import { Partner } from '../partner/partner.entity';
+import { Project } from '../project/project.entity';
 import { SeedService } from './seed.service';
 
 @Module({
@@ -15,7 +18,7 @@ import { SeedService } from './seed.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const dbType = configService.get<string>('DB_TYPE', 'sqlite');
-        const entities = [User, Category, Article, Setting];
+        const entities = [User, Category, Article, Setting, Contact, Partner, Project];
         const migrations = [path.join(__dirname, 'migrations/*{.ts,.js}')];
 
         if (dbType === 'mysql') {
@@ -29,7 +32,7 @@ import { SeedService } from './seed.service';
             entities,
             migrations,
             migrationsRun: true,
-            synchronize: true,
+            synchronize: false,
             charset: 'utf8mb4_unicode_ci',
           };
         }
@@ -41,11 +44,11 @@ import { SeedService } from './seed.service';
           entities,
           migrations,
           migrationsRun: true,
-          synchronize: true,
+          synchronize: false,
         };
       },
     }),
-    TypeOrmModule.forFeature([User, Category, Article, Setting]),
+    TypeOrmModule.forFeature([User, Category, Article, Setting, Contact, Partner, Project]),
   ],
   providers: [SeedService],
   exports: [TypeOrmModule, SeedService],

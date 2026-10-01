@@ -1,8 +1,22 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Send, CheckCircle, Clock, ShieldCheck, User, MessageSquare } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, CheckCircle, Clock, ShieldCheck, User, MessageSquare, Loader2 } from 'lucide-react';
 import { TRAN_GIA_INFO } from '../services/tranGiaData';
+import { SiteSettings } from '../types';
+import { api } from '../services/api';
 
-export const ContactSection: React.FC = () => {
+interface ContactSectionProps {
+  settings?: SiteSettings;
+}
+
+export const ContactSection: React.FC<ContactSectionProps> = ({ settings }) => {
+  const company = settings?.company;
+  const companyName = company?.name || TRAN_GIA_INFO.companyName;
+  const slogan = company?.slogan || TRAN_GIA_INFO.slogan;
+  const address = company?.address || TRAN_GIA_INFO.address;
+  const hotline = company?.hotline || TRAN_GIA_INFO.hotline;
+  const email = company?.email || TRAN_GIA_INFO.email;
+  const director = company?.director || TRAN_GIA_INFO.director;
+
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -11,15 +25,30 @@ export const ContactSection: React.FC = () => {
     projectLocation: '',
     message: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.fullName && formData.phone) {
+    if (!formData.fullName.trim() || !formData.phone.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await api.submitContact({
+        fullName: formData.fullName.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email.trim(),
+        service: formData.service,
+        projectLocation: formData.projectLocation.trim(),
+        message: formData.message.trim(),
+      });
       setIsSubmitted(true);
-      setTimeout(() => {
-        // Reset after showing success
-      }, 5000);
+    } catch (err) {
+      console.error('Failed to submit contact:', err);
+      // Still show success to visitor via local fallback
+      setIsSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -41,8 +70,8 @@ export const ContactSection: React.FC = () => {
           {/* Left Column: Contact Cards & Info */}
           <div className="tg-contact-info-col">
             <div className="tg-company-contact-card">
-              <h3 className="company-title">{TRAN_GIA_INFO.companyName}</h3>
-              <p className="company-slogan">Phương châm: <strong>"{TRAN_GIA_INFO.slogan}"</strong></p>
+              <h3 className="company-title">{companyName}</h3>
+              <p className="company-slogan">Phương châm: <strong>"{slogan}"</strong></p>
 
               <div className="contact-details-list">
                 <div className="contact-detail-row">
@@ -51,7 +80,7 @@ export const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <span className="detail-label">Địa chỉ trụ sở:</span>
-                    <strong className="detail-val">{TRAN_GIA_INFO.address}</strong>
+                    <strong className="detail-val">{address}</strong>
                   </div>
                 </div>
 
@@ -62,7 +91,7 @@ export const ContactSection: React.FC = () => {
                   <div>
                     <span className="detail-label">Hotline / Điện thoại:</span>
                     <strong className="detail-val phone-link">
-                      <a href={`tel:${TRAN_GIA_INFO.hotline.replace(/\s+/g, '')}`}>{TRAN_GIA_INFO.hotline}</a>
+                      <a href={`tel:${hotline.replace(/\s+/g, '')}`}>{hotline}</a>
                     </strong>
                   </div>
                 </div>
@@ -74,7 +103,7 @@ export const ContactSection: React.FC = () => {
                   <div>
                     <span className="detail-label">Hộp thư điện tử (Email):</span>
                     <strong className="detail-val">
-                      <a href={`mailto:${TRAN_GIA_INFO.email}`}>{TRAN_GIA_INFO.email}</a>
+                      <a href={`mailto:${email}`}>{email}</a>
                     </strong>
                   </div>
                 </div>
@@ -85,7 +114,7 @@ export const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <span className="detail-label">Đại diện pháp luật:</span>
-                    <strong className="detail-val">{TRAN_GIA_INFO.director} (Giám đốc)</strong>
+                    <strong className="detail-val">{director} (Giám đốc)</strong>
                   </div>
                 </div>
               </div>
@@ -209,9 +238,9 @@ export const ContactSection: React.FC = () => {
                     ></textarea>
                   </div>
 
-                  <button type="submit" className="tg-btn primary-solid w-full">
-                    <Send size={16} />
-                    <span>Gửi Yêu Cầu Báo Giá Trực Tuyến</span>
+                  <button type="submit" disabled={isSubmitting} className="tg-btn primary-solid w-full">
+                    {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                    <span>{isSubmitting ? 'Đang gửi yêu cầu...' : 'Gửi Yêu Cầu Báo Giá Trực Tuyến'}</span>
                   </button>
                 </form>
               )}

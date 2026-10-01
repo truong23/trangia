@@ -30,14 +30,11 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 1: Company Profile & Info */}
           <div className="tg-footer-col col-main">
             <div className="tg-footer-brand">
-              <div className="tg-logo-symbol">
-                <span className="logo-t">T</span>
-                <span className="logo-g">G</span>
-              </div>
-              <div className="tg-brand-name-wrap">
-                <span className="footer-brand-title">TRẦN GIA</span>
-                <span className="footer-brand-sub">CONSTRUCTION</span>
-              </div>
+              <img
+                src={company?.logo || '/images/logo-trangia.png'}
+                alt={companyName}
+                style={{ height: '46px', width: 'auto', objectFit: 'contain', background: 'rgba(255,255,255,0.92)', padding: '4px 10px', borderRadius: '6px' }}
+              />
             </div>
 
             <p className="footer-company-fullname">{companyName}</p>

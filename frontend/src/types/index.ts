@@ -62,14 +62,27 @@ export interface Project {
   year?: string;
   pageInPdf?: number;
   description?: string;
+  sortOrder?: number;
+  isFeatured?: boolean;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Partner {
   id: string;
   name: string;
-  logo: string;
+  logo?: string;
+  thumbnail?: string;
   role: string;
+  category?: 'developer' | 'contractor' | 'manufacturer';
+  projects?: string[] | string;
+  brandColor?: string;
+  badge?: string;
   description?: string;
+  website?: string;
+  sortOrder?: number;
+  isActive?: boolean;
 }
 
 export interface EquipmentItem {
@@ -92,11 +105,16 @@ export interface ContactRequest {
   id?: string;
   fullName: string;
   phone: string;
-  email: string;
+  email?: string;
   service: string;
-  message: string;
+  projectLocation?: string;
+  message?: string;
+  status?: 'new' | 'contacted' | 'quoted' | 'completed' | 'cancelled';
+  notes?: string;
   createdAt?: string;
+  updatedAt?: string;
 }
+
 
 export interface ArticlesResponse {
   items: Article[];
@@ -130,9 +148,14 @@ export interface SiteSettings {
   };
   heroBanner: {
     title: string;
+    subtitle?: string;
     subtext: string;
     feedbackEmail: string;
     backgroundImage?: string;
+    stats?: Array<{
+      number: string;
+      label: string;
+    }>;
   };
   navigation: Array<{
     title: string;

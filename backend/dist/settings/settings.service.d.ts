@@ -18,9 +18,14 @@ export interface SiteSettings {
     };
     heroBanner: {
         title: string;
+        subtitle?: string;
         subtext: string;
         feedbackEmail: string;
         backgroundImage?: string;
+        stats?: Array<{
+            number: string;
+            label: string;
+        }>;
     };
     navigation: Array<{
         title: string;
