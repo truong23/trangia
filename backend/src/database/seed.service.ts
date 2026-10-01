@@ -234,6 +234,64 @@ export class SeedService implements OnApplicationBootstrap {
           <p>VinFast showroom identity mandates strict specifications for surface smoothness, acoustics, and lighting integration. Tran Gia proven multi-site rollout capacity ensured timely showroom launches.</p>
         `,
       },
+      {
+        title: 'Nhà thầu thi công trần thạch cao cho các tập đoàn lớn: Tiêu chuẩn và năng lực Trần Gia',
+        titleEn: 'Drywall & Ceiling Contractor for Major Corporations: Standards and Capacity of Tran Gia',
+        slug: 'thi-cong-tran-thach-cao-cho-cac-tap-doan-lon',
+        categorySlug: 'cong-nghe-ky-thuat',
+        thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+        publishedAt: new Date('2026-09-25T10:00:00Z'),
+        viewCount: 2150,
+        isFeatured: true,
+        summary:
+          'Tìm hiểu tiêu chuẩn kỹ thuật khắt khe khi thi công trần thạch cao cho các tập đoàn lớn: VinGroup, DELTA, Viettel Construction, Masterise Homes và giải pháp toàn diện từ Trần Gia.',
+        summaryEn:
+          'Discover stringent technical standards when executing gypsum ceilings for major conglomerates like VinGroup, DELTA, Viettel, and Masterise Homes with Tran Gia comprehensive solutions.',
+        content: `
+          <p>Đối với các công trình quy mô biểu tượng như khách sạn 5 sao, trung tâm thương mại, showroom ô tô và các đại đô thị cao cấp, hạng mục <strong>thi công trần thạch cao cho các tập đoàn lớn</strong> đòi hỏi những tiêu chuẩn kỹ thuật và quy trình kiểm soát chất lượng ở cấp độ cao nhất.</p>
+          <h3>1. Những thách thức khi thi công trần thạch cao cho tập đoàn lớn:</h3>
+          <ul>
+            <li><strong>Tiến độ gấp rút và gối đầu liên tục:</strong> Thường xuyên phải triển khai theo lệnh điều động 3 ca 24/7.</li>
+            <li><strong>Độ phẳng và cao độ chuẩn xác:</strong> Bề mặt trần không được phép gợn sóng hay sai lệch cao độ quá 1mm/m.</li>
+            <li><strong>Quy chuẩn PCCC nghiêm ngặt:</strong> Vách ngăn và trần chống cháy phải có chứng chỉ kiểm định EI 60 đến EI 120 phút.</li>
+            <li><strong>An toàn lao động tuyệt đối:</strong> 100% công nhân trên công trường phải có chứng chỉ huấn luyện an toàn và BHLĐ đạt chuẩn.</li>
+          </ul>
+          <h3>2. Giải pháp và năng lực vượt trội của Trần Gia:</h3>
+          <p>Với hơn <strong>50 cán bộ kỹ sư thường trực</strong>, đội cơ động <strong>50 - 200 thợ tay nghề cao</strong> cùng <strong>300+ thiết bị hiện đại</strong> (65 máy laser 3D, 120 máy bắn vít, 70 máy khoan bê tông), Trần Gia đã hoàn thành xuất sắc hàng loạt gói thầu lớn từ Bắc vào Nam.</p>
+          <p>Mọi dự án đều được quản lý theo quy trình nghiệm thu KCS 6 bước chuẩn hóa, đảm bảo bàn giao đúng tiến độ, chất lượng bền vững và tính thẩm mỹ trường tồn.</p>
+        `,
+        contentEn: `
+          <p>For monumental developments such as 5-star hotels, shopping malls, EV showrooms, and mega-urban communities, executing <strong>gypsum ceiling systems for major corporations</strong> requires rigorous technical compliance and top-tier QA/QC protocols.</p>
+          <p>Tran Gia provides turnkey solutions backed by 50+ engineers, up to 200 skilled craftsmen, and 300+ specialized machinery units, ensuring on-time milestone handovers with zero structural defects.</p>
+        `,
+      },
+      {
+        title: 'Kinh nghiệm thi công trần thạch cao cho hệ sinh thái VinGroup: Vinhomes, VinFast, Vincom',
+        titleEn: 'Experience in Gypsum Ceiling Execution for VinGroup Ecosystem: Vinhomes, VinFast, Vincom',
+        slug: 'kinh-nghiem-thi-cong-tran-thach-cao-cho-vingroup',
+        categorySlug: 'doi-tac-khach-hang',
+        thumbnail: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80',
+        publishedAt: new Date('2026-09-20T14:30:00Z'),
+        viewCount: 1890,
+        isFeatured: true,
+        summary:
+          'Trần Gia chia sẻ kinh nghiệm thực chiến thi công trần vách thạch cao và hoàn thiện tại các dự án trọng điểm của Tập đoàn VinGroup: Vinhomes Grand Park, Showroom VinFast QS 3, Vincom Dĩ An.',
+        summaryEn:
+          'Tran Gia shares hands-on experience in executing gypsum ceilings and drywalls across key VinGroup developments including Vinhomes Grand Park, VinFast Showrooms, and Vincom Mall.',
+        content: `
+          <p>Tập đoàn <strong>VinGroup</strong> luôn được biết đến là một trong những chủ đầu tư khắt khe nhất tại Việt Nam về tiến độ bàn giao thần tốc và tiêu chuẩn kỹ mỹ thuật hoàn hảo. Trần Gia vinh dự được lựa chọn là đơn vị thi công trần vách thạch cao tại nhiều dự án trọng điểm:</p>
+          <h3>1. Đại đô thị Vinhomes Grand Park (TP. Hồ Chí Minh):</h3>
+          <p>Trần Gia thi công trần chìm giật cấp và vách thạch cao ngăn phòng cho các tháp căn hộ và khu vực tiện ích công cộng. Đội ngũ kỹ sư Trần Gia ứng dụng máy laser định vị cao độ, bảo đảm hàng chục ngàn mét vuông trần phẳng tuyệt đối.</p>
+          <h3>2. Chuỗi Showroom VinFast QS 3 Phía Nam:</h3>
+          <p>Đáp ứng bộ nhận diện thương hiệu quốc tế của VinFast với trần phẳng không tì vết, hệ thống rãnh đèn âm trần tinh tế và sơn bả màu sắc chuẩn xác.</p>
+          <h3>3. Trung tâm thương mại Vincom Dĩ An Bình Dương:</h3>
+          <p>Hệ trần sảnh thương mại và cụm rạp chiếu phim với khả năng tiêu âm chống ồn và khung xương chịu lực gia cố chống rung lắc cao độ.</p>
+          <blockquote>"Sự tín nhiệm của Tập đoàn VinGroup là minh chứng rõ ràng nhất cho năng lực thực thi và chữ TÍN của Trần Gia trong ngành xây dựng hoàn thiện."</blockquote>
+        `,
+        contentEn: `
+          <p><strong>VinGroup</strong> is recognized as one of the most demanding developers regarding milestone speed and architectural finish quality. Tran Gia has successfully delivered gypsum ceilings, acoustic drywalls, and specialized coatings across multiple VinGroup landmark projects.</p>
+        `,
+      },
     ];
 
     // Seed or update articles

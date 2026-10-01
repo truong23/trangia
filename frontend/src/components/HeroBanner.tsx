@@ -2,28 +2,48 @@ import React from 'react';
 import { ShieldCheck, Download, ArrowRight, Building2, Users, Wrench, CheckCircle2 } from 'lucide-react';
 import { SiteSettings } from '../types';
 import { TRAN_GIA_INFO } from '../services/tranGiaData';
+import { Language } from '../services/i18n';
 
 interface HeroBannerProps {
   settings?: SiteSettings;
   onNavigateSection: (sectionId: string) => void;
   onOpenProfileModal: () => void;
+  currentLang?: Language;
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({
   settings,
   onNavigateSection,
   onOpenProfileModal,
+  currentLang = 'vi',
 }) => {
+  const isEn = currentLang === 'en';
   const company = settings?.company;
   const companyName = company?.name || TRAN_GIA_INFO.companyName;
   const slogan = company?.slogan || TRAN_GIA_INFO.slogan;
   const hotline = company?.hotline || TRAN_GIA_INFO.hotline;
 
   const stats = [
-    { number: '50+', label: 'Cán bộ Kỹ sư & Thợ lành nghề', icon: Users },
-    { number: '15+', label: 'Dự án cho tập đoàn lớn', icon: Building2 },
-    { number: '300+', label: 'Máy móc thiết bị chuyên dụng', icon: Wrench },
-    { number: '100%', label: 'Đạt chuẩn ISO & Đúng tiến độ', icon: CheckCircle2 },
+    {
+      number: '50+',
+      label: isEn ? 'Engineers & Skilled Craftsmen' : 'Cán bộ Kỹ sư & Thợ lành nghề',
+      icon: Users,
+    },
+    {
+      number: '15+',
+      label: isEn ? 'Projects for Major Corporations' : 'Dự án cho tập đoàn lớn',
+      icon: Building2,
+    },
+    {
+      number: '300+',
+      label: isEn ? 'Specialized Machinery Units' : 'Máy móc thiết bị chuyên dụng',
+      icon: Wrench,
+    },
+    {
+      number: '100%',
+      label: isEn ? 'ISO Standard & On-Time Delivery' : 'Đạt chuẩn ISO & Đúng tiến độ',
+      icon: CheckCircle2,
+    },
   ];
 
   return (
@@ -33,17 +53,41 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         {/* Slogan Pill */}
         <div className="tg-hero-badge">
           <ShieldCheck size={16} className="text-amber animate-pulse" />
-          <span>CHUYÊN THI CÔNG TRẦN THẠCH CAO CHO CÁC TẬP ĐOÀN LỚN • {slogan.toUpperCase()}</span>
+          <span>
+            {isEn
+              ? `SPECIALIZED GYPSUM CEILING CONTRACTOR FOR MAJOR CORPORATIONS • ${slogan.toUpperCase()}`
+              : `CHUYÊN THI CÔNG TRẦN THẠCH CAO CHO CÁC TẬP ĐOÀN LỚN • ${slogan.toUpperCase()}`}
+          </span>
         </div>
 
         {/* Main Title - SEO H1 */}
         <h1 className="tg-hero-title">
-          Thi Công Trần Thạch Cao Cho Các Tập Đoàn Lớn
+          {isEn
+            ? 'Gypsum Ceiling Contractor For Major Corporations'
+            : 'Thi Công Trần Thạch Cao Cho Các Tập Đoàn Lớn'}
         </h1>
 
         {/* Subtitle - SEO Rich */}
         <p className="tg-hero-subtitle">
-          <strong>Trần Gia</strong> – Đối tác thi công trần thạch cao tin cậy của <strong>VinGroup</strong>, <strong>Vinhomes</strong>, <strong>VinFast</strong>, <strong>DELTA Group</strong>, <strong>Viettel Construction</strong> và <strong>Masterise Homes</strong>. Chuyên thi công trần vách thạch cao tiêu chuẩn ISO, trần kim loại, vách chống cháy, sơn bả hoàn thiện & phào GFRC cho khách sạn 5 sao, TTTM và chung cư cao cấp trên toàn quốc.
+          {isEn ? (
+            <>
+              <strong>Tran Gia Construction</strong> – Trusted gypsum ceiling and drywall partner of{' '}
+              <strong>VinGroup</strong>, <strong>Vinhomes</strong>, <strong>VinFast</strong>,{' '}
+              <strong>DELTA Group</strong>, <strong>Viettel Construction</strong>, and{' '}
+              <strong>Masterise Homes</strong>. Specializing in ISO-standard acoustic & fire-rated gypsum
+              ceilings, metal ceilings, specialized coatings, and GFRC architectural moldings for 5-star
+              hotels, shopping malls, and premium high-rise residences across Vietnam.
+            </>
+          ) : (
+            <>
+              <strong>Trần Gia</strong> – Đối tác thi công trần thạch cao tin cậy của{' '}
+              <strong>VinGroup</strong>, <strong>Vinhomes</strong>, <strong>VinFast</strong>,{' '}
+              <strong>DELTA Group</strong>, <strong>Viettel Construction</strong> và{' '}
+              <strong>Masterise Homes</strong>. Chuyên thi công trần vách thạch cao tiêu chuẩn ISO, trần kim
+              loại, vách chống cháy, sơn bả hoàn thiện & phào GFRC cho khách sạn 5 sao, TTTM và chung cư cao
+              cấp trên toàn quốc.
+            </>
+          )}
         </p>
         <p className="tg-hero-company-name">
           {companyName}
@@ -55,7 +99,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             onClick={() => onNavigateSection('projects')}
             className="tg-hero-btn primary"
           >
-            <span>Dự Án Nổi Bật</span>
+            <span>{isEn ? 'Featured Projects' : 'Dự Án Nổi Bật'}</span>
             <ArrowRight size={18} />
           </button>
 
@@ -64,14 +108,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             className="tg-hero-btn secondary"
           >
             <Download size={18} />
-            <span>Xem Hồ Sơ Năng Lực PDF</span>
+            <span>{isEn ? 'View Profile PDF (36p)' : 'Xem Hồ Sơ Năng Lực PDF'}</span>
           </button>
 
           <button
             onClick={() => onNavigateSection('contact')}
             className="tg-hero-btn outline"
           >
-            <span>Nhận Báo Giá Thi Công</span>
+            <span>{isEn ? 'Request Quotation' : 'Nhận Báo Giá Thi Công'}</span>
           </button>
         </div>
 

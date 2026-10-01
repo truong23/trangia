@@ -50,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
       id: 'services',
       label: t.nav.services,
       children: [
+        { id: 'corporate-ceiling', label: t.nav.corporateCeiling },
         { id: 'services-ceiling', label: t.nav.servicesCeiling },
         { id: 'services-partition', label: t.nav.servicesPartition },
         { id: 'services-painting', label: t.nav.servicesPainting },

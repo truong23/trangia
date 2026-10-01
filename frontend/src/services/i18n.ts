@@ -10,6 +10,7 @@ export interface Translations {
     aboutPrinciples: string;
     services: string;
     servicesCeiling: string;
+    corporateCeiling: string;
     servicesPartition: string;
     servicesPainting: string;
     servicesFitout: string;
@@ -92,6 +93,7 @@ export const translations: Record<Language, Translations> = {
       aboutPrinciples: 'Nguyên tắc hoạt động',
       services: 'LĨNH VỰC',
       servicesCeiling: 'Thi công Trần thạch cao & Kim loại',
+      corporateCeiling: 'Trần Thạch Cao Tập Đoàn Lớn',
       servicesPartition: 'Thi công Vách ngăn chống cháy',
       servicesPainting: 'Sơn bả hoàn thiện & Phào GFRC',
       servicesFitout: 'Nội thất Fit-out & Cơ điện M&E',
@@ -172,6 +174,7 @@ export const translations: Record<Language, Translations> = {
       aboutPrinciples: 'Operational Principles',
       services: 'SERVICES',
       servicesCeiling: 'Gypsum & Metal Ceiling Systems',
+      corporateCeiling: 'Corporate Ceiling Systems',
       servicesPartition: 'Fire-Rated Partition Drywalls',
       servicesPainting: 'Architectural Coating & GFRC',
       servicesFitout: 'Fit-out & MEP Engineering',

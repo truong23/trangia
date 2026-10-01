@@ -5056,3 +5056,690 @@ button {
   background: #FCA5A5;
 }
 
+/* ==========================================================
+   TG CORPORATE CEILING SECTION (SEO: THI CÔNG TRẦN THẠCH CAO CHO CÁC TẬP ĐOÀN LỚN)
+   ========================================================== */
+.tg-corporate-ceiling-section {
+  background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 50%, #F8FAFC 100%);
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid #E2E8F0;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.tg-section-badge-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.tg-highlight-pill {
+  display: inline-block;
+  padding: 5px 14px;
+  background-color: var(--tg-primary);
+  color: #FFFFFF;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(11, 34, 64, 0.15);
+}
+
+.tg-corporate-lead {
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 920px;
+  margin: 0 auto;
+  color: #334155;
+}
+
+.tg-corporate-lead strong {
+  color: var(--tg-primary);
+}
+
+/* Key Metrics Grid */
+.tg-corporate-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 35px;
+}
+
+.tg-corp-metric-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(11, 34, 64, 0.04);
+}
+
+.tg-corp-metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(11, 34, 64, 0.08);
+  border-color: var(--tg-accent);
+}
+
+.corp-metric-icon {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 12px;
+  background: rgba(254, 123, 0, 0.1);
+  color: var(--tg-accent);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.corp-metric-val {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--tg-primary);
+  line-height: 1.1;
+  margin-bottom: 6px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.corp-metric-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 4px;
+}
+
+.corp-metric-sub {
+  font-size: 12px;
+  color: #64748B;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Featured Corporate Showcase Box */
+.tg-corp-showcase-box {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(11, 34, 64, 0.06);
+}
+
+.tg-showcase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #F1F5F9;
+  padding-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tg-showcase-tag {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--tg-accent);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.tg-showcase-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--tg-primary);
+  margin: 0;
+}
+
+.tg-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tg-secondary);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.tg-link-btn:hover {
+  color: var(--tg-accent);
+}
+
+/* Corporate Project Tabs */
+.tg-corp-project-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+.tg-corp-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tg-corp-tab-btn:hover {
+  background: #E2E8F0;
+  color: var(--tg-primary);
+}
+
+.tg-corp-tab-btn.active {
+  background: var(--tg-primary);
+  color: #FFFFFF;
+  border-color: var(--tg-primary);
+  box-shadow: 0 4px 12px rgba(11, 34, 64, 0.2);
+}
+
+.vingroup-badge {
+  background: #FE7B00;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Active Project Display */
+.tg-corp-project-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.display-media-col {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  height: 380px;
+}
+
+.display-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.display-media-col:hover .display-img {
+  transform: scale(1.04);
+}
+
+.display-badge-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.badge-location, .badge-client {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 10px;
+  background: rgba(11, 34, 64, 0.85);
+  backdrop-filter: blur(4px);
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.badge-client {
+  background: rgba(254, 123, 0, 0.9);
+}
+
+.display-content-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.display-meta-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tg-accent);
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-pdf {
+  color: #64748B;
+  font-weight: 500;
+}
+
+.display-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--tg-primary);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.display-scope {
+  font-size: 13.5px;
+  color: #334155;
+  background: #F8FAFC;
+  padding: 10px 14px;
+  border-left: 3px solid var(--tg-accent);
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 14px;
+}
+
+.display-desc {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.display-tech-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #1E293B;
+  font-weight: 600;
+}
+
+.display-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 4 Pillars Grid */
+.tg-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.tg-pillar-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 26px 20px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.tg-pillar-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--tg-secondary);
+  box-shadow: 0 10px 25px rgba(2, 132, 199, 0.1);
+}
+
+.pillar-num {
+  font-size: 28px;
+  font-weight: 900;
+  color: rgba(11, 34, 64, 0.12);
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.pillar-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #EFF6FF;
+  color: var(--tg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.tg-pillar-card h4 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--tg-primary);
+  margin-bottom: 8px;
+}
+
+.tg-pillar-card p {
+  font-size: 13px;
+  color: #64748B;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Technical Standards Comparison Table */
+.tg-standards-table-wrap {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 16px;
+  padding: 35px;
+  box-shadow: 0 8px 30px rgba(11, 34, 64, 0.05);
+}
+
+.table-header-block {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.tg-sub-heading {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--tg-primary);
+  margin: 6px 0;
+}
+
+.tg-sub-lead {
+  font-size: 14px;
+  color: #64748B;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tg-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13.5px;
+}
+
+.tg-comparison-table th {
+  background: #F1F5F9;
+  padding: 14px 18px;
+  font-weight: 700;
+  color: var(--tg-primary);
+  border-bottom: 2px solid #CBD5E1;
+  font-size: 14px;
+}
+
+.tg-comparison-table th.highlight-col {
+  background: #0B2240;
+  color: #FE7B00;
+  border-bottom: 2px solid #FE7B00;
+}
+
+.tg-comparison-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #E2E8F0;
+  vertical-align: middle;
+}
+
+.tg-comparison-table tr:hover td {
+  background-color: #F8FAFC;
+}
+
+.tg-comparison-table td.highlight-col {
+  background-color: rgba(2, 132, 199, 0.04);
+  font-weight: 600;
+  color: #0F172A;
+}
+
+.feature-name {
+  color: var(--tg-primary);
+}
+
+.cell-flex {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* 6-Step Workflow */
+.tg-workflow-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+
+.step-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 20px 14px;
+  position: relative;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--tg-accent);
+  box-shadow: 0 6px 15px rgba(254, 123, 0, 0.1);
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  background: var(--tg-accent);
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.step-card h5 {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--tg-primary);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.step-card p {
+  font-size: 11.5px;
+  color: #64748B;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Corporate FAQ Accordion */
+.tg-corp-faq-box {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 16px;
+  padding: 35px;
+  box-shadow: 0 8px 30px rgba(11, 34, 64, 0.05);
+}
+
+.tg-faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.faq-item.active {
+  border-color: var(--tg-secondary);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+}
+
+.faq-question-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #FFFFFF;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tg-primary);
+  cursor: pointer;
+  gap: 14px;
+}
+
+.faq-item.active .faq-question-btn {
+  background: #F8FAFC;
+  color: var(--tg-secondary);
+}
+
+.faq-q-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.faq-answer-content {
+  padding: 16px 20px 20px 50px;
+  background: #F8FAFC;
+  border-top: 1px solid #F1F5F9;
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.7;
+}
+
+/* Bottom CTA Banner */
+.tg-corp-cta-banner {
+  background: linear-gradient(135deg, #0B2240 0%, #162D61 100%);
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  color: #FFFFFF;
+  box-shadow: 0 10px 30px rgba(11, 34, 64, 0.25);
+}
+
+.cta-content-left {
+  max-width: 680px;
+}
+
+.cta-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(254, 123, 0, 0.2);
+  color: #FE7B00;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.cta-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.cta-desc {
+  font-size: 14px;
+  color: #CBD5E1;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.cta-hotline-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: #FFFFFF;
+}
+
+.cta-hotline-info strong {
+  color: #FE7B00;
+  font-size: 18px;
+}
+
+.cta-actions-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.tg-btn.lg {
+  padding: 14px 26px;
+  font-size: 14.5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .tg-corporate-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tg-corp-project-display {
+    grid-template-columns: 1fr;
+  }
+  .display-media-col {
+    height: 300px;
+  }
+  .tg-pillars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tg-workflow-steps-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .tg-corp-cta-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .tg-corporate-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .tg-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+  .tg-workflow-steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tg-corp-showcase-box, .tg-standards-table-wrap, .tg-corp-faq-box {
+    padding: 20px 15px;
+  }
+  .faq-answer-content {
+    padding: 14px;
+  }
+}
+
+

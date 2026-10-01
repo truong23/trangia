@@ -7,6 +7,7 @@ import { Header } from './components/Header';
 import { HeroBanner } from './components/HeroBanner';
 import { AboutSection } from './components/AboutSection';
 import { ServicesSection } from './components/ServicesSection';
+import { CorporateCeilingSection } from './components/CorporateCeilingSection';
 import { CapacitySection } from './components/CapacitySection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
@@ -42,7 +43,13 @@ export const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname);
   const [currentSearch, setCurrentSearch] = useState<string>(() => window.location.search);
   const [activeSection, setActiveSection] = useState<string>('home');
-  const [currentLang, setCurrentLang] = useState<Language>('vi');
+  // Hệ thống đa ngôn ngữ chỉ hỗ trợ Tiếng Việt và Tiếng Anh - Mặc định luôn là Tiếng Việt ('vi')
+  const [currentLang, setCurrentLang] = useState<Language>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const langParam = params.get('lang');
+    if (langParam === 'en') return 'en';
+    return 'vi';
+  });
 
   // Site Settings & News data
   const [siteSettings, setSiteSettings] = useState<SiteSettings | undefined>(undefined);
@@ -97,7 +104,7 @@ export const App: React.FC = () => {
       setShowScrollTop(window.scrollY > 400);
 
       // Scroll Spy for active section
-      const sections = ['home', 'about', 'services', 'capacity', 'projects', 'partners', 'news', 'contact'];
+      const sections = ['home', 'about', 'services', 'corporate-ceiling', 'capacity', 'projects', 'partners', 'news', 'contact'];
       for (const s of sections) {
         const el = document.getElementById(s);
         if (el) {
@@ -117,6 +124,11 @@ export const App: React.FC = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Đồng bộ thuộc tính lang của thẻ <html> theo ngôn ngữ hiện tại (mặc định 'vi')
+  useEffect(() => {
+    document.documentElement.lang = currentLang;
+  }, [currentLang]);
 
   const navigate = (path: string) => {
     window.history.pushState({}, '', path);
@@ -284,6 +296,7 @@ export const App: React.FC = () => {
         settings={siteSettings}
         onNavigateSection={navigateSection}
         onOpenProfileModal={() => setIsProfileModalOpen(true)}
+        currentLang={currentLang}
       />
 
       {/* 3. Giới thiệu & Triết lý: Thư ngỏ, Tầm nhìn, Sứ mệnh, 6 Giá trị cốt lõi, Nguyên tắc hoạt động */}
@@ -291,6 +304,14 @@ export const App: React.FC = () => {
 
       {/* 4. Lĩnh vực hoạt động: Trần thạch cao ISO & kim loại, Vách ngăn chống cháy, Sơn bả & GFRC, Fit-out/M&E */}
       <ServicesSection onNavigateSection={navigateSection} />
+
+      {/* 4.5. Chuyên thi công trần thạch cao cho các tập đoàn lớn & VinGroup */}
+      <CorporateCeilingSection
+        onSelectProject={(project) => setActiveProject(project)}
+        onNavigateSection={navigateSection}
+        onOpenProfileModal={() => setIsProfileModalOpen(true)}
+        currentLang={currentLang}
+      />
 
       {/* 5. Năng lực & Tổ chức: Sơ đồ tổ chức, Năng lực nhân sự 50+, Máy móc thiết bị 300+ */}
       <CapacitySection />
