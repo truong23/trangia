@@ -34,7 +34,7 @@ let ArticleService = class ArticleService {
         this.articleRepository = articleRepository;
     }
     async findAll(query) {
-        const { page = 1, limit = 9, search, category, status, isFeatured } = query;
+        const { page = 1, limit = 9, search, category, status, isFeatured, lang } = query;
         const skip = (page - 1) * limit;
         const queryBuilder = this.articleRepository
             .createQueryBuilder('article')
@@ -45,8 +45,11 @@ let ArticleService = class ArticleService {
         if (status) {
             queryBuilder.andWhere('article.status = :status', { status });
         }
+        if (lang && lang !== 'all') {
+            queryBuilder.andWhere('(article.lang = :lang OR article.lang = :allLang OR (article.titleEn IS NOT NULL AND :lang = \'en\'))', { lang, allLang: 'all' });
+        }
         if (search && search.trim() !== '') {
-            queryBuilder.andWhere('(LOWER(article.title) LIKE :search OR LOWER(article.summary) LIKE :search)', { search: `%${search.toLowerCase().trim()}%` });
+            queryBuilder.andWhere('(LOWER(article.title) LIKE :search OR LOWER(article.summary) LIKE :search OR LOWER(article.titleEn) LIKE :search OR LOWER(article.summaryEn) LIKE :search)', { search: `%${search.toLowerCase().trim()}%` });
         }
         if (category) {
             queryBuilder.andWhere('(category.slug = :catParam OR category.id = :catParam)', { catParam: category });

@@ -62,16 +62,6 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                 </div>
               </div>
             )}
-
-            {project.pageInPdf && (
-              <div className="meta-item">
-                <FileText size={18} className="text-amber" />
-                <div>
-                  <span className="meta-label">Trang trong Profile PDF:</span>
-                  <strong className="meta-val">Trang {project.pageInPdf} | TRẦN GIA PROFILE</strong>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Scope of Work */}

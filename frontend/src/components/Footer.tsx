@@ -30,14 +30,11 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 1: Company Profile & Info */}
           <div className="tg-footer-col col-main">
             <div className="tg-footer-brand">
-              <div className="tg-logo-symbol">
-                <span className="logo-t">T</span>
-                <span className="logo-g">G</span>
-              </div>
-              <div className="tg-brand-name-wrap">
-                <span className="footer-brand-title">TRẦN GIA</span>
-                <span className="footer-brand-sub">CONSTRUCTION</span>
-              </div>
+              <img
+                src={company?.logo || '/images/logo-trangia.png'}
+                alt={companyName}
+                style={{ height: '46px', width: 'auto', objectFit: 'contain', background: 'rgba(255,255,255,0.92)', padding: '4px 10px', borderRadius: '6px' }}
+              />
             </div>
 
             <p className="footer-company-fullname">{companyName}</p>
@@ -131,6 +128,18 @@ export const Footer: React.FC<FooterProps> = ({
               <span>Yêu Cầu Báo Giá Nhanh</span>
             </button>
           </div>
+        </div>
+
+        {/* SEO Rich Footer Content */}
+        <div className="tg-footer-seo" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '20px 0', marginTop: '16px' }}>
+          <p style={{ fontSize: '0.8rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.35)', maxWidth: 900 }}>
+            <strong style={{ color: 'rgba(255,255,255,0.5)' }}>Trần Gia Construction</strong> – Đơn vị uy tín chuyên <strong style={{ color: 'rgba(255,255,255,0.5)' }}>thi công trần thạch cao cho các tập đoàn lớn</strong> tại Việt Nam. 
+            Là đối tác chiến lược của <strong style={{ color: 'rgba(255,255,255,0.5)' }}>VinGroup, Vinhomes, VinFast, DELTA Group, Viettel Construction, Masterise Homes, Charm Group, MBLand</strong>. 
+            Chuyên thi công trần vách thạch cao tiêu chuẩn ISO, trần kim loại cao cấp, vách ngăn chống cháy, sơn bả hoàn thiện trong & ngoài nhà, 
+            lắp dựng phào chỉ GFRC và nội thất Fit-out cho các dự án khách sạn 5 sao, trung tâm thương mại, showroom ô tô, chung cư cao cấp và khu đô thị trên toàn quốc. 
+            Với đội ngũ hơn 50 kỹ sư – thợ lành nghề và 300+ máy móc thiết bị chuyên dụng, 
+            Trần Gia đã hoàn thành 15+ dự án trọng điểm tại Hà Nội, TP.HCM, Hải Phòng, Quảng Ninh, Thanh Hóa, Bình Dương, Quảng Nam, Hưng Yên và Tây Ninh.
+          </p>
         </div>
 
         {/* Bottom Footer Bar */}

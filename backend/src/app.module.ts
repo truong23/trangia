@@ -11,6 +11,10 @@ import { ArticleModule } from './article/article.module';
 import { SettingsModule } from './settings/settings.module';
 import { JobModule } from './job/job.module';
 import { ApplicationModule } from './application/application.module';
+import { UploadModule } from './upload/upload.module';
+import { ContactModule } from './contact/contact.module';
+import { PartnerModule } from './partner/partner.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -30,6 +34,10 @@ import { ApplicationModule } from './application/application.module';
     SettingsModule,
     JobModule,
     ApplicationModule,
+    UploadModule,
+    ContactModule,
+    PartnerModule,
+    ProjectModule,
   ],
   controllers: [AppController],
 })

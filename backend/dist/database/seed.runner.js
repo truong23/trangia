@@ -4,6 +4,9 @@ const core_1 = require("@nestjs/core");
 const app_module_1 = require("../app.module");
 async function runSeed() {
     const app = await core_1.NestFactory.createApplicationContext(app_module_1.AppModule);
+    const { SeedService } = await Promise.resolve().then(() => require('./seed.service'));
+    const seedService = app.get(SeedService);
+    await seedService.seedData();
     console.log('Seed executed successfully through Nest Application Context!');
     await app.close();
 }

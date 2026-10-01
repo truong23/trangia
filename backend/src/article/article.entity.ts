@@ -33,6 +33,18 @@ export class Article {
   @Column({ type: 'text' })
   content: string;
 
+  @Column({ type: 'varchar', default: 'vi' })
+  lang: string;
+
+  @Column({ type: 'text', nullable: true })
+  titleEn: string;
+
+  @Column({ type: 'text', nullable: true })
+  summaryEn: string;
+
+  @Column({ type: 'text', nullable: true })
+  contentEn: string;
+
   @Column({ nullable: true })
   thumbnail: string;
 

@@ -3,47 +3,28 @@ import { categoryService } from './category/category.service';
 import { authService } from './auth/auth.service';
 import { settingsService } from './settings/settings.service';
 import { userService } from './user/user.service';
+import { uploadService } from './upload/upload.service';
+import { contactService } from './contact/contact.service';
+import { partnerService } from './partner/partner.service';
+import { projectService } from './project/project.service';
+import { jobService, applicationService } from './recruitment/recruitment.service';
 
 export * from './article/article.service';
 export * from './category/category.service';
 export * from './auth/auth.service';
 export * from './settings/settings.service';
 export * from './user/user.service';
+export * from './upload/upload.service';
+export * from './contact/contact.service';
+export * from './partner/partner.service';
+export * from './project/project.service';
 export * from './recruitment/recruitment.service';
-
-import { jobService, applicationService } from './recruitment/recruitment.service';
 
 // Hợp nhất export api đối tượng tiện lợi cho các component
 export const api = {
   // Settings Service
   getSettings: settingsService.getSettings.bind(settingsService),
   updateSettings: settingsService.updateSettings.bind(settingsService),
-
-  // Upload Image
-  uploadImage: async (file: File): Promise<{ url: string }> => {
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    // Get token
-    let token = '';
-    const stored = localStorage.getItem('auth_user');
-    if (stored) {
-      const authData = JSON.parse(stored);
-      if (authData?.access_token) {
-        token = authData.access_token;
-      }
-    }
-
-    const res = await fetch('http://localhost:3001/api/upload', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData
-    });
-    if (!res.ok) throw new Error('Upload failed');
-    return res.json();
-  },
 
   // Category Service
   getCategories: categoryService.getCategories.bind(categoryService),
@@ -58,6 +39,12 @@ export const api = {
   createArticle: articleService.createArticle.bind(articleService),
   updateArticle: articleService.updateArticle.bind(articleService),
   deleteArticle: articleService.deleteArticle.bind(articleService),
+
+  // Upload Service
+  uploadImage: uploadService.uploadImage.bind(uploadService),
+  uploadMultiple: uploadService.uploadMultiple.bind(uploadService),
+  getUploadedFiles: uploadService.getUploadedFiles.bind(uploadService),
+  deleteFile: uploadService.deleteFile.bind(uploadService),
 
   // Auth Service
   login: authService.login.bind(authService),
@@ -84,7 +71,26 @@ export const api = {
   createApplication: applicationService.createApplication.bind(applicationService),
   updateApplicationStatus: applicationService.updateApplicationStatus.bind(applicationService),
   updateApplicationNote: applicationService.updateApplicationNote.bind(applicationService),
+
+  // Contact & Quotations Service
+  getContacts: contactService.getContacts.bind(contactService),
+  submitContact: contactService.submitContact.bind(contactService),
+  updateContact: contactService.updateContact.bind(contactService),
+  deleteContact: contactService.deleteContact.bind(contactService),
+
+  // Partner & Clients Service
+  getPartners: partnerService.getPartners.bind(partnerService),
+  getAllPartnersAdmin: partnerService.getAllAdmin.bind(partnerService),
+  createPartner: partnerService.createPartner.bind(partnerService),
+  updatePartner: partnerService.updatePartner.bind(partnerService),
+  deletePartner: partnerService.deletePartner.bind(partnerService),
+
+  // Project Service
+  getProjects: projectService.getProjects.bind(projectService),
+  getProject: projectService.getProject.bind(projectService),
+  createProject: projectService.createProject.bind(projectService),
+  updateProject: projectService.updateProject.bind(projectService),
+  deleteProject: projectService.deleteProject.bind(projectService),
 };
 
 export default api;
-

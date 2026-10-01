@@ -3,8 +3,6 @@ import {
   X,
   Download,
   FileText,
-  ChevronLeft,
-  ChevronRight,
   BookOpen,
   Building,
   Users,
@@ -12,6 +10,15 @@ import {
   Award,
   CheckCircle2,
   ExternalLink,
+  ShieldCheck,
+  Briefcase,
+  Layers,
+  Phone,
+  Mail,
+  MapPin,
+  Sparkles,
+  Eye,
+  Check,
 } from 'lucide-react';
 import { TRAN_GIA_INFO, PROJECTS_DATA, SERVICES_DATA } from '../services/tranGiaData';
 
@@ -20,215 +27,138 @@ interface ProfileViewerModalProps {
   onClose: () => void;
 }
 
-interface ProfilePageDoc {
-  pageNumber: number;
-  title: string;
-  category: string;
-  content: string[];
-  keyHighlight?: string;
-}
+type TabType = 'all' | 'overview' | 'capacity' | 'services' | 'projects' | 'partners' | 'pdf';
 
-const PROFILE_PAGES_INDEX: ProfilePageDoc[] = [
+// 15 Dự án trích xuất trực tiếp từ trang 15 - 32 tài liệu HSNL TRANGIA.pdf
+const PDF_EXTRACTED_PROJECTS = [
   {
-    pageNumber: 1,
-    title: 'BÌA HỒ SƠ NĂNG LỰC TRẦN GIA',
-    category: 'Tổng quan',
-    content: [
-      'CÔNG TY TNHH DỊCH VỤ THƯƠNG MẠI VÀ XÂY DỰNG TRẦN GIA',
-      'Địa chỉ: Xóm Chùa, Thôn Trung Cao, Xã Phú Nghĩa, TP. Hà Nội',
-      'Điện thoại: 0986 078 270 | Email: trangia.kt69@gmail.com',
-      'Hồ Sơ Năng Lực Doanh Nghiệp (Profile 2026)',
-    ],
-    keyHighlight: 'TRẦN GIA PROFILE',
+    pdfPage: 16,
+    name: 'The Watson Hotel Hạ Long',
+    location: 'Bãi Cháy, TP. Hạ Long, Quảng Ninh',
+    scope: 'Thi công hệ trần vách thạch cao giật cấp & hoàn thiện sơn bả các tầng khách sạn',
+    client: 'Chủ đầu tư Khách sạn The Watson',
+    badge: 'Khách sạn 5 sao',
   },
   {
-    pageNumber: 2,
-    title: 'THƯ NGỎ TỪ BAN GIÁM ĐỐC',
-    category: 'Giới thiệu',
-    content: [
-      'Kính gửi Quý Chủ đầu tư và Khách hàng!',
-      'Lời đầu tiên, chúng tôi xin gửi lời cảm ơn chân thành đến tất cả Quý khách hàng đã tin tưởng, ủng hộ các sản phẩm và dịch vụ của Trần Gia.',
-      'Với phương châm "Uy tín - Chất lượng - Chính xác", Trần Gia luôn tôn trọng và hết lòng phục vụ tất cả các khách hàng.',
-      'Giám đốc công ty: TRẦN XUÂN ANH',
-    ],
-    keyHighlight: 'Phương châm: "Uy tín - Chất lượng - Chính xác"',
+    pdfPage: 17,
+    name: 'The Yacht Hotel Hạ Long',
+    location: 'Bãi Cháy, TP. Hạ Long, Quảng Ninh',
+    scope: 'Thi công trần trang trí sảnh, phòng nghỉ và sơn bả cao cấp phong cách du thuyền',
+    client: 'Chủ đầu tư The Yacht Hotel',
+    badge: 'Khách sạn nghỉ dưỡng',
   },
   {
-    pageNumber: 3,
-    title: 'GIỚI THIỆU DOANH NGHIỆP',
-    category: 'Giới thiệu',
-    content: [
-      'Là đơn vị hoạt động trong lĩnh vực thiết kế – thi công nội thất, trần, vách, sơn bả và hoàn thiện công trình xây dựng.',
-      'Xây dựng đội ngũ hơn 50 cán bộ – công nhân viên, trong đó có 10 cán bộ chủ chốt quản lý, kỹ thuật và vận hành.',
-      'Hợp tác thường xuyên với các viện nghiên cứu, công ty tư vấn và các trường đại học chuyên ngành xây dựng.',
-    ],
-    keyHighlight: 'Đội ngũ 50+ cán bộ CNV & 10 cán bộ chủ chốt',
+    pdfPage: 18,
+    name: 'Nhà xưởng Tập đoàn Jinyu Tây Ninh',
+    location: 'Lô 9 KCN Phước Đông, Trảng Bàng, Tây Ninh',
+    scope: 'Hạng mục FIT - OUT (Showroom & Multifunction Area)',
+    client: 'CTY TNHH Cogniplus Interiors',
+    badge: 'Công nghiệp & Nhà xưởng',
   },
   {
-    pageNumber: 4,
-    title: 'TẦM NHÌN, SỨ MỆNH & GIÁ TRỊ CỐT LÕI',
-    category: 'Triết lý',
-    content: [
-      'TẦM NHÌN: Trở thành đơn vị hàng đầu trong lĩnh vực thiết kế thi công nội thất, trần vách, sơn bả hoàn thiện.',
-      'SỨ MỆNH: Cung cấp hệ thống dịch vụ đồng bộ, khép kín với chất lượng và phong cách phục vụ chuyên nghiệp nhất.',
-      '6 GIÁ TRỊ CỐT LÕI: Uy tín, Tiến độ, Chất lượng, Sáng tạo, Chuyên nghiệp, Nỗ lực.',
-    ],
-    keyHighlight: '6 Giá trị cốt lõi: Uy tín - Tiến độ - Chất lượng - Sáng tạo - Chuyên nghiệp - Nỗ lực',
+    pdfPage: 19,
+    name: 'Chuỗi Showroom VinFast QS 3 Phía Nam',
+    location: 'Khu vực các tỉnh thành Phía Nam',
+    scope: 'Thi công trần thạch cao tiêu âm, trần phẳng sơn bả sắc nét & hoàn thiện nội thất chuẩn VinFast',
+    client: 'Tập đoàn Vingroup / VinFast',
+    badge: 'Thương mại & Showroom',
   },
   {
-    pageNumber: 5,
-    title: 'HỒ SƠ PHÁP LÝ & CHỨNG NHẬN NĂNG LỰC',
-    category: 'Pháp lý',
-    content: [
-      'Đầy đủ giấy phép đăng ký kinh doanh và hồ sơ năng lực hoạt động xây dựng theo quy định của Bộ Xây dựng.',
-      'Đạt các tiêu chuẩn quản lý chất lượng và quy chuẩn an toàn lao động vệ sinh môi trường.',
-    ],
-    keyHighlight: 'Hồ sơ pháp lý minh bạch, đầy đủ chứng chỉ năng lực xây dựng',
+    pdfPage: 20,
+    name: 'Đại đô thị Vinhomes Grand Park',
+    location: 'Đường Phước Thiện, Long Mỹ, TP. Thủ Đức, TP.HCM',
+    scope: 'Thi công hệ thống trần thạch cao chìm giật cấp, vách ngăn chống cháy căn hộ & khu công cộng',
+    client: 'Tập đoàn Vingroup',
+    badge: 'Đô thị cao tầng',
   },
   {
-    pageNumber: 6,
-    title: 'LĨNH VỰC HOẠT ĐỘNG CHÍNH',
-    category: 'Lĩnh vực',
-    content: [
-      '01. THI CÔNG TRẦN (Trần thạch cao ISO, trần kim loại cao cấp)',
-      '02. THI CÔNG VÁCH (Vách ngăn thạch cao chống cháy, tiêu âm)',
-      '03. SƠN BẢ HOÀN THIỆN (Sơn bả trong & ngoài nhà, phào chỉ GFRC)',
-      '04. THI CÔNG NỘI THẤT VÀ HOÀN THIỆN XÂY DỰNG (Fit-out, M&E)',
-    ],
-    keyHighlight: '4 Lĩnh vực thi công trọng tâm toàn diện',
+    pdfPage: 21,
+    name: 'Khách sạn 5 sao Nam Hội An',
+    location: 'Nam Hội An, Tỉnh Quảng Nam',
+    scope: 'Thi công trần vách thạch cao cách âm, trang trí sảnh hội nghị & biệt thự biển',
+    client: 'Tập đoàn Vingroup / Đối tác',
+    badge: 'Resort & Khách sạn 5 sao',
   },
   {
-    pageNumber: 7,
-    title: 'SƠ ĐỒ TỔ CHỨC CÔNG TY',
-    category: 'Tổ chức',
-    content: [
-      'Mô hình quản lý trực tuyến chức năng: Giám đốc công ty -> Giám đốc dự án.',
-      'Khối phòng ban: P. Kinh tế & Đầu tư, P. Thi công Dân dụng & Công nghiệp, P. Nhân sự, Ban Kế toán.',
-      'Khối hiện trường: Cán bộ kỹ thuật, Kỹ sư giám sát & Đội ngũ công nhân viên.',
-    ],
-    keyHighlight: 'Mô hình quản lý trực tuyến chức năng hiệu quả',
+    pdfPage: 22,
+    name: 'Tòa nhà ở cao tầng Charm Group',
+    location: 'Ngã tư 550, Dĩ An, Tỉnh Bình Dương',
+    scope: 'Thi công trần thạch cao, vách ngăn chống cháy khối căn hộ & shophouse thương mại',
+    client: 'Tập đoàn Charm Group',
+    badge: 'Căn hộ chung cư cao cấp',
   },
   {
-    pageNumber: 8,
-    title: 'NĂNG LỰC NHÂN SỰ CÔNG TY',
-    category: 'Nhân sự',
-    content: [
-      '04 Kiến trúc sư và Kỹ sư thiết kế',
-      '08 Kỹ sư nhà máy và công trường',
-      '03 Cử nhân kinh tế & Đấu thầu',
-      '03 Kế toán và Hành chính văn phòng',
-      '36 Công nhân kỹ thuật tại xưởng & công trình',
-      '50 - 200 Lao động thời vụ theo yêu cầu tiến độ dự án',
-    ],
-    keyHighlight: '50 - 200 nhân sự cơ động sẵn sàng huy động',
+    pdfPage: '23-25',
+    name: 'TTTM Vincom Dĩ An Bình Dương',
+    location: 'TP. Dĩ An, Tỉnh Bình Dương',
+    scope: 'Thi công hoàn thiện trần thạch cao thương mại, sảnh thông tầng và vách tiêu âm',
+    client: 'Tập đoàn Vingroup / Vincom Retail',
+    badge: 'Trung tâm thương mại',
   },
   {
-    pageNumber: 9,
-    title: 'NĂNG LỰC THIẾT BỊ – MÁY MÓC',
-    category: 'Thiết bị',
-    content: [
-      '70 Máy khoan bê tông chuyên dụng',
-      '120 Máy bắn vít thạch cao & kim loại',
-      '65 Máy laser định vị độ cao & góc chuẩn',
-      '15 Máy hàn công nghiệp',
-      '40 Máy cắt bàn & cắt cầm tay',
-    ],
-    keyHighlight: 'Hơn 300 đầu thiết bị máy móc tân tiến',
+    pdfPage: 26,
+    name: 'Khu chung cư & KS Ruby Hạ Long',
+    location: 'TP. Hạ Long, Tỉnh Quảng Ninh',
+    scope: 'Thi công trần thạch cao khối khách sạn, chung cư thương mại & dịch vụ',
+    client: 'Chủ đầu tư Ruby Hạ Long',
+    badge: 'Tổ hợp thương mại cao tầng',
   },
   {
-    pageNumber: 10,
-    title: 'CHÍNH SÁCH HOẠT ĐỘNG',
-    category: 'Chính sách',
-    content: [
-      'Chất lượng và uy tín là yếu tố quyết định sự thỏa mãn của khách hàng.',
-      'Xem việc đảm bảo tiến độ và chất lượng dịch vụ là mục tiêu chiến lược.',
-      'Tối ưu hóa về mặt kinh tế và chi phí đầu tư cho Quý khách hàng.',
-      'Tuyển dụng và đào tạo nhân sự tay nghề cao, chuyên môn vững vàng.',
-    ],
-    keyHighlight: 'Chiến lược: Đảm bảo tiến độ, chất lượng & tối ưu chi phí',
+    pdfPage: 27,
+    name: 'Dự án Masteri Hưng Yên',
+    location: 'Huyện Văn Giang, Tỉnh Hưng Yên',
+    scope: 'Thi công trần thạch cao cao cấp và hoàn thiện bả sơn khối căn hộ hạng sang',
+    client: 'Tập đoàn Masterise Homes',
+    badge: 'Căn hộ hạng sang',
   },
   {
-    pageNumber: 11,
-    title: 'NGUYÊN TẮC HOẠT ĐỘNG',
-    category: 'Nguyên tắc',
-    content: [
-      'VỚI KHÁCH HÀNG: Chất lượng, uy tín, tiến độ; cởi mở, thân thiện, cầu thị, nhiệt tình.',
-      'VỚI NHÂN VIÊN: Tạo cơ hội học tập, tác phong quốc tế, thăng tiến chính trực công bằng.',
-      'VỚI ĐỐI TÁC: Xây dựng mối quan hệ đoàn kết lâu dài, cùng có lợi, tôn vinh đạo đức kinh doanh.',
-      'VỚI CỘNG ĐỒNG: Trách nhiệm xã hội, tuân thủ pháp luật, đóng góp phát triển xã hội.',
-    ],
-    keyHighlight: '4 Nguyên tắc ứng xử chuẩn mực của Trần Gia',
+    pdfPage: 28,
+    name: 'KĐT Phía Đông Bắc Nam - Nam Ngạn Thanh Hóa',
+    location: 'Phường Nam Ngạn, TP. Thanh Hóa',
+    scope: 'Thi công bả sơn mặt ngoài, lắp dựng phào chỉ GFRC nghệ thuật kiến trúc',
+    client: 'CÔNG TY CỔ PHẦN TỔNG CÔNG TY MBLAND',
+    badge: 'Khu đô thị & Phào GFRC',
   },
   {
-    pageNumber: 12,
-    title: 'NĂNG LỰC NỘI THẤT & THIẾT KẾ (DECORATE & DESIGN)',
-    category: 'Năng lực',
-    content: [
-      'DECORATE: Trang trí nội thất văn phòng, khách sạn, nhà ở, nhà hàng tiêu chuẩn quốc tế.',
-      'DESIGN: Thiết kế với phần mềm ứng dụng tiên tiến nhất thế giới (BIM, 3D Max, Revit).',
-    ],
-    keyHighlight: 'Thiết kế 3D chuẩn xác & Thi công nội thất quốc tế',
+    pdfPage: 29,
+    name: 'TTTM Phức hợp Hải Dương',
+    location: 'Số 2 Phố Thống Nhất, P. Lê Thanh Nghị, TP. Hải Dương',
+    scope: 'Cung cấp vật tư và thi công sơn bả ngoài nhà chống thấm công nghệ cao',
+    client: 'TẬP ĐOÀN XÂY DỰNG DELTA',
+    badge: 'Tổng thầu DELTA',
   },
   {
-    pageNumber: 14,
-    title: 'NĂNG LỰC NỘI THẤT GỖ, KIM LOẠI & CƠ ĐIỆN (FURNITURE & M&E)',
-    category: 'Năng lực',
-    content: [
-      'FURNITURE: Sản phẩm gỗ MDF, MFC, Inox, da, ván lạng nhập khẩu cao cấp.',
-      'M&E & SERVICE: Cung cấp thiết bị điện aptomat, đèn chiếu sáng, ổ cắm, cáp điện; chế độ bảo hành chuyên nghiệp.',
-    ],
-    keyHighlight: 'Sản xuất đồ gỗ nội thất & Thi công cơ điện M&E trọn gói',
+    pdfPage: 30,
+    name: 'Sentosa Sky Park Hải Phòng',
+    location: 'Giao lộ Bùi Viện - Võ Nguyên Giáp, Lê Chân, Hải Phòng',
+    scope: 'Cung cấp vật tư, thi công trần vách thạch cao và sơn bả trần hoàn thiện',
+    client: 'DELTA-V (DELTA GROUP)',
+    badge: 'Tổng thầu DELTA-V',
   },
   {
-    pageNumber: 15,
-    title: 'DỰ ÁN NỔI BẬT & HÀNH TRÌNH PHÁT TRIỂN (Trang 15 - 32)',
-    category: 'Dự án',
-    content: [
-      'The Watson Hotel Hạ Long & The Yacht Hotel (Quảng Ninh)',
-      'Nhà xưởng Tập đoàn Jinyu (KCN Phước Đông, Tây Ninh - CĐT Cogniplus)',
-      'Chuỗi Showroom VinFast QS 3 Phía Nam & Vinhomes Grand Park (TP.HCM)',
-      'Khách sạn 5 sao Nam Hội An & Tòa nhà Charm Group (Bình Dương)',
-      'TTTM Vincom Dĩ An & Ruby Hạ Long & Masteri Hưng Yên',
-      'KĐT Nam Ngạn Thanh Hóa (CĐT MBland) & TTTM Hải Dương (CĐT Delta Group)',
-      'Sentosa Sky Park Hải Phòng (CĐT Delta-V) & Khách sạn 5 sao Đồng Gia (CĐT Viettel Construction) & Chung cư A&T Sky Garden (CĐT CDC)',
-    ],
-    keyHighlight: '15+ Công trình trọng điểm trên khắp cả nước',
+    pdfPage: 31,
+    name: 'Khách sạn 5 sao Đồng Gia',
+    location: 'Phường Bãi Cháy, TP. Hạ Long, Tỉnh Quảng Ninh',
+    scope: 'Thi công hệ trần kim loại cao cấp khu vực sảnh và không gian dịch vụ trong nhà',
+    client: 'TỔNG CÔNG TY CỔ PHẦN CÔNG TRÌNH VIETTEL',
+    badge: 'CĐT Viettel Construction',
   },
   {
-    pageNumber: 33,
-    title: 'ĐỐI TÁC CHIẾN LƯỢC & KHÁCH HÀNG (Trang 33 - 34)',
-    category: 'Đối tác',
-    content: [
-      'TẬP ĐOÀN XÂY DỰNG DELTA & DELTA-V',
-      'TỔNG CÔNG TY CÔNG TRÌNH VIETTEL (VIETTEL CONSTRUCTION)',
-      'CÔNG TY CỔ PHẦN XÂY DỰNG CDC & TỔNG CÔNG TY MBLAND',
-      'TẬP ĐOÀN VINGROUP, MASTERISE HOMES, COGNIPLUS, CHARM GROUP',
-    ],
-    keyHighlight: 'Đối tác tin cậy của các Tổng thầu & Chủ đầu tư số 1',
+    pdfPage: 32,
+    name: 'Chung cư cao cấp A&T Sky Garden Bình Dương',
+    location: 'Số 54C Cách Mạng Tháng 8, P. Lái Thiêu, TP. Thuận An, Bình Dương',
+    scope: 'Thi công hạng mục trần thạch cao căn hộ tiêu chuẩn chất lượng cao',
+    client: 'CÔNG TY CỔ PHẦN XÂY DỰNG CDC',
+    badge: 'Tổng thầu CDC',
   },
 ];
 
 export const ProfileViewerModal: React.FC<ProfileViewerModalProps> = ({ isOpen, onClose }) => {
-  const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<TabType>('all');
 
   if (!isOpen) return null;
 
-  const currentDoc = PROFILE_PAGES_INDEX[currentPageIndex];
-
-  const handlePrev = () => {
-    if (currentPageIndex > 0) {
-      setCurrentPageIndex(currentPageIndex - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPageIndex < PROFILE_PAGES_INDEX.length - 1) {
-      setCurrentPageIndex(currentPageIndex + 1);
-    }
-  };
-
   const handleDownloadPdf = () => {
-    // Direct link to the pdf file in workspace
     const link = document.createElement('a');
     link.href = `/${TRAN_GIA_INFO.pdfFileName}`;
     link.download = TRAN_GIA_INFO.pdfFileName;
@@ -240,23 +170,25 @@ export const ProfileViewerModal: React.FC<ProfileViewerModalProps> = ({ isOpen, 
 
   return (
     <div className="tg-modal-overlay" onClick={onClose}>
-      <div className="tg-modal-box profile-modal-box" onClick={(e) => e.stopPropagation()}>
-        {/* Modal Header */}
-        <div className="profile-modal-header">
-          <div className="profile-modal-title-wrap">
-            <BookOpen size={22} className="text-amber" />
+      <div className="tg-modal-box tg-eprofile-modal" onClick={(e) => e.stopPropagation()}>
+        {/* Modal Header: Tối giản, thanh lịch */}
+        <div className="eprofile-header">
+          <div className="eprofile-title-group">
+            <div className="eprofile-badge-icon">
+              <BookOpen size={20} />
+            </div>
             <div>
-              <h3>HỒ SƠ NĂNG LỰC TRẦN GIA (E-PROFILE)</h3>
-              <p className="subtext">
+              <h3 className="eprofile-main-title">HỒ SƠ NĂNG LỰC TRẦN GIA (E-PROFILE)</h3>
+              <p className="eprofile-sub-title">
                 Trích xuất trực tiếp từ tài liệu gốc <strong>{TRAN_GIA_INFO.pdfFileName}</strong> (36 trang)
               </p>
             </div>
           </div>
 
-          <div className="profile-modal-header-actions">
+          <div className="eprofile-actions">
             <button
               onClick={handleDownloadPdf}
-              className="tg-btn primary-solid small"
+              className="tg-btn primary-solid small eprofile-download-btn"
               title="Tải tệp PDF gốc về máy tính"
             >
               <Download size={15} />
@@ -268,104 +200,403 @@ export const ProfileViewerModal: React.FC<ProfileViewerModalProps> = ({ isOpen, 
           </div>
         </div>
 
-        {/* Modal Main Body */}
-        <div className="profile-modal-body">
-          {/* Left Sidebar: Table of Contents */}
-          <div className="profile-toc-sidebar">
-            <h4 className="toc-title">MỤC LỤC HỒ SƠ</h4>
-            <ul className="toc-list">
-              {PROFILE_PAGES_INDEX.map((page, idx) => (
-                <li
-                  key={idx}
-                  className={`toc-item ${currentPageIndex === idx ? 'active' : ''}`}
-                  onClick={() => setCurrentPageIndex(idx)}
-                >
-                  <span className="toc-page-num">Trang {page.pageNumber}</span>
-                  <span className="toc-item-title">{page.title}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Right Area: Page Preview & Content */}
-          <div className="profile-page-viewer">
-            <div className="page-viewer-header">
-              <div className="page-badge">
-                <span>{currentDoc.category}</span> • <strong>Trang {currentDoc.pageNumber} / 36</strong>
-              </div>
-              <div className="page-nav-controls">
-                <button
-                  onClick={handlePrev}
-                  disabled={currentPageIndex === 0}
-                  className="page-nav-btn"
-                  title="Trang trước"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <span className="page-indicator">
-                  {currentPageIndex + 1} / {PROFILE_PAGES_INDEX.length}
-                </span>
-                <button
-                  onClick={handleNext}
-                  disabled={currentPageIndex === PROFILE_PAGES_INDEX.length - 1}
-                  className="page-nav-btn"
-                  title="Trang tiếp theo"
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-            </div>
-
-            {/* Page Content Render Box */}
-            <div className="page-rendered-sheet">
-              <div className="sheet-watermark">TRẦN GIA PROFILE</div>
-
-              <div className="sheet-inner">
-                <div className="sheet-top-line">
-                  <span className="sheet-brand">TRẦN GIA PROFILE</span>
-                  <span className="sheet-num">{currentDoc.pageNumber.toString().padStart(2, '0')}</span>
-                </div>
-
-                <h2 className="sheet-title">{currentDoc.title}</h2>
-
-                {currentDoc.keyHighlight && (
-                  <div className="sheet-highlight-banner">
-                    <CheckCircle2 size={18} className="text-amber flex-shrink-0" />
-                    <span>{currentDoc.keyHighlight}</span>
-                  </div>
-                )}
-
-                <div className="sheet-body-content">
-                  {currentDoc.content.map((line, lIdx) => (
-                    <div key={lIdx} className="sheet-content-row">
-                      <span className="bullet-point">•</span>
-                      <p>{line}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="sheet-footer-line">
-                  <span>{TRAN_GIA_INFO.companyName}</span>
-                  <span>Hotline: {TRAN_GIA_INFO.hotline}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Navigation Tabs: Điều hướng ngang đơn giản, không rườm rà */}
+        <div className="eprofile-nav-tabs">
+          <button
+            className={`eprofile-tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveTab('all')}
+          >
+            <Layers size={15} />
+            <span>Toàn bộ hồ sơ</span>
+          </button>
+          <button
+            className={`eprofile-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            <Building size={15} />
+            <span>Tổng quan & Pháp lý</span>
+          </button>
+          <button
+            className={`eprofile-tab-btn ${activeTab === 'capacity' ? 'active' : ''}`}
+            onClick={() => setActiveTab('capacity')}
+          >
+            <Users size={15} />
+            <span>Nhân sự & Máy móc</span>
+          </button>
+          <button
+            className={`eprofile-tab-btn ${activeTab === 'services' ? 'active' : ''}`}
+            onClick={() => setActiveTab('services')}
+          >
+            <Wrench size={15} />
+            <span>Lĩnh vực hoạt động</span>
+          </button>
+          <button
+            className={`eprofile-tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
+            onClick={() => setActiveTab('projects')}
+          >
+            <Award size={15} />
+            <span>15+ Dự án tiêu biểu</span>
+          </button>
+          <button
+            className={`eprofile-tab-btn ${activeTab === 'partners' ? 'active' : ''}`}
+            onClick={() => setActiveTab('partners')}
+          >
+            <ShieldCheck size={15} />
+            <span>Đối tác chiến lược</span>
+          </button>
+          <button
+            className={`eprofile-tab-btn eprofile-tab-pdf ${activeTab === 'pdf' ? 'active' : ''}`}
+            onClick={() => setActiveTab('pdf')}
+          >
+            <Eye size={15} />
+            <span>Xem PDF gốc (36 trang)</span>
+          </button>
         </div>
 
-        {/* Modal Footer Bar */}
-        <div className="profile-modal-footer">
-          <div className="footer-doc-info">
-            <FileText size={16} className="text-slate-400" />
-            <span>Tệp: {TRAN_GIA_INFO.pdfFileName} | Phiên bản mới nhất</span>
+        {/* Modal Body */}
+        <div className="eprofile-content-body">
+          {activeTab === 'pdf' ? (
+            /* Chế độ nhúng xem trực tiếp PDF gốc */
+            <div className="eprofile-pdf-embed-wrapper">
+              <div className="eprofile-pdf-notice">
+                <span>Đang hiển thị tài liệu PDF gốc: <strong>{TRAN_GIA_INFO.pdfFileName}</strong> (36 trang, 32.8MB).</span>
+                <button onClick={handleDownloadPdf} className="tg-btn outline-btn small">
+                  <Download size={14} />
+                  <span>Tải tệp về</span>
+                </button>
+              </div>
+              <iframe
+                src={`/${TRAN_GIA_INFO.pdfFileName}#toolbar=1&navpanes=1`}
+                title="HSNL TRẦN GIA PDF"
+                className="eprofile-pdf-iframe"
+              />
+            </div>
+          ) : (
+            /* Chế độ bản số hóa hiển thị đơn giản, rõ ràng */
+            <div className="eprofile-digest-scroll">
+              {/* Thống kê nhanh nổi bật */}
+              <div className="eprofile-stats-row">
+                <div className="eprofile-stat-card">
+                  <div className="eprofile-stat-num">50+</div>
+                  <div className="eprofile-stat-lbl">Cán bộ & Nhân sự chủ chốt</div>
+                </div>
+                <div className="eprofile-stat-card">
+                  <div className="eprofile-stat-num">300+</div>
+                  <div className="eprofile-stat-lbl">Thiết bị máy móc chuyên dụng</div>
+                </div>
+                <div className="eprofile-stat-card">
+                  <div className="eprofile-stat-num">15+</div>
+                  <div className="eprofile-stat-lbl">Đại dự án quy mô toàn quốc</div>
+                </div>
+                <div className="eprofile-stat-card">
+                  <div className="eprofile-stat-num">04</div>
+                  <div className="eprofile-stat-lbl">Lĩnh vực thi công trọng tâm</div>
+                </div>
+              </div>
+
+              {/* SECTION 1: TỔNG QUAN & THƯ NGỎ */}
+              {(activeTab === 'all' || activeTab === 'overview') && (
+                <section className="eprofile-card-section">
+                  <div className="eprofile-section-head">
+                    <span className="eprofile-sec-badge">Trang 01 - 05</span>
+                    <h4 className="eprofile-sec-title">1. Giới thiệu Doanh nghiệp & Thư ngỏ Ban Giám đốc</h4>
+                  </div>
+
+                  <div className="eprofile-letter-box">
+                    <div className="eprofile-letter-quote">
+                      <p className="lead-text">
+                        "Với phương châm <strong>Uy tín - Chất lượng - Chính xác</strong>, Trần Gia luôn tôn trọng và hết lòng phục vụ tất cả các khách hàng. Sự tin tưởng, ủng hộ của Quý khách hàng là động lực thôi thúc Trần Gia ngày càng hoàn thiện, đổi mới và đem lại lợi ích cao nhất cho mọi công trình."
+                      </p>
+                      <div className="eprofile-letter-signature">
+                        <span className="sig-role">Giám đốc Công ty:</span>
+                        <strong className="sig-name">TRẦN XUÂN ANH</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="eprofile-info-grid">
+                    <div className="eprofile-info-item">
+                      <span className="info-label">Tên đầy đủ:</span>
+                      <strong className="info-val">{TRAN_GIA_INFO.companyName}</strong>
+                    </div>
+                    <div className="eprofile-info-item">
+                      <span className="info-label">Trụ sở công ty:</span>
+                      <strong className="info-val">{TRAN_GIA_INFO.address}</strong>
+                    </div>
+                    <div className="eprofile-info-item">
+                      <span className="info-label">Điện thoại / Hotline:</span>
+                      <strong className="info-val">{TRAN_GIA_INFO.hotline}</strong>
+                    </div>
+                    <div className="eprofile-info-item">
+                      <span className="info-label">Email chính thức:</span>
+                      <strong className="info-val">{TRAN_GIA_INFO.email}</strong>
+                    </div>
+                  </div>
+
+                  <div className="eprofile-philosophy-grid">
+                    <div className="philosophy-box">
+                      <h5>TẦM NHÌN (VISION)</h5>
+                      <p>Trở thành đơn vị hàng đầu trong lĩnh vực thiết kế thi công nội thất, trần vách, sơn bả hoàn thiện và thi công xây dựng trên toàn quốc.</p>
+                    </div>
+                    <div className="philosophy-box">
+                      <h5>SỨ MỆNH (MISSION)</h5>
+                      <p>Cung cấp hệ thống dịch vụ đồng bộ, khép kín với chất lượng và phong cách phục vụ chuyên nghiệp nhất, đáp ứng các tiêu chuẩn khắt khe của Quý khách hàng.</p>
+                    </div>
+                  </div>
+
+                  <div className="eprofile-core-values-wrap">
+                    <span className="sub-heading">6 Giá trị cốt lõi (Core Values):</span>
+                    <div className="eprofile-values-chips">
+                      <span className="value-chip"><strong>Uy tín:</strong> Giữ vững niềm tin bằng trách nhiệm</span>
+                      <span className="value-chip"><strong>Tiến độ:</strong> Cam kết đúng hạn và chuẩn xác</span>
+                      <span className="value-chip"><strong>Chất lượng:</strong> Tỉ mỉ trong từng chi tiết thi công</span>
+                      <span className="value-chip"><strong>Sáng tạo:</strong> Đổi mới giải pháp kỹ thuật</span>
+                      <span className="value-chip"><strong>Chuyên nghiệp:</strong> Quy trình rõ ràng, minh bạch</span>
+                      <span className="value-chip"><strong>Nỗ lực:</strong> Luôn phấn đấu vì sự thành công của CĐT</span>
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {/* SECTION 2: NHÂN SỰ & MÁY MÓC */}
+              {(activeTab === 'all' || activeTab === 'capacity') && (
+                <section className="eprofile-card-section">
+                  <div className="eprofile-section-head">
+                    <span className="eprofile-sec-badge">Trang 07 - 11</span>
+                    <h4 className="eprofile-sec-title">2. Sơ đồ Tổ chức, Năng lực Nhân sự & Máy móc Thiết bị</h4>
+                  </div>
+
+                  {/* Sơ đồ tổ chức dạng thanh tối giản */}
+                  <div className="eprofile-org-bar">
+                    <div className="org-step root">GIÁM ĐỐC CÔNG TY (TRẦN XUÂN ANH)</div>
+                    <div className="org-arrow">↓</div>
+                    <div className="org-step project">GIÁM ĐỐC DỰ ÁN</div>
+                    <div className="org-arrow">↓</div>
+                    <div className="org-departments">
+                      <div className="org-dep">P. Kinh tế & Đầu tư</div>
+                      <div className="org-dep">P. Thi công Dân dụng & Công nghiệp</div>
+                      <div className="org-dep">P. Nhân sự & Hành chính</div>
+                      <div className="org-dep">Ban Kế toán Dự án</div>
+                    </div>
+                  </div>
+
+                  {/* Bảng nhân sự */}
+                  <div className="eprofile-subsection">
+                    <h5 className="sub-title-with-icon">
+                      <Users size={16} className="text-amber" />
+                      Cơ cấu Nhân sự Trần Gia (Trang 08)
+                    </h5>
+                    <div className="eprofile-personnel-grid">
+                      <div className="personnel-card">
+                        <span className="p-count">04</span>
+                        <span className="p-role">Kiến trúc sư & Kỹ sư thiết kế</span>
+                      </div>
+                      <div className="personnel-card">
+                        <span className="p-count">08</span>
+                        <span className="p-role">Kỹ sư nhà máy & Công trường</span>
+                      </div>
+                      <div className="personnel-card">
+                        <span className="p-count">03</span>
+                        <span className="p-role">Cử nhân kinh tế & Đấu thầu</span>
+                      </div>
+                      <div className="personnel-card">
+                        <span className="p-count">03</span>
+                        <span className="p-role">Kế toán & Văn phòng</span>
+                      </div>
+                      <div className="personnel-card highlight">
+                        <span className="p-count">36</span>
+                        <span className="p-role">Công nhân kỹ thuật tại xưởng & công trường</span>
+                      </div>
+                      <div className="personnel-card highlight">
+                        <span className="p-count">50 - 200</span>
+                        <span className="p-role">Lao động thời vụ cơ động theo dự án</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bảng thiết bị máy móc */}
+                  <div className="eprofile-subsection">
+                    <h5 className="sub-title-with-icon">
+                      <Wrench size={16} className="text-amber" />
+                      Năng lực Máy móc Thiết bị thi công (Trang 09)
+                    </h5>
+                    <div className="eprofile-equipment-list">
+                      <div className="equip-row">
+                        <span className="equip-name">Máy khoan bê tông chuyên dụng</span>
+                        <span className="equip-qty">70 Chiếc</span>
+                      </div>
+                      <div className="equip-row">
+                        <span className="equip-name">Máy bắn vít thạch cao & kim loại</span>
+                        <span className="equip-qty">120 Chiếc</span>
+                      </div>
+                      <div className="equip-row">
+                        <span className="equip-name">Máy Laser định vị độ cao & góc chuẩn</span>
+                        <span className="equip-qty">65 Chiếc</span>
+                      </div>
+                      <div className="equip-row">
+                        <span className="equip-name">Máy hàn công nghiệp & hàn điện</span>
+                        <span className="equip-qty">15 Chiếc</span>
+                      </div>
+                      <div className="equip-row">
+                        <span className="equip-name">Máy cắt bàn & Máy cắt cầm tay</span>
+                        <span className="equip-qty">40 Chiếc</span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {/* SECTION 3: LĨNH VỰC HOẠT ĐỘNG */}
+              {(activeTab === 'all' || activeTab === 'services') && (
+                <section className="eprofile-card-section">
+                  <div className="eprofile-section-head">
+                    <span className="eprofile-sec-badge">Trang 06, 12 - 14</span>
+                    <h4 className="eprofile-sec-title">3. Lĩnh vực Hoạt động & Dịch vụ Trọng tâm</h4>
+                  </div>
+
+                  <div className="eprofile-services-grid">
+                    <div className="service-simple-card">
+                      <div className="service-idx">01</div>
+                      <div className="service-detail">
+                        <h5>THI CÔNG TRẦN</h5>
+                        <p>Trần thạch cao chìm giật cấp, trần thả tiêu âm, trần nhôm và trần kim loại cao cấp đạt chuẩn ISO kỹ thuật.</p>
+                      </div>
+                    </div>
+
+                    <div className="service-simple-card">
+                      <div className="service-idx">02</div>
+                      <div className="service-detail">
+                        <h5>THI CÔNG VÁCH</h5>
+                        <p>Hệ vách ngăn thạch cao 1 mặt, 2 mặt cách âm, chống cháy chuyên dụng cho công trình cao tầng, trung tâm thương mại và khu công nghiệp.</p>
+                      </div>
+                    </div>
+
+                    <div className="service-simple-card">
+                      <div className="service-idx">03</div>
+                      <div className="service-detail">
+                        <h5>SƠN BẢ HOÀN THIỆN</h5>
+                        <p>Cung cấp vật tư và thi công bả sơn ngoài nhà chống thấm, sơn bả trong nhà thẩm mỹ cao, sản xuất và lắp dựng hoàn thiện phào chỉ GFRC nghệ thuật.</p>
+                      </div>
+                    </div>
+
+                    <div className="service-simple-card">
+                      <div className="service-idx">04</div>
+                      <div className="service-detail">
+                        <h5>NỘI THẤT & HOÀN THIỆN XÂY DỰNG</h5>
+                        <p>Fit-out trọn gói: Trang trí nội thất quốc tế (Decorate), Thiết kế 3D/BIM (Design), Sản xuất Furniture gỗ/Inox cao cấp và hệ thống cơ điện M&E.</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {/* SECTION 4: 15+ DỰ ÁN TIÊU BIỂU */}
+              {(activeTab === 'all' || activeTab === 'projects') && (
+                <section className="eprofile-card-section">
+                  <div className="eprofile-section-head">
+                    <span className="eprofile-sec-badge">Trang 15 - 32</span>
+                    <h4 className="eprofile-sec-title">4. Dự án Nổi bật & Hành trình Phát triển (15 Công trình)</h4>
+                  </div>
+
+                  <p className="eprofile-projects-intro">
+                    Trích xuất đầy đủ 15 dự án trọng điểm được giới thiệu chi tiết từ trang 16 đến trang 32 trong tài liệu gốc:
+                  </p>
+
+                  <div className="eprofile-projects-table-wrap">
+                    <table className="eprofile-projects-table">
+                      <thead>
+                        <tr>
+                          <th style={{ width: '85px' }}>Trang PDF</th>
+                          <th>Tên Công Trình</th>
+                          <th>Chủ Đầu Tư / Tổng Thầu</th>
+                          <th>Địa Điểm</th>
+                          <th>Hạng Mục Thi Công</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {PDF_EXTRACTED_PROJECTS.map((proj, idx) => (
+                          <tr key={idx}>
+                            <td>
+                              <span className="table-pdf-tag">Trang {proj.pdfPage}</span>
+                            </td>
+                            <td>
+                              <strong className="table-proj-name">{proj.name}</strong>
+                              <span className="table-proj-badge">{proj.badge}</span>
+                            </td>
+                            <td className="table-proj-client">{proj.client}</td>
+                            <td className="table-proj-loc">{proj.location}</td>
+                            <td className="table-proj-scope">{proj.scope}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              )}
+
+              {/* SECTION 5: ĐỐI TÁC CHIẾN LƯỢC */}
+              {(activeTab === 'all' || activeTab === 'partners') && (
+                <section className="eprofile-card-section">
+                  <div className="eprofile-section-head">
+                    <span className="eprofile-sec-badge">Trang 33 - 34</span>
+                    <h4 className="eprofile-sec-title">5. Đối tác Chiến lược & Khách hàng</h4>
+                  </div>
+
+                  <div className="eprofile-partners-cloud">
+                    <div className="partner-cloud-item">
+                      <strong>TẬP ĐOÀN XÂY DỰNG DELTA</strong>
+                      <span>Tổng thầu xây dựng hàng đầu Việt Nam</span>
+                    </div>
+                    <div className="partner-cloud-item">
+                      <strong>DELTA-V</strong>
+                      <span>Ứng dụng công nghệ xây dựng Delta</span>
+                    </div>
+                    <div className="partner-cloud-item">
+                      <strong>VIETTEL CONSTRUCTION</strong>
+                      <span>Tổng công ty CP Công trình Viettel</span>
+                    </div>
+                    <div className="partner-cloud-item">
+                      <strong>CÔNG TY CỔ PHẦN XÂY DỰNG CDC</strong>
+                      <span>Tổng thầu xây dựng các công trình cao tầng</span>
+                    </div>
+                    <div className="partner-cloud-item">
+                      <strong>TỔNG CÔNG TY MBLAND</strong>
+                      <span>Chủ đầu tư các đại đô thị phát triển</span>
+                    </div>
+                    <div className="partner-cloud-item">
+                      <strong>TẬP ĐOÀN VINGROUP / VINFAST</strong>
+                      <span>Showroom & Đại đô thị Vinhomes</span>
+                    </div>
+                    <div className="partner-cloud-item">
+                      <strong>MASTERISE HOMES</strong>
+                      <span>Nhà phát triển bất động sản hàng hiệu</span>
+                    </div>
+                    <div className="partner-cloud-item">
+                      <strong>COGNIPLUS INTERIORS</strong>
+                      <span>Đối tác Fit-out nhà xưởng công nghiệp</span>
+                    </div>
+                  </div>
+                </section>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Modal Footer: Tinh gọn, rõ ràng */}
+        <div className="eprofile-footer">
+          <div className="eprofile-footer-info">
+            <FileText size={15} className="text-amber" />
+            <span>Tài liệu: <strong>{TRAN_GIA_INFO.pdfFileName}</strong> (36 trang, 32.8MB)</span>
+            <span className="divider">•</span>
+            <span>Hotline: {TRAN_GIA_INFO.hotline}</span>
           </div>
 
-          <div className="footer-buttons">
-            <button onClick={handleDownloadPdf} className="tg-btn primary-solid">
-              <Download size={16} />
-              <span>Tải Toàn Bộ Hồ Sơ Năng Lực (PDF)</span>
+          <div className="eprofile-footer-actions">
+            <button onClick={handleDownloadPdf} className="tg-btn primary-solid small">
+              <Download size={14} />
+              <span>Tải Toàn Bộ PDF (32MB)</span>
             </button>
-            <button onClick={onClose} className="tg-btn outline-btn">
+            <button onClick={onClose} className="tg-btn outline-btn small">
               <span>Đóng</span>
             </button>
           </div>

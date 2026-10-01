@@ -28,7 +28,7 @@ export class ArticleService {
   ) {}
 
   async findAll(query: QueryArticlesDto) {
-    const { page = 1, limit = 9, search, category, status, isFeatured } = query;
+    const { page = 1, limit = 9, search, category, status, isFeatured, lang } = query;
     const skip = (page - 1) * limit;
 
     const queryBuilder = this.articleRepository
@@ -42,9 +42,16 @@ export class ArticleService {
       queryBuilder.andWhere('article.status = :status', { status });
     }
 
+    if (lang && lang !== 'all') {
+      queryBuilder.andWhere(
+        '(article.lang = :lang OR article.lang = :allLang OR (article.titleEn IS NOT NULL AND :lang = \'en\'))',
+        { lang, allLang: 'all' },
+      );
+    }
+
     if (search && search.trim() !== '') {
       queryBuilder.andWhere(
-        '(LOWER(article.title) LIKE :search OR LOWER(article.summary) LIKE :search)',
+        '(LOWER(article.title) LIKE :search OR LOWER(article.summary) LIKE :search OR LOWER(article.titleEn) LIKE :search OR LOWER(article.summaryEn) LIKE :search)',
         { search: `%${search.toLowerCase().trim()}%` },
       );
     }

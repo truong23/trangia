@@ -17,9 +17,13 @@ export interface Category {
 export interface Article {
   id: string;
   title: string;
+  titleEn?: string;
   slug: string;
   summary: string;
+  summaryEn?: string;
   content: string;
+  contentEn?: string;
+  lang?: string;
   thumbnail?: string;
   status: 'published' | 'draft' | 'archived';
   viewCount: number;
@@ -31,6 +35,16 @@ export interface Article {
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface UploadedFile {
+  url: string;
+  location?: string;
+  filename: string;
+  originalname: string;
+  mimetype: string;
+  size: number;
+  uploadedAt: string;
 }
 
 export interface Project {
@@ -48,14 +62,27 @@ export interface Project {
   year?: string;
   pageInPdf?: number;
   description?: string;
+  sortOrder?: number;
+  isFeatured?: boolean;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Partner {
   id: string;
   name: string;
-  logo: string;
+  logo?: string;
+  thumbnail?: string;
   role: string;
+  category?: 'developer' | 'contractor' | 'manufacturer';
+  projects?: string[] | string;
+  brandColor?: string;
+  badge?: string;
   description?: string;
+  website?: string;
+  sortOrder?: number;
+  isActive?: boolean;
 }
 
 export interface EquipmentItem {
@@ -78,11 +105,16 @@ export interface ContactRequest {
   id?: string;
   fullName: string;
   phone: string;
-  email: string;
+  email?: string;
   service: string;
-  message: string;
+  projectLocation?: string;
+  message?: string;
+  status?: 'new' | 'contacted' | 'quoted' | 'completed' | 'cancelled';
+  notes?: string;
   createdAt?: string;
+  updatedAt?: string;
 }
+
 
 export interface ArticlesResponse {
   items: Article[];
@@ -116,10 +148,15 @@ export interface SiteSettings {
   };
   heroBanner: {
     title: string;
+    subtitle?: string;
     subtext: string;
     feedbackEmail: string;
     backgroundImage?: string;
     recruitmentBanner?: string;
+    stats?: Array<{
+      number: string;
+      label: string;
+    }>;
   };
   navigation: Array<{
     title: string;

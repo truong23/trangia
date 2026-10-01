@@ -43,6 +43,22 @@ __decorate([
     __metadata("design:type", String)
 ], Article.prototype, "content", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', default: 'vi' }),
+    __metadata("design:type", String)
+], Article.prototype, "lang", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Article.prototype, "titleEn", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Article.prototype, "summaryEn", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Article.prototype, "contentEn", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Article.prototype, "thumbnail", void 0);

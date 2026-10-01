@@ -23,7 +23,27 @@ export class CreateArticleDto {
   @IsString()
   content: string;
 
-  @ApiProperty({ example: 'https://deltagroup.vn/wp-content/uploads/2026/09/1V7A8103.webp', required: false, description: 'URL ảnh thumbnail' })
+  @ApiProperty({ example: 'vi', required: false, description: 'Ngôn ngữ bài viết (vi, en)' })
+  @IsOptional()
+  @IsString()
+  lang?: string;
+
+  @ApiProperty({ example: 'Tran Gia Construction: Quality and Innovation', required: false, description: 'Tiêu đề tiếng Anh' })
+  @IsOptional()
+  @IsString()
+  titleEn?: string;
+
+  @ApiProperty({ example: 'Summary in English...', required: false, description: 'Tóm tắt tiếng Anh' })
+  @IsOptional()
+  @IsString()
+  summaryEn?: string;
+
+  @ApiProperty({ example: '<p>English detailed content...</p>', required: false, description: 'Nội dung tiếng Anh' })
+  @IsOptional()
+  @IsString()
+  contentEn?: string;
+
+  @ApiProperty({ example: 'https://images.unsplash.com/...', required: false, description: 'URL ảnh thumbnail' })
   @IsOptional()
   @IsString()
   thumbnail?: string;

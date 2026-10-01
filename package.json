@@ -8,6 +8,10 @@
     "install:all": "yarn --cwd backend install && yarn --cwd frontend install",
     "db:migrate": "yarn --cwd backend db:migrate",
     "db:migrate:rollback": "yarn --cwd backend db:migrate:rollback",
+    "db:migration:create": "yarn --cwd backend db:migration:create",
+    "db:migration:generate": "yarn --cwd backend db:migration:generate",
+    "db:migrate:create": "yarn --cwd backend db:migrate:create",
+    "db:migrate:generate": "yarn --cwd backend db:migrate:generate",
     "db:seed": "yarn --cwd backend db:seed",
     "db:refresh": "yarn --cwd backend db:refresh"
   },

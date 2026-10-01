@@ -41,7 +41,31 @@ __decorate([
     __metadata("design:type", String)
 ], CreateArticleDto.prototype, "content", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'https://deltagroup.vn/wp-content/uploads/2026/09/1V7A8103.webp', required: false, description: 'URL ảnh thumbnail' }),
+    (0, swagger_1.ApiProperty)({ example: 'vi', required: false, description: 'Ngôn ngữ bài viết (vi, en)' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateArticleDto.prototype, "lang", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Tran Gia Construction: Quality and Innovation', required: false, description: 'Tiêu đề tiếng Anh' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateArticleDto.prototype, "titleEn", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Summary in English...', required: false, description: 'Tóm tắt tiếng Anh' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateArticleDto.prototype, "summaryEn", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '<p>English detailed content...</p>', required: false, description: 'Nội dung tiếng Anh' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateArticleDto.prototype, "contentEn", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'https://images.unsplash.com/...', required: false, description: 'URL ảnh thumbnail' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)

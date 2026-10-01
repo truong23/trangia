@@ -11,6 +11,7 @@ export const articleService = {
     search?: string;
     status?: string;
     isFeatured?: boolean;
+    lang?: string;
   }): Promise<ArticlesResponse> {
     const query = new URLSearchParams();
     if (params.page) query.append('page', params.page.toString());
@@ -19,6 +20,7 @@ export const articleService = {
     if (params.search) query.append('search', params.search);
     if (params.status) query.append('status', params.status);
     if (params.isFeatured !== undefined) query.append('isFeatured', String(params.isFeatured));
+    if (params.lang && params.lang !== 'all') query.append('lang', params.lang);
 
     const res = await fetch(`${API_BASE_URL}/articles?${query.toString()}`);
     if (!res.ok) throw new Error('Failed to fetch articles');
