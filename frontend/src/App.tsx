@@ -16,6 +16,7 @@ import { Sidebar } from './components/Sidebar';
 import { Pagination } from './components/Pagination';
 import { ArticleDetailModal } from './components/ArticleDetailModal';
 import { ContactSection } from './components/ContactSection';
+import { RecruitmentSection } from './components/RecruitmentSection';
 import { ProfileViewerModal } from './components/ProfileViewerModal';
 import { AdminPage } from './components/AdminPage';
 import { Footer } from './components/Footer';
@@ -225,6 +226,38 @@ export const App: React.FC = () => {
   }
 
   // ==========================================================
+  // ROUTE 3: RECRUITMENT PAGE (/tuyen-dung)
+  // ==========================================================
+  if (currentPath.toLowerCase() === '/tuyen-dung') {
+    return (
+      <div className="tg-page-wrapper">
+        <Header
+          onSearch={handleSearch}
+          settings={siteSettings}
+          activeSection="recruitment"
+          onNavigateSection={navigateSection}
+          onOpenProfileModal={() => setIsProfileModalOpen(true)}
+        />
+        
+        <div style={{ minHeight: 'calc(100vh - 300px)' }}>
+          <RecruitmentSection bannerUrl={siteSettings?.heroBanner?.recruitmentBanner} />
+        </div>
+
+        <Footer
+          settings={siteSettings}
+          onNavigateSection={navigateSection}
+          onOpenProfileModal={() => setIsProfileModalOpen(true)}
+        />
+
+        <ProfileViewerModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+        />
+      </div>
+    );
+  }
+
+  // ==========================================================
   // ROUTE 2: PUBLIC TRAN GIA PROFILE & CORPORATE PORTAL (/)
   // ==========================================================
   const currentCategoryObj = categories.find((c) => c.slug === selectedCategory);
@@ -358,10 +391,12 @@ export const App: React.FC = () => {
         </div>
       </section>
 
-      {/* 9. Liên hệ & Yêu cầu báo giá thi công */}
+      {/* 9. Recruitment (moved to standalone page) */}
+
+      {/* 10. Liên hệ & Yêu cầu báo giá thi công */}
       <ContactSection />
 
-      {/* 10. Footer Trần Gia */}
+      {/* 11. Footer Trần Gia */}
       <Footer
         settings={siteSettings}
         onNavigateSection={navigateSection}

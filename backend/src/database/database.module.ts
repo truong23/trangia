@@ -6,6 +6,8 @@ import { User } from '../user/user.entity';
 import { Category } from '../category/category.entity';
 import { Article } from '../article/article.entity';
 import { Setting } from '../settings/settings.entity';
+import { JobPosting } from '../job/entities/job.entity';
+import { JobApplication } from '../application/entities/application.entity';
 import { SeedService } from './seed.service';
 
 @Module({
@@ -15,7 +17,7 @@ import { SeedService } from './seed.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const dbType = configService.get<string>('DB_TYPE', 'sqlite');
-        const entities = [User, Category, Article, Setting];
+        const entities = [User, Category, Article, Setting, JobPosting, JobApplication];
         const migrations = [path.join(__dirname, 'migrations/*{.ts,.js}')];
 
         if (dbType === 'mysql') {
@@ -45,7 +47,7 @@ import { SeedService } from './seed.service';
         };
       },
     }),
-    TypeOrmModule.forFeature([User, Category, Article, Setting]),
+    TypeOrmModule.forFeature([User, Category, Article, Setting, JobPosting, JobApplication]),
   ],
   providers: [SeedService],
   exports: [TypeOrmModule, SeedService],

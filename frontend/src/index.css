@@ -301,7 +301,7 @@ button {
   justify-content: center;
   box-shadow: 0 3px 8px rgba(11, 34, 64, 0.25);
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .tg-logo-symbol::before {
@@ -3653,7 +3653,7 @@ button {
   background: #FFFFFF;
   border: 1px solid var(--tg-border);
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: var(--tg-shadow-sm);
 }
 
@@ -3983,4 +3983,119 @@ button {
   .admin-portal-wrapper { flex-direction: column; }
   .admin-sidebar { width: 100%; }
   .overview-stats-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================
+   RECRUITMENT RESPONSIVE LAYOUTS
+   ========================================================== */
+.recruitment-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+}
+
+.job-detail-layout {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  gap: 40px;
+}
+
+.job-detail-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.job-card-layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 20px;
+}
+
+.job-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 992px) {
+  .recruitment-layout {
+    grid-template-columns: 1fr;
+  }
+  .job-detail-layout {
+    grid-template-columns: 1fr;
+  }
+  .job-card-layout {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+  .job-card-layout > div:last-child {
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .job-detail-info-grid {
+    grid-template-columns: 1fr;
+  }
+  .job-card-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .job-detail-banner-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .job-detail-banner-content h1 {
+    font-size: 1.8rem !important;
+  }
+  .job-detail-banner-content button {
+    margin-top: 20px;
+    width: 100%;
+  }
+}
+/* Responsive Table for Admin */
+@media (max-width: 768px) {
+  .responsive-admin-table, .responsive-admin-table tbody, .responsive-admin-table tr, .responsive-admin-table td {
+    display: block;
+    width: 100%;
+    min-width: auto !important;
+  }
+  .responsive-admin-table thead {
+    display: none;
+  }
+  .responsive-admin-table tr {
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .responsive-admin-table td {
+    text-align: left !important;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    min-width: auto !important;
+  }
+  .responsive-admin-table td:last-child {
+    border-bottom: none;
+  }
+  .responsive-admin-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+  }
+  .responsive-admin-table .table-actions {
+    justify-content: flex-start !important;
+  }
 }

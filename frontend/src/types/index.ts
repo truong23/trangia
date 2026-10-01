@@ -119,6 +119,7 @@ export interface SiteSettings {
     subtext: string;
     feedbackEmail: string;
     backgroundImage?: string;
+    recruitmentBanner?: string;
   };
   navigation: Array<{
     title: string;
@@ -138,3 +139,34 @@ export interface SiteSettings {
 }
 
 
+
+export interface Job {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  salary: string;
+  jobType: string;
+  deadline: string;
+  description: string;
+  requirements: string;
+  benefits: string;
+  status: 'open' | 'closed';
+  applicationCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Application {
+  id: string;
+  jobId: string;
+  candidateName: string;
+  email: string;
+  phone: string;
+  coverLetter?: string;
+  cvUrl: string;
+  hrNote?: string;
+  status: 'pending' | 'passed' | 'rejected';
+  createdAt?: string;
+  updatedAt?: string;
+}

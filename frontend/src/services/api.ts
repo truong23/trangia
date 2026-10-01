@@ -9,12 +9,41 @@ export * from './category/category.service';
 export * from './auth/auth.service';
 export * from './settings/settings.service';
 export * from './user/user.service';
+export * from './recruitment/recruitment.service';
+
+import { jobService, applicationService } from './recruitment/recruitment.service';
 
 // Hợp nhất export api đối tượng tiện lợi cho các component
 export const api = {
   // Settings Service
   getSettings: settingsService.getSettings.bind(settingsService),
   updateSettings: settingsService.updateSettings.bind(settingsService),
+
+  // Upload Image
+  uploadImage: async (file: File): Promise<{ url: string }> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    // Get token
+    let token = '';
+    const stored = localStorage.getItem('auth_user');
+    if (stored) {
+      const authData = JSON.parse(stored);
+      if (authData?.access_token) {
+        token = authData.access_token;
+      }
+    }
+
+    const res = await fetch('http://localhost:3001/api/upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    });
+    if (!res.ok) throw new Error('Upload failed');
+    return res.json();
+  },
 
   // Category Service
   getCategories: categoryService.getCategories.bind(categoryService),
@@ -43,6 +72,18 @@ export const api = {
   createUser: userService.createUser.bind(userService),
   updateUser: userService.updateUser.bind(userService),
   deleteUser: userService.deleteUser.bind(userService),
+
+  // Recruitment Service
+  getJobs: jobService.getJobs.bind(jobService),
+  getJobById: jobService.getJobById.bind(jobService),
+  createJob: jobService.createJob.bind(jobService),
+  updateJob: jobService.updateJob.bind(jobService),
+  deleteJob: jobService.deleteJob.bind(jobService),
+  
+  getApplications: applicationService.getApplications.bind(applicationService),
+  createApplication: applicationService.createApplication.bind(applicationService),
+  updateApplicationStatus: applicationService.updateApplicationStatus.bind(applicationService),
+  updateApplicationNote: applicationService.updateApplicationNote.bind(applicationService),
 };
 
 export default api;

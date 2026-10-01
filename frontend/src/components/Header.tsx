@@ -62,6 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'projects', label: 'DỰ ÁN' },
     { id: 'partners', label: 'ĐỐI TÁC' },
     { id: 'news', label: 'TIN TỨC' },
+    { id: 'recruitment', label: 'TUYỂN DỤNG' },
     { id: 'contact', label: 'LIÊN HỆ' },
   ];
 
@@ -75,6 +76,14 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const handleLinkClick = (id: string) => {
+    if (id === 'recruitment') {
+      window.location.href = '/tuyen-dung';
+      return;
+    }
+    if (window.location.pathname !== '/' && window.location.pathname !== '') {
+      window.location.href = '/#' + id;
+      return;
+    }
     onNavigateSection(id);
     setMobileMenuOpen(false);
   };

@@ -29,9 +29,11 @@ import {
   ShieldAlert,
   Send,
   CheckCircle2,
+  Briefcase,
 } from 'lucide-react';
 import { Article, Category, User, SiteSettings } from '../types';
 import { api } from '../services/api';
+import { AdminJobsTab } from './AdminJobsTab';
 
 interface AdminPageProps {
   onNavigate: (path: string) => void;
@@ -40,7 +42,7 @@ interface AdminPageProps {
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(() => api.getCurrentUser());
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'articles' | 'editor' | 'categories' | 'users' | 'security' | 'settings'
+    'overview' | 'articles' | 'editor' | 'categories' | 'jobs' | 'users' | 'security' | 'settings'
   >('overview');
 
   // Login form state
@@ -128,6 +130,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     subtext: '',
     feedbackEmail: '',
     backgroundImage: '',
+      recruitmentBanner: '',
   });
   const [settingsFooter, setSettingsFooter] = useState({
     introHeading: '',
@@ -185,6 +188,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           subtext: cfg.heroBanner?.subtext || '',
           feedbackEmail: cfg.heroBanner?.feedbackEmail || '',
           backgroundImage: cfg.heroBanner?.backgroundImage || '',
+            recruitmentBanner: cfg.heroBanner?.recruitmentBanner || '',
         });
         setSettingsFooter({
           introHeading: cfg.footer?.introHeading || '',
@@ -766,6 +770,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           </button>
 
           <button
+            onClick={() => setActiveTab('jobs')}
+            className={`admin-nav-btn ${activeTab === 'jobs' ? 'active' : ''}`}
+          >
+            <Briefcase size={18} />
+            <span>Quản lý Tuyển dụng</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('users')}
             className={`admin-nav-btn ${activeTab === 'users' ? 'active' : ''}`}
           >
@@ -820,6 +832,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   : 'Thêm bài mới'
                 : activeTab === 'categories'
                 ? 'Chuyên mục'
+                : activeTab === 'jobs'
+                ? 'Quản lý Tuyển dụng'
                 : activeTab === 'users'
                 ? 'Quản lý tài khoản Admin & Nhân viên'
                 : activeTab === 'security'
@@ -1253,6 +1267,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           </div>
         )}
 
+        {/* Tab Jobs: RECRUITMENT MANAGEMENT */}
+        {activeTab === 'jobs' && <AdminJobsTab />}
+
         {/* Tab 5: USERS & ADMIN ACCOUNTS MANAGEMENT (QUẢN LÝ TÀI KHOẢN) */}
         {activeTab === 'users' && (
           <div className="admin-tab-pane">
@@ -1483,6 +1500,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     onChange={(e) => setSettingsCompany({ ...settingsCompany, address: e.target.value })}
                   />
                 </div>
+
+
+
 
                 <div className="editor-actions mt-4">
                   <button type="submit" disabled={isSavingSettings} className="btn-primary">
