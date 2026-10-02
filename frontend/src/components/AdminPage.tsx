@@ -322,7 +322,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     address: '',
     website: '',
     slogan: '',
-    director: '',
+    director: 'TRẦN XUÂN ANH',
   });
   const [settingsHero, setSettingsHero] = useState({
     title: '',
@@ -390,7 +390,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           address: cfg.company?.address || '',
           website: cfg.company?.website || '',
           slogan: cfg.company?.slogan || '',
-          director: cfg.company?.director || '',
+          director: cfg.company?.director || 'TRẦN XUÂN ANH',
         });
         setSettingsHero({
           title: cfg.heroBanner?.title || '',
@@ -1069,12 +1069,34 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   };
 
   // Settings Save handler
-  const handleSaveSettings = async (e: React.FormEvent) => {
+  const handleSaveSettings = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSavingSettings(true);
     try {
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+      const name = (formData.get('name') as string)?.trim() || settingsCompany.name;
+      const shortName = (formData.get('shortName') as string)?.trim() || settingsCompany.shortName;
+      const director = (formData.get('director') as string)?.trim() || settingsCompany.director || 'TRẦN XUÂN ANH';
+      const slogan = (formData.get('slogan') as string)?.trim() || settingsCompany.slogan;
+      const hotline = (formData.get('hotline') as string)?.trim() || settingsCompany.hotline;
+      const email = (formData.get('email') as string)?.trim() || settingsCompany.email;
+      const address = (formData.get('address') as string)?.trim() || settingsCompany.address;
+
+      const newCompany = {
+        ...settingsCompany,
+        name,
+        shortName,
+        director,
+        slogan,
+        hotline,
+        phone: hotline,
+        email,
+        address,
+      };
+
       const updated = await api.updateSettings({
-        company: settingsCompany as any,
+        company: newCompany as any,
         heroBanner: settingsHero,
         footer: {
           ...siteSettings?.footer,
@@ -1082,6 +1104,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         } as any,
       });
       setSiteSettings(updated);
+      setSettingsCompany(newCompany);
       showToast('success', 'Cập nhật thông tin công ty & cấu hình thành công!');
     } catch (err: any) {
       showToast('error', err.message || 'Lỗi khi lưu cấu hình');
@@ -3083,16 +3106,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     <label>Tên đầy đủ công ty</label>
                     <input
                       type="text"
-                      value={settingsCompany.name}
-                      onChange={(e) => setSettingsCompany({ ...settingsCompany, name: e.target.value })}
+                      name="name"
+                      defaultValue={settingsCompany.name}
+                      key={`name-${settingsCompany.name}`}
                     />
                   </div>
                   <div className="form-group">
                     <label>Tên viết tắt / Thương hiệu</label>
                     <input
                       type="text"
-                      value={settingsCompany.shortName}
-                      onChange={(e) => setSettingsCompany({ ...settingsCompany, shortName: e.target.value })}
+                      name="shortName"
+                      defaultValue={settingsCompany.shortName}
+                      key={`shortName-${settingsCompany.shortName}`}
                     />
                   </div>
                 </div>
@@ -3102,16 +3127,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     <label>Giám đốc đại diện</label>
                     <input
                       type="text"
-                      value={settingsCompany.director}
-                      onChange={(e) => setSettingsCompany({ ...settingsCompany, director: e.target.value })}
+                      name="director"
+                      defaultValue={settingsCompany.director || 'TRẦN XUÂN ANH'}
+                      key={`director-${settingsCompany.director}`}
                     />
                   </div>
                   <div className="form-group">
                     <label>Phương châm / Slogan</label>
                     <input
                       type="text"
-                      value={settingsCompany.slogan}
-                      onChange={(e) => setSettingsCompany({ ...settingsCompany, slogan: e.target.value })}
+                      name="slogan"
+                      defaultValue={settingsCompany.slogan}
+                      key={`slogan-${settingsCompany.slogan}`}
                     />
                   </div>
                 </div>
@@ -3121,22 +3148,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     <label>Hotline / Điện thoại</label>
                     <input
                       type="text"
-                      value={settingsCompany.hotline}
-                      onChange={(e) =>
-                        setSettingsCompany({
-                          ...settingsCompany,
-                          hotline: e.target.value,
-                          phone: e.target.value,
-                        })
-                      }
+                      name="hotline"
+                      defaultValue={settingsCompany.hotline}
+                      key={`hotline-${settingsCompany.hotline}`}
                     />
                   </div>
                   <div className="form-group">
                     <label>Hộp thư điện tử (Email)</label>
                     <input
                       type="email"
-                      value={settingsCompany.email}
-                      onChange={(e) => setSettingsCompany({ ...settingsCompany, email: e.target.value })}
+                      name="email"
+                      defaultValue={settingsCompany.email}
+                      key={`email-${settingsCompany.email}`}
                     />
                   </div>
                 </div>
@@ -3145,13 +3168,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   <label>Địa chỉ trụ sở chính</label>
                   <input
                     type="text"
-                    value={settingsCompany.address}
-                    onChange={(e) => setSettingsCompany({ ...settingsCompany, address: e.target.value })}
+                    name="address"
+                    defaultValue={settingsCompany.address}
+                    key={`address-${settingsCompany.address}`}
                   />
                 </div>
-
-
-
 
                 <div className="editor-actions mt-4">
                   <button type="submit" disabled={isSavingSettings} className="btn-primary">
