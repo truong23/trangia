@@ -32,6 +32,7 @@ export interface PartnerLogoBadgeProps {
   className?: string;
   style?: React.CSSProperties;
   title?: string;
+  border?: string;
   onStatusChange?: (status: 'success' | 'error' | 'empty') => void;
 }
 
@@ -50,6 +51,7 @@ export const PartnerLogoBadge: React.FC<PartnerLogoBadgeProps> = ({
   className = '',
   style = {},
   title,
+  border,
   onStatusChange,
 }) => {
   const [imgError, setImgError] = useState(false);
@@ -79,7 +81,7 @@ export const PartnerLogoBadge: React.FC<PartnerLogoBadgeProps> = ({
         minHeight: `${size}px`,
         borderRadius: `${actualBorderRadius}px`,
         background: '#FFFFFF',
-        border: `${Math.max(1.5, Math.round(size * 0.05))}px solid ${brandColor || '#0284C7'}`,
+        border: border || 'none',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
