@@ -8,10 +8,24 @@ import { Setting } from '../settings/settings.entity';
 import { Contact } from '../contact/contact.entity';
 import { Partner } from '../partner/partner.entity';
 import { Project } from '../project/project.entity';
+import { JobPosting } from '../job/entities/job.entity';
+import { JobApplication } from '../application/entities/application.entity';
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const dbType = process.env.DB_TYPE || 'sqlite';
+
+const entities = [
+  User,
+  Category,
+  Article,
+  Setting,
+  Contact,
+  Partner,
+  Project,
+  JobPosting,
+  JobApplication,
+];
 
 let connectionOptions: DataSourceOptions;
 
@@ -21,9 +35,9 @@ if (dbType === 'mysql') {
     host: process.env.DB_HOST || 'localhost',
     port: Number(process.env.DB_PORT) || 3306,
     username: process.env.DB_USERNAME || 'root',
-    password: process.env.DB_PASSWORD || 'rootpassword',
+    password: process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD : 'rootpassword',
     database: process.env.DB_NAME || 'deltagroup_news',
-    entities: [User, Category, Article, Setting, Contact, Partner, Project],
+    entities,
     migrations: [path.join(__dirname, 'migrations/*{.ts,.js}')],
     synchronize: false,
     charset: 'utf8mb4_unicode_ci',
@@ -32,7 +46,7 @@ if (dbType === 'mysql') {
   connectionOptions = {
     type: 'sqlite',
     database: path.join(__dirname, '../../deltagroup_news.sqlite'),
-    entities: [User, Category, Article, Setting, Contact, Partner, Project],
+    entities,
     migrations: [path.join(__dirname, 'migrations/*{.ts,.js}')],
     synchronize: false,
   };

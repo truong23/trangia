@@ -62,4 +62,13 @@ export class ApplicationService {
     application.hrNote = hrNote;
     return this.applicationRepository.save(application);
   }
+
+  async remove(id: string): Promise<{ success: boolean; message: string }> {
+    const application = await this.applicationRepository.findOne({ where: { id } });
+    if (!application) {
+      throw new NotFoundException(`Application with ID ${id} not found`);
+    }
+    await this.applicationRepository.remove(application);
+    return { success: true, message: `Deleted application ${id}` };
+  }
 }

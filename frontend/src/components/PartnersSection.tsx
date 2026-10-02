@@ -13,6 +13,9 @@ import {
 import { Partner } from '../types';
 import { partnerService } from '../services/partner/partner.service';
 import { PARTNERS_DATA } from '../services/tranGiaData';
+import { PartnerLogoBadge, getPartnerInitials } from './PartnerLogoBadge';
+
+
 
 export const PartnersSection: React.FC = () => {
   const [partners, setPartners] = useState<Partner[]>(PARTNERS_DATA);
@@ -172,12 +175,7 @@ export const PartnersSection: React.FC = () => {
                     </div>
                   )}
                   <div className="partner-thumb-overlay">
-                    <div
-                      className="partner-monogram-badge"
-                      style={{ borderColor: p.brandColor || '#0284C7', color: p.brandColor || '#0B2240' }}
-                    >
-                      {getPartnerInitials(p.name)}
-                    </div>
+                    <PartnerLogoBadge name={p.name} logo={p.logo} brandColor={p.brandColor} size={36} />
                     {p.badge && (
                       <span
                         className="partner-tier-badge"

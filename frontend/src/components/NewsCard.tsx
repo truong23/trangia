@@ -60,7 +60,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({ article, onClick, currentLan
           <div
             className="post-thumbnail"
             style={{
-              background: '#0B2240',
+              background: '#26A9E0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

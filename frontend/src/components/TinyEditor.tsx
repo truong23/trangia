@@ -120,12 +120,12 @@ export const TinyEditor: React.FC<TinyEditorProps> = ({
               font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
               font-size: 15px;
               line-height: 1.75;
-              color: #2D3748;
+              color: var(--gray-800, #2D3748);
               padding: 16px;
               background-color: #FFFFFF;
             }
             h1, h2, h3, h4, h5, h6 {
-              color: #162D61;
+              color: #4DBCE6;
               font-weight: 700;
               margin-top: 1.5em;
               margin-bottom: 0.5em;
@@ -145,7 +145,7 @@ export const TinyEditor: React.FC<TinyEditorProps> = ({
               border-left: 4px solid #0284C7;
               padding-left: 16px;
               margin: 16px 0;
-              color: #4A5568;
+              color: var(--gray-600, #4A5568);
               font-style: italic;
               background: #FFF8F0;
               padding: 12px 16px;
@@ -162,7 +162,7 @@ export const TinyEditor: React.FC<TinyEditorProps> = ({
             }
             table th {
               background-color: #F7FAFC;
-              color: #162D61;
+              color: #4DBCE6;
             }
             ul, ol {
               padding-left: 24px;

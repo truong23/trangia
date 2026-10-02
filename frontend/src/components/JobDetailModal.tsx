@@ -52,15 +52,15 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, onClose, on
             <h1 style={{ fontSize: '2.2rem', fontWeight: 700, marginBottom: '20px', lineHeight: 1.3 }}>{job.title}</h1>
             <div style={{ display: 'flex', gap: '15px' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: 'rgba(255,255,255,0.15)', padding: '6px 16px', borderRadius: '20px', fontSize: '0.9rem' }}>
-                <MapPin size={16} color="#00B14F" /> {job.location}
+                <MapPin size={16} color="#26A9E0" /> {job.location}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: 'rgba(255,255,255,0.15)', padding: '6px 16px', borderRadius: '20px', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
-                <Briefcase size={16} color="#00B14F" /> {job.jobType}
+                <Briefcase size={16} color="#26A9E0" /> {job.jobType}
               </span>
             </div>
           </div>
           <div>
-            <button onClick={onApply} style={{ backgroundColor: '#00B14F', color: '#fff', padding: '15px 40px', fontSize: '1.1rem', fontWeight: 600, border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 4px 15px rgba(0, 177, 79, 0.4)' }}>
+            <button onClick={onApply} style={{ backgroundColor: '#26A9E0', color: '#fff', padding: '15px 40px', fontSize: '1.1rem', fontWeight: 600, border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 4px 15px rgba(38, 169, 224, 0.4)' }}>
               ỨNG TUYỂN NGAY
             </button>
           </div>
@@ -71,44 +71,44 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, onClose, on
         
         {/* Left Main Content */}
         <div>
-          <button onClick={onClose} style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#00B14F', background: 'none', border: 'none', fontSize: '1rem', cursor: 'pointer', marginBottom: '20px', fontWeight: 500, padding: 0 }}>
+          <button onClick={onClose} style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#26A9E0', background: 'none', border: 'none', fontSize: '1rem', cursor: 'pointer', marginBottom: '20px', fontWeight: 500, padding: 0 }}>
             &larr; Quay lại
           </button>
 
           {/* Info Grid */}
           <div className="job-detail-info-grid" style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '30px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', marginBottom: '30px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '15px' }}>
-              <div style={{ color: '#00B14F' }}><MapPin size={28} strokeWidth={1.5} /></div>
+              <div style={{ color: '#26A9E0' }}><MapPin size={28} strokeWidth={1.5} /></div>
               <div>
-                <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '3px' }}>Địa điểm</div>
+                <div style={{ color: 'var(--gray-500, #666)', fontSize: '0.9rem', marginBottom: '3px' }}>Địa điểm</div>
                 <div style={{ fontWeight: 600, color: '#333' }}>{job.location}</div>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '15px' }}>
-              <div style={{ color: '#00B14F' }}><Briefcase size={28} strokeWidth={1.5} /></div>
+              <div style={{ color: '#26A9E0' }}><Briefcase size={28} strokeWidth={1.5} /></div>
               <div>
-                <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '3px' }}>Loại hợp đồng</div>
+                <div style={{ color: 'var(--gray-500, #666)', fontSize: '0.9rem', marginBottom: '3px' }}>Loại hợp đồng</div>
                 <div style={{ fontWeight: 600, color: '#333' }}>{job.jobType}</div>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '15px' }}>
-              <div style={{ color: '#00B14F' }}><DollarSign size={28} strokeWidth={1.5} /></div>
+              <div style={{ color: '#26A9E0' }}><DollarSign size={28} strokeWidth={1.5} /></div>
               <div>
-                <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '3px' }}>Mức lương</div>
+                <div style={{ color: 'var(--gray-500, #666)', fontSize: '0.9rem', marginBottom: '3px' }}>Mức lương</div>
                 <div style={{ fontWeight: 600, color: '#333' }}>{job.salary}</div>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '15px' }}>
-              <div style={{ color: '#00B14F' }}><Clock size={28} strokeWidth={1.5} /></div>
+              <div style={{ color: '#26A9E0' }}><Clock size={28} strokeWidth={1.5} /></div>
               <div>
-                <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '3px' }}>Kinh nghiệm làm việc</div>
+                <div style={{ color: 'var(--gray-500, #666)', fontSize: '0.9rem', marginBottom: '3px' }}>Kinh nghiệm làm việc</div>
                 <div style={{ fontWeight: 600, color: '#333' }}>Không yêu cầu / Theo năng lực</div>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '15px' }}>
-              <div style={{ color: '#00B14F' }}><Calendar size={28} strokeWidth={1.5} /></div>
+              <div style={{ color: '#26A9E0' }}><Calendar size={28} strokeWidth={1.5} /></div>
               <div>
-                <div style={{ color: '#666', fontSize: '0.9rem', marginBottom: '3px' }}>Hạn nộp hồ sơ</div>
+                <div style={{ color: 'var(--gray-500, #666)', fontSize: '0.9rem', marginBottom: '3px' }}>Hạn nộp hồ sơ</div>
                 <div style={{ fontWeight: 600, color: '#333' }}>{new Date(job.deadline).toLocaleDateString('vi-VN')}</div>
               </div>
             </div>
@@ -125,7 +125,7 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, onClose, on
             <div style={{ color: '#444', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{job.benefits}</div>
             
             <div style={{ marginTop: '40px', textAlign: 'center' }}>
-              <button onClick={onApply} style={{ backgroundColor: '#00B14F', color: '#fff', padding: '15px 50px', fontSize: '1.1rem', fontWeight: 600, border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 4px 15px rgba(0, 177, 79, 0.4)' }}>
+              <button onClick={onApply} style={{ backgroundColor: '#26A9E0', color: '#fff', padding: '15px 50px', fontSize: '1.1rem', fontWeight: 600, border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 4px 15px rgba(38, 169, 224, 0.4)' }}>
                 ỨNG TUYỂN NGAY
               </button>
             </div>
@@ -138,13 +138,13 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, onClose, on
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
              {relatedJobs.length === 0 ? (
                <div style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
-                 <p style={{ color: '#666', fontSize: '0.9rem' }}>Hiện chưa có vị trí liên quan.</p>
+                 <p style={{ color: 'var(--gray-500, #666)', fontSize: '0.9rem' }}>Hiện chưa có vị trí liên quan.</p>
                </div>
              ) : (
                relatedJobs.map(rj => (
                  <div key={rj.id} onClick={() => onSelectRelated && onSelectRelated(rj)} style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', cursor: 'pointer' }}>
                     <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#333', marginBottom: '10px', lineHeight: 1.4 }}>{rj.title}</h4>
-                    <div style={{ color: '#00B14F', fontSize: '0.9rem', fontWeight: 500, marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <div style={{ color: '#26A9E0', fontSize: '0.9rem', fontWeight: 500, marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '5px' }}>
                       <DollarSign size={14} /> {rj.salary}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px', color: '#888', fontSize: '0.85rem' }}>

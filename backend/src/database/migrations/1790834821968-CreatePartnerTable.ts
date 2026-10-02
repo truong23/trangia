@@ -54,6 +54,11 @@ export class CreatePartnerTable1790834821968 implements MigrationInterface {
               isNullable: true,
             },
             {
+              name: 'logo',
+              type: 'text',
+              isNullable: true,
+            },
+            {
               name: 'projects',
               type: 'text',
               isNullable: true,

@@ -40,20 +40,130 @@ import {
   Building2,
   MapPin,
 } from 'lucide-react';
-import { Article, Category, User, SiteSettings, UploadedFile, ContactRequest, Partner, Project } from '../types';
+import { Article, Category, User, SiteSettings, UploadedFile, ContactRequest, Partner, Project, Application } from '../types';
 import { api } from '../services/api';
 import { AdminJobsTab } from './AdminJobsTab';
+import { PartnerLogoBadge, getPartnerInitials } from './PartnerLogoBadge';
 import { TinyEditor } from './TinyEditor';
 
 interface AdminPageProps {
   onNavigate: (path: string) => void;
 }
 
+export type AdminTab =
+  | 'overview'
+  | 'articles'
+  | 'editor'
+  | 'categories'
+  | 'media'
+  | 'projects'
+  | 'partners'
+  | 'contacts'
+  | 'jobs'
+  | 'users'
+  | 'security'
+  | 'settings';
+
+export const getInitialAdminTab = (): AdminTab => {
+  const params = new URLSearchParams(window.location.search);
+  const tabParam = params.get('tab') as AdminTab;
+  const validTabs: AdminTab[] = [
+    'overview',
+    'articles',
+    'editor',
+    'categories',
+    'media',
+    'projects',
+    'partners',
+    'contacts',
+    'jobs',
+    'users',
+    'security',
+    'settings',
+  ];
+  if (tabParam && validTabs.includes(tabParam)) {
+    return tabParam;
+  }
+
+  // Hỗ trợ cả đường dẫn URL tĩnh: /admin/jobs, /admin/articles, etc.
+  const subPath = window.location.pathname.toLowerCase().replace(/^\/admin\/?/, '');
+  const subPathMap: Record<string, AdminTab> = {
+    'jobs': 'jobs',
+    'tuyen-dung': 'jobs',
+    'articles': 'articles',
+    'bai-viet': 'articles',
+    'editor': 'editor',
+    'soan-bai': 'editor',
+    'categories': 'categories',
+    'chuyen-muc': 'categories',
+    'media': 'media',
+    'projects': 'projects',
+    'du-an': 'projects',
+    'partners': 'partners',
+    'doi-tac': 'partners',
+    'contacts': 'contacts',
+    'lien-he': 'contacts',
+    'users': 'users',
+    'tai-khoan': 'users',
+    'security': 'security',
+    'bao-mat': 'security',
+    'settings': 'settings',
+    'cai-dat': 'settings',
+    'overview': 'overview',
+    'tong-quan': 'overview',
+  };
+  if (subPath && subPathMap[subPath]) {
+    return subPathMap[subPath];
+  }
+
+  return 'overview';
+};
+
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(() => api.getCurrentUser());
-  const [activeTab, setActiveTab] = useState<
-    'overview' | 'articles' | 'editor' | 'categories' | 'media' | 'projects' | 'partners' | 'contacts' | 'jobs' | 'users' | 'security' | 'settings'
-  >('overview');
+  const [activeTab, _setActiveTab] = useState<AdminTab>(() => getInitialAdminTab());
+
+  // Hàm chuyển tab và đồng bộ chính xác lên queryParams (?tab=...)
+  const setActiveTab = (tab: AdminTab, extraParams: Record<string, string> = {}) => {
+    _setActiveTab(tab);
+    const params = new URLSearchParams(window.location.search);
+    params.set('tab', tab);
+
+    // Nếu đổi tab chính, dọn dẹp các queryParam cục bộ của tab cũ
+    if (tab !== activeTab) {
+      ['jobId', 'articleId', 'contactId', 'projectId', 'modal', 'view', 'sub', 'id'].forEach((p) => {
+        if (!extraParams[p]) params.delete(p);
+      });
+    }
+
+    Object.entries(extraParams).forEach(([k, v]) => {
+      if (v) params.set(k, v);
+      else params.delete(k);
+    });
+
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({ tab, ...extraParams }, '', newUrl);
+  };
+
+  // Đồng bộ tab khi người dùng bấm nút Back / Forward trên trình duyệt
+  useEffect(() => {
+    const handlePopState = () => {
+      const tab = getInitialAdminTab();
+      _setActiveTab(tab);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Tự động gán ?tab= vào URL nếu chưa có
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('tab')) {
+      params.set('tab', activeTab);
+      window.history.replaceState({ tab: activeTab }, '', `${window.location.pathname}?${params.toString()}`);
+    }
+  }, []);
 
   // Projects states
   const [projectsList, setProjectsList] = useState<Project[]>([]);
@@ -94,6 +204,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [partnerFormBadge, setPartnerFormBadge] = useState('');
   const [partnerFormBrandColor, setPartnerFormBrandColor] = useState('#0284C7');
   const [partnerFormThumbnail, setPartnerFormThumbnail] = useState('');
+  const [partnerFormLogo, setPartnerFormLogo] = useState('');
   const [partnerFormProjects, setPartnerFormProjects] = useState('');
   const [partnerFormDescription, setPartnerFormDescription] = useState('');
   const [partnerFormWebsite, setPartnerFormWebsite] = useState('');
@@ -101,9 +212,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const [partnerFormIsActive, setPartnerFormIsActive] = useState<boolean>(true);
   const [isSavingPartner, setIsSavingPartner] = useState(false);
   const [isUploadingPartnerThumb, setIsUploadingPartnerThumb] = useState(false);
+  const [isUploadingPartnerLogo, setIsUploadingPartnerLogo] = useState(false);
+  const [partnerLogoStatus, setPartnerLogoStatus] = useState<'success' | 'error' | 'empty'>('empty');
   const partnerThumbInputRef = useRef<HTMLInputElement>(null);
+  const partnerLogoInputRef = useRef<HTMLInputElement>(null);
 
-  // Contact & Quotations states
+  // Applications & Recruitment states
+  const [applicationsList, setApplicationsList] = useState<Application[]>([]);
   const [contactsList, setContactsList] = useState<ContactRequest[]>([]);
   const [isLoadingContacts, setIsLoadingContacts] = useState(false);
   const [contactSearch, setContactSearch] = useState('');
@@ -239,7 +354,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
   const loadAdminData = async () => {
     setIsLoadingData(true);
     try {
-      const [cats, artsRes, cfg, users, media, contacts, partners, projects] = await Promise.all([
+      const [cats, artsRes, cfg, users, media, contacts, partners, projects, apps] = await Promise.all([
         api.getCategories().catch(() => []),
         api.getArticles({ limit: 100 }).catch(() => ({ items: [], pagination: { total: 0, page: 1, limit: 100, totalPages: 1 } })),
         api.getSettings().catch(() => null),
@@ -248,6 +363,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         api.getContacts().catch(() => []),
         api.getAllPartnersAdmin().catch(() => []),
         api.getProjects().catch(() => []),
+        api.getApplications().catch(() => []),
       ]);
       setCategories(cats);
       setArticles(artsRes.items);
@@ -256,6 +372,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
       setContactsList(contacts);
       setPartnersList(partners);
       setProjectsList(projects);
+      setApplicationsList(apps);
       if (cats.length > 0 && !formCategoryId) {
         setFormCategoryId(cats[0].id);
       }
@@ -519,6 +636,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
       setPartnerFormBadge(p.badge || '');
       setPartnerFormBrandColor(p.brandColor || '#0284C7');
       setPartnerFormThumbnail(p.thumbnail || '');
+      setPartnerFormLogo(p.logo || '');
       setPartnerFormProjects(Array.isArray(p.projects) ? p.projects.join(', ') : (p.projects || ''));
       setPartnerFormDescription(p.description || '');
       setPartnerFormWebsite(p.website || '');
@@ -532,12 +650,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
       setPartnerFormBadge('');
       setPartnerFormBrandColor('#0284C7');
       setPartnerFormThumbnail('');
+      setPartnerFormLogo('');
       setPartnerFormProjects('');
       setPartnerFormDescription('');
       setPartnerFormWebsite('');
       setPartnerFormSortOrder(partnersList.length + 1);
       setPartnerFormIsActive(true);
     }
+    setPartnerLogoStatus(p?.logo ? 'success' : 'empty');
     setIsPartnerModalOpen(true);
   };
 
@@ -557,6 +677,26 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
       setIsUploadingPartnerThumb(false);
       if (partnerThumbInputRef.current) {
         partnerThumbInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handlePartnerLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPartnerLogo(true);
+    try {
+      const res = await api.uploadImage(file);
+      setPartnerFormLogo(res.url);
+      showToast('success', `Đã tải lên logo đối tác: ${res.filename}`);
+      loadMediaFiles();
+    } catch (err: any) {
+      showToast('error', err.message || 'Lỗi khi tải logo đối tác');
+    } finally {
+      setIsUploadingPartnerLogo(false);
+      if (partnerLogoInputRef.current) {
+        partnerLogoInputRef.current.value = '';
       }
     }
   };
@@ -582,6 +722,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         badge: partnerFormBadge.trim() || undefined,
         brandColor: partnerFormBrandColor.trim() || undefined,
         thumbnail: partnerFormThumbnail.trim() || undefined,
+        logo: partnerFormLogo.trim() || undefined,
         projects: projectsArr,
         description: partnerFormDescription.trim() || undefined,
         website: partnerFormWebsite.trim() || undefined,
@@ -1337,6 +1478,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
           >
             <Briefcase size={18} />
             <span>Quản lý Tuyển dụng</span>
+            {applicationsList.length > 0 && (
+              <span
+                className={`nav-badge-count ${
+                  applicationsList.some((a) => a.status === 'pending') ? 'unread' : ''
+                }`}
+                title={`${applicationsList.length} hồ sơ (${
+                  applicationsList.filter((a) => a.status === 'pending').length
+                } chờ duyệt)`}
+              >
+                {applicationsList.length}
+              </span>
+            )}
           </button>
 
           <button
@@ -1478,6 +1631,31 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   <span className="stat-number">{contactsList.length}</span>
                   <span className="stat-label">
                     Khách gửi liên hệ {newContactsCount > 0 && <strong style={{ color: '#EF4444' }}>({newContactsCount} mới)</strong>}
+                  </span>
+                </div>
+              </div>
+
+              <div
+                className="stat-box"
+                onClick={() => setActiveTab('jobs')}
+                style={{
+                  cursor: 'pointer',
+                  border: applicationsList.some((a) => a.status === 'pending') ? '1px solid #FDBA74' : undefined,
+                }}
+                title="Bấm để xem quản lý tuyển dụng & hồ sơ ứng viên"
+              >
+                <div className="stat-icon-wrap" style={{ background: '#FFFBEB', color: '#D97706' }}>
+                  <Briefcase size={24} />
+                </div>
+                <div className="stat-val-wrap">
+                  <span className="stat-number">{applicationsList.length}</span>
+                  <span className="stat-label">
+                    Hồ sơ tuyển dụng{' '}
+                    {applicationsList.filter((a) => a.status === 'pending').length > 0 && (
+                      <strong style={{ color: '#EF4444' }}>
+                        ({applicationsList.filter((a) => a.status === 'pending').length} chờ duyệt)
+                      </strong>
+                    )}
                   </span>
                 </div>
               </div>
@@ -1728,7 +1906,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                         <td>
                           <div className="table-actions">
                             <button
-                              onClick={() => window.open(`/bai-viet/${art.slug}`, '_blank')}
+                              onClick={() => window.open(`/bai-viet/${art.slug}?from=admin`, '_blank')}
                               className="btn-icon view"
                               title="Xem chi tiết bài viết trên trang web"
                             >
@@ -1749,7 +1927,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                                 setFormIsFeatured(art.isFeatured);
                                 setFormLang(art.lang || 'vi');
                                 setEditorLangTab('vi');
-                                setActiveTab('editor');
+                                setActiveTab('editor', { id: art.id });
                               }}
                               className="btn-icon edit"
                               title="Chỉnh sửa bài viết với TinyMCE"
@@ -2025,7 +2203,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
               >
                 <Upload size={32} color="#0284C7" style={{ margin: '0 auto 8px' }} />
                 <h4>Nhấn vào đây hoặc kéo thả ảnh vào khu vực này để tải lên</h4>
-                <p style={{ fontSize: '13px', color: '#64748B', marginTop: '4px' }}>
+                <p style={{ fontSize: '13px', color: 'var(--gray-500, #64748B)', marginTop: '4px' }}>
                   Hỗ trợ định dạng JPG, PNG, WEBP, GIF, SVG (Tối đa 15MB/ảnh)
                 </p>
               </div>
@@ -2295,7 +2473,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                           </td>
                           <td>
                             <strong style={{ display: 'block', color: 'var(--tg-primary)' }}>{p.title}</strong>
-                            {p.client && <span style={{ fontSize: '12px', color: '#64748B' }}>{p.client}</span>}
+                            {p.client && <span style={{ fontSize: '12px', color: 'var(--gray-500, #64748B)' }}>{p.client}</span>}
                           </td>
                           <td>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px' }}>
@@ -2310,7 +2488,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                             </span>
                           </td>
                           <td>
-                            <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, maxWidth: '280px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <p style={{ fontSize: '12.5px', color: 'var(--gray-700, #334155)', margin: 0, maxWidth: '280px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                               {p.scope}
                             </p>
                           </td>
@@ -2423,8 +2601,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                         <td>
                           <div
                             style={{
-                              width: '64px',
-                              height: '44px',
+                              position: 'relative',
+                              width: '68px',
+                              height: '46px',
                               borderRadius: '6px',
                               background: '#F8FAFC',
                               border: '1px solid #E2E8F0',
@@ -2438,7 +2617,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                               <img
                                 src={p.thumbnail}
                                 alt={p.name}
-                                style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px' }}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 onError={(e) => {
                                   (e.target as HTMLElement).style.display = 'none';
                                 }}
@@ -2446,12 +2625,30 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                             ) : (
                               <HeartHandshake size={20} color="#94A3B8" />
                             )}
+                            <div
+                              style={{
+                                position: 'absolute',
+                                bottom: '2px',
+                                right: '2px',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+                                borderRadius: '4px',
+                                overflow: 'hidden',
+                              }}
+                            >
+                              <PartnerLogoBadge
+                                name={p.name}
+                                logo={p.logo}
+                                brandColor={p.brandColor}
+                                size={22}
+                                borderRadius={3}
+                              />
+                            </div>
                           </div>
                         </td>
                         <td>
                           <div>
                             <strong style={{ fontSize: '14px', color: '#0F172A', display: 'block' }}>{p.name}</strong>
-                            <span style={{ fontSize: '12px', color: '#64748B' }}>{p.role}</span>
+                            <span style={{ fontSize: '12px', color: 'var(--gray-500, #64748B)' }}>{p.role}</span>
                             {p.website && (
                               <a
                                 href={p.website}
@@ -2488,34 +2685,36 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                           </span>
                         </td>
                         <td>
-                          {p.badge ? (
-                            <span
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '6px',
-                                padding: '3px 10px',
-                                borderRadius: '12px',
-                                fontSize: '11px',
-                                fontWeight: 600,
-                                background: p.brandColor ? `${p.brandColor}15` : '#FFF7ED',
-                                color: p.brandColor || '#EA580C',
-                                border: `1px solid ${p.brandColor || '#FDBA74'}`,
-                              }}
-                            >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <PartnerLogoBadge
+                              name={p.name}
+                              logo={p.logo}
+                              brandColor={p.brandColor}
+                              size={24}
+                              borderRadius={5}
+                              title={p.logo ? `Logo: ${p.name}` : `Huy hiệu mặc định: ${getPartnerInitials(p.name)}`}
+                            />
+                            {p.badge ? (
                               <span
                                 style={{
-                                  width: '8px',
-                                  height: '8px',
-                                  borderRadius: '50%',
-                                  background: p.brandColor || '#0284C7',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '6px',
+                                  padding: '3px 10px',
+                                  borderRadius: '12px',
+                                  fontSize: '11px',
+                                  fontWeight: 600,
+                                  background: p.brandColor ? `${p.brandColor}15` : '#FFF7ED',
+                                  color: p.brandColor || '#EA580C',
+                                  border: `1px solid ${p.brandColor || '#FDBA74'}`,
                                 }}
-                              />
-                              {p.badge}
-                            </span>
-                          ) : (
-                            <span style={{ fontSize: '12px', color: '#94A3B8' }}>—</span>
-                          )}
+                              >
+                                {p.badge}
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: '11px', color: '#94A3B8' }}>{p.brandColor}</span>
+                            )}
+                          </div>
                         </td>
                         <td>
                           {Array.isArray(p.projects) && p.projects.length > 0 ? (
@@ -2528,7 +2727,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                                     background: '#F1F5F9',
                                     padding: '2px 6px',
                                     borderRadius: '4px',
-                                    color: '#475569',
+                                    color: 'var(--gray-600, #475569)',
                                     whiteSpace: 'nowrap',
                                   }}
                                 >
@@ -2536,7 +2735,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                                 </span>
                               ))}
                               {p.projects.length > 2 && (
-                                <span style={{ fontSize: '10px', color: '#64748B', alignSelf: 'center' }}>
+                                <span style={{ fontSize: '10px', color: 'var(--gray-500, #64748B)', alignSelf: 'center' }}>
                                   +{p.projects.length - 2}
                                 </span>
                               )}
@@ -2545,7 +2744,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                             <span style={{ fontSize: '12px', color: '#94A3B8' }}>Chưa có dự án</span>
                           )}
                         </td>
-                        <td style={{ textAlign: 'center', fontWeight: 600, color: '#64748B' }}>
+                        <td style={{ textAlign: 'center', fontWeight: 600, color: 'var(--gray-500, #64748B)' }}>
                           {p.sortOrder ?? 0}
                         </td>
                         <td style={{ textAlign: 'center' }}>
@@ -2636,14 +2835,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                 <tbody>
                   {filteredContacts.length === 0 ? (
                     <tr>
-                      <td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: '#64748B' }}>
+                      <td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: 'var(--gray-500, #64748B)' }}>
                         Không có yêu cầu liên hệ hoặc báo giá nào phù hợp với bộ lọc.
                       </td>
                     </tr>
                   ) : (
                     filteredContacts.map((c) => (
                       <tr key={c.id}>
-                        <td style={{ fontSize: '12px', color: '#64748B' }}>
+                        <td style={{ fontSize: '12px', color: 'var(--gray-500, #64748B)' }}>
                           <div>{c.createdAt ? new Date(c.createdAt).toLocaleDateString('vi-VN') : '—'}</div>
                           <div style={{ fontSize: '11px', color: '#94A3B8' }}>
                             {c.createdAt ? new Date(c.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : ''}
@@ -2656,7 +2855,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                               📞 {c.phone}
                             </a>
                             {c.email && (
-                              <a href={`mailto:${c.email}`} style={{ color: '#64748B', fontSize: '12px' }} title="Gửi email">
+                              <a href={`mailto:${c.email}`} style={{ color: 'var(--gray-500, #64748B)', fontSize: '12px' }} title="Gửi email">
                                 ✉️ {c.email}
                               </a>
                             )}
@@ -2676,7 +2875,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                           </span>
                         </td>
                         <td>
-                          <span style={{ fontSize: '12.5px', color: '#334155' }}>
+                          <span style={{ fontSize: '12.5px', color: 'var(--gray-700, #334155)' }}>
                             {c.projectLocation || 'Chưa ghi rõ địa điểm'}
                           </span>
                         </td>
@@ -3301,9 +3500,130 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                   </div>
                 </div>
 
-                {/* Thumbnail input & upload */}
+                {/* 1. Logo đối tác (Monogram / Badge) */}
                 <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                  <label>Thumbnail / Logo đối tác</label>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <label style={{ margin: 0, fontWeight: 600 }}>Logo thương hiệu đối tác (Hình vuông / Icon huy hiệu)</label>
+                    <span style={{ fontSize: '11px', color: '#64748B' }}>Tự động kích hoạt huy hiệu mặc định nếu không có logo hoặc ảnh lỗi</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                    <input
+                      type="text"
+                      placeholder="https://... hoặc bấm tải logo từ máy tính"
+                      value={partnerFormLogo}
+                      onChange={(e) => {
+                        setPartnerFormLogo(e.target.value);
+                        if (!e.target.value.trim()) setPartnerLogoStatus('empty');
+                      }}
+                      style={{ flex: 1 }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => partnerLogoInputRef.current?.click()}
+                      disabled={isUploadingPartnerLogo}
+                      className="btn-secondary"
+                      style={{ whiteSpace: 'nowrap' }}
+                    >
+                      <Upload size={15} />
+                      <span>{isUploadingPartnerLogo ? 'Đang tải...' : 'Tải logo lên'}</span>
+                    </button>
+                    <input
+                      ref={partnerLogoInputRef}
+                      type="file"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      onChange={handlePartnerLogoUpload}
+                    />
+                  </div>
+
+                  {/* Trạng thái xem trước Logo: Đã có logo / Lỗi ảnh / Chưa nhập (Default) */}
+                  {partnerFormLogo.trim() ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '10px 14px',
+                        background: partnerLogoStatus === 'error' ? '#FEF2F2' : '#F8FAFC',
+                        borderRadius: '6px',
+                        border: partnerLogoStatus === 'error' ? '1px solid #FECACA' : '1px solid #E2E8F0',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      <PartnerLogoBadge
+                        name={partnerFormName || 'Đối tác'}
+                        logo={partnerFormLogo}
+                        brandColor={partnerFormBrandColor || '#0284C7'}
+                        size={44}
+                        onStatusChange={setPartnerLogoStatus}
+                      />
+                      <div style={{ flex: 1 }}>
+                        {partnerLogoStatus === 'error' ? (
+                          <>
+                            <span style={{ fontSize: '12px', color: '#DC2626', fontWeight: 600, display: 'block' }}>
+                              ⚠️ Ảnh logo bị lỗi hoặc link không hợp lệ!
+                            </span>
+                            <span style={{ fontSize: '11px', color: '#991B1B', display: 'block' }}>
+                              Hệ thống tự động kích hoạt Huy hiệu mặc định ({getPartnerInitials(partnerFormName || 'Đối tác')}) với màu thương hiệu.
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span style={{ fontSize: '12px', color: '#16A34A', fontWeight: 600, display: 'block' }}>
+                              ✓ Đã nạp Logo đối tác (Hiển thị góc huy hiệu)
+                            </span>
+                            <span style={{ fontSize: '11px', color: 'var(--gray-500, #64748B)', wordBreak: 'break-all' }}>
+                              {partnerFormLogo}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPartnerFormLogo('');
+                          setPartnerLogoStatus('empty');
+                        }}
+                        className="btn-icon delete"
+                        title="Xóa logo"
+                      >
+                        <X size={15} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '10px 14px',
+                        background: '#F0F9FF',
+                        borderRadius: '6px',
+                        border: '1px dashed #BAE6FD',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      <PartnerLogoBadge
+                        name={partnerFormName || 'Đối tác'}
+                        logo=""
+                        brandColor={partnerFormBrandColor || '#0284C7'}
+                        size={44}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <span style={{ fontSize: '12px', color: '#0369A1', fontWeight: 600, display: 'block' }}>
+                          🛡️ Đang sử dụng Huy hiệu thương hiệu mặc định (Tự động)
+                        </span>
+                        <span style={{ fontSize: '11px', color: '#0284C7' }}>
+                          Chưa nhập logo riêng. Hệ thống tự động tạo huy hiệu thương hiệu hình vuông bo góc theo chữ viết tắt (<strong>{getPartnerInitials(partnerFormName || 'Đối tác')}</strong>) và tông màu nhận diện (<strong>{partnerFormBrandColor || '#0284C7'}</strong>).
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. Thumbnail input & upload (Ảnh bìa nền card) */}
+                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                  <label>Ảnh bìa / Thumbnail dự án (Nền thẻ card đối tác)</label>
                   <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                     <input
                       type="text"
@@ -3320,7 +3640,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                       style={{ whiteSpace: 'nowrap' }}
                     >
                       <Upload size={15} />
-                      <span>{isUploadingPartnerThumb ? 'Đang tải...' : 'Tải ảnh lên'}</span>
+                      <span>{isUploadingPartnerThumb ? 'Đang tải...' : 'Tải ảnh bìa'}</span>
                     </button>
                     <input
                       ref={partnerThumbInputRef}
@@ -3345,14 +3665,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                     >
                       <img
                         src={partnerFormThumbnail}
-                        alt="Preview"
-                        style={{ height: '48px', maxWidth: '120px', objectFit: 'contain', background: '#FFF', padding: '4px', borderRadius: '4px', border: '1px solid #CBD5E1' }}
+                        alt="Thumbnail Preview"
+                        style={{ height: '48px', width: '80px', objectFit: 'cover', background: '#FFF', borderRadius: '4px', border: '1px solid #CBD5E1' }}
                       />
                       <div style={{ flex: 1 }}>
                         <span style={{ fontSize: '12px', color: '#16A34A', fontWeight: 600, display: 'block' }}>
-                          ✓ Đã nạp thumbnail / logo đối tác
+                          ✓ Đã nạp Thumbnail dự án (Nền thẻ card)
                         </span>
-                        <span style={{ fontSize: '11px', color: '#64748B', wordBreak: 'break-all' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--gray-500, #64748B)', wordBreak: 'break-all' }}>
                           {partnerFormThumbnail}
                         </span>
                       </div>
@@ -3360,7 +3680,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                         type="button"
                         onClick={() => setPartnerFormThumbnail('')}
                         className="btn-icon delete"
-                        title="Xóa ảnh"
+                        title="Xóa ảnh bìa"
                       >
                         <X size={15} />
                       </button>
@@ -3576,7 +3896,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
                         style={{ width: '80px', height: '56px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #CBD5E1' }}
                         onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
                       />
-                      <span style={{ fontSize: '12px', color: '#64748B', wordBreak: 'break-all' }}>{projectFormImage}</span>
+                      <span style={{ fontSize: '12px', color: 'var(--gray-500, #64748B)', wordBreak: 'break-all' }}>{projectFormImage}</span>
                     </div>
                   )}
                 </div>

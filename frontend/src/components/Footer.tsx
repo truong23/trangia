@@ -44,21 +44,21 @@ export const Footer: React.FC<FooterProps> = ({
 
             <div className="footer-contact-list">
               <div className="footer-contact-item">
-                <MapPin size={16} className="text-amber flex-shrink-0" />
+                <MapPin size={16} className="flex-shrink-0" style={{ color: '#FFFFFF' }} />
                 <span>{address}</span>
               </div>
               <div className="footer-contact-item">
-                <Phone size={16} className="text-amber flex-shrink-0" />
+                <Phone size={16} className="flex-shrink-0" style={{ color: '#FFFFFF' }} />
                 <span>
                   Hotline / ĐT: <strong>{phone}</strong>
                 </span>
               </div>
               <div className="footer-contact-item">
-                <Mail size={16} className="text-amber flex-shrink-0" />
+                <Mail size={16} className="flex-shrink-0" style={{ color: '#FFFFFF' }} />
                 <span>{email}</span>
               </div>
               <div className="footer-contact-item">
-                <Shield size={16} className="text-amber flex-shrink-0" />
+                <Shield size={16} className="flex-shrink-0" style={{ color: '#FFFFFF' }} />
                 <span>Người đại diện: <strong>{director}</strong> (Giám đốc)</span>
               </div>
             </div>
@@ -120,7 +120,7 @@ export const Footer: React.FC<FooterProps> = ({
             <p className="footer-cta-desc">
               Tải hồ sơ năng lực chính thức bản cập nhật 36 trang đầy đủ thông tin pháp lý, thiết bị và dự án.
             </p>
-            <button onClick={onOpenProfileModal} className="tg-btn primary-solid small w-full mb-3">
+            <button onClick={onOpenProfileModal} className="tg-btn white-solid small w-full mb-3">
               <Download size={15} />
               <span>Xem & Tải Profile PDF</span>
             </button>
@@ -131,10 +131,10 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
 
         {/* SEO Rich Footer Content */}
-        <div className="tg-footer-seo" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '20px 0', marginTop: '16px' }}>
-          <p style={{ fontSize: '0.8rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.35)', maxWidth: 900 }}>
-            <strong style={{ color: 'rgba(255,255,255,0.5)' }}>Trần Gia Construction</strong> – Đơn vị uy tín chuyên <strong style={{ color: 'rgba(255,255,255,0.5)' }}>thi công trần thạch cao cho các tập đoàn lớn</strong> tại Việt Nam. 
-            Là đối tác chiến lược của <strong style={{ color: 'rgba(255,255,255,0.5)' }}>VinGroup, Vinhomes, VinFast, DELTA Group, Viettel Construction, Masterise Homes, Charm Group, MBLand</strong>. 
+        <div className="tg-footer-seo" style={{ borderTop: '1px solid rgba(255,255,255,0.2)', padding: '20px 0', marginTop: '16px' }}>
+          <p style={{ fontSize: '0.8rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.9)', maxWidth: 900 }}>
+            <strong style={{ color: '#FFFFFF' }}>Trần Gia Construction</strong> – Đơn vị uy tín chuyên <strong style={{ color: '#FFFFFF' }}>thi công trần thạch cao cho các tập đoàn lớn</strong> tại Việt Nam. 
+            Là đối tác chiến lược của <strong style={{ color: '#FFFFFF' }}>VinGroup, Vinhomes, VinFast, DELTA Group, Viettel Construction, Masterise Homes, Charm Group, MBLand</strong>. 
             Chuyên thi công trần vách thạch cao tiêu chuẩn ISO, trần kim loại cao cấp, vách ngăn chống cháy, sơn bả hoàn thiện trong & ngoài nhà, 
             lắp dựng phào chỉ GFRC và nội thất Fit-out cho các dự án khách sạn 5 sao, trung tâm thương mại, showroom ô tô, chung cư cao cấp và khu đô thị trên toàn quốc. 
             Với đội ngũ hơn 50 kỹ sư – thợ lành nghề và 300+ máy móc thiết bị chuyên dụng, 

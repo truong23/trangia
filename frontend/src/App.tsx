@@ -92,6 +92,14 @@ export const App: React.FC = () => {
 
       setSelectedCategory(catParam);
       setSearchQuery(searchParam);
+
+      if (window.location.hash) {
+        const hash = window.location.hash.replace('#', '');
+        setTimeout(() => {
+          const el = document.getElementById(hash);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 120);
+      }
     };
 
     window.addEventListener('popstate', handleLocationChange);
@@ -135,7 +143,17 @@ export const App: React.FC = () => {
     window.history.pushState({}, '', path);
     setCurrentPath(window.location.pathname);
     setCurrentSearch(window.location.search);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (path.includes('#')) {
+      const hash = path.split('#')[1];
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const navigateSection = (sectionId: string) => {

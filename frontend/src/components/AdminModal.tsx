@@ -131,8 +131,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '900px' }}>
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Shield size={20} color="#162D61" />
-            <span style={{ fontSize: '18px', fontWeight: 800, color: '#162D61' }}>
+            <Shield size={20} color="#4DBCE6" />
+            <span style={{ fontSize: '18px', fontWeight: 800, color: '#4DBCE6' }}>
               DELTA CMS Portal
             </span>
           </div>
@@ -159,8 +159,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 borderRadius: '6px',
                 fontWeight: 600,
                 fontSize: '14px',
-                background: activeTab === 'articles' ? '#162D61' : 'transparent',
-                color: activeTab === 'articles' ? '#FFF' : '#475569',
+                background: activeTab === 'articles' ? '#4DBCE6' : 'transparent',
+                color: activeTab === 'articles' ? '#FFF' : 'var(--gray-600, #475569)',
               }}
             >
               Danh sách bài viết ({articles.length})
@@ -175,8 +175,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                background: activeTab === 'new-article' ? '#162D61' : 'transparent',
-                color: activeTab === 'new-article' ? '#FFF' : '#475569',
+                background: activeTab === 'new-article' ? '#4DBCE6' : 'transparent',
+                color: activeTab === 'new-article' ? '#FFF' : 'var(--gray-600, #475569)',
               }}
             >
               <Plus size={16} />
@@ -192,8 +192,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                background: activeTab === 'categories' ? '#162D61' : 'transparent',
-                color: activeTab === 'categories' ? '#FFF' : '#475569',
+                background: activeTab === 'categories' ? '#4DBCE6' : 'transparent',
+                color: activeTab === 'categories' ? '#FFF' : 'var(--gray-600, #475569)',
               }}
             >
               <FolderPlus size={16} />
@@ -207,11 +207,11 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           {!currentUser && (
             <div style={{ maxWidth: '420px', margin: '20px auto' }}>
               <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-                <Lock size={36} color="#162D61" style={{ margin: '0 auto 8px' }} />
-                <h3 style={{ fontSize: '20px', color: '#162D61', fontWeight: 700 }}>
+                <Lock size={36} color="#4DBCE6" style={{ margin: '0 auto 8px' }} />
+                <h3 style={{ fontSize: '20px', color: '#4DBCE6', fontWeight: 700 }}>
                   Đăng nhập Quản trị viên
                 </h3>
-                <p style={{ fontSize: '13px', color: '#64748B' }}>
+                <p style={{ fontSize: '13px', color: 'var(--gray-500, #64748B)' }}>
                   Sử dụng tài khoản quản trị mặc định: <strong>admin</strong> / <strong>Admin@123</strong>
                 </p>
               </div>
@@ -269,7 +269,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           {currentUser && activeTab === 'articles' && (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h4 style={{ fontSize: '16px', color: '#162D61', fontWeight: 700 }}>
+                <h4 style={{ fontSize: '16px', color: '#4DBCE6', fontWeight: 700 }}>
                   Quản lý tất cả tin bài ({articles.length})
                 </h4>
                 <button
@@ -303,10 +303,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             style={{ width: '60px', height: '42px', objectFit: 'cover', borderRadius: '4px' }}
                           />
                         </td>
-                        <td style={{ padding: '10px 12px', fontWeight: 600, color: '#1E293B', maxWidth: '300px' }}>
+                        <td style={{ padding: '10px 12px', fontWeight: 600, color: 'var(--gray-800, #1E293B)', maxWidth: '300px' }}>
                           {art.title}
                         </td>
-                        <td style={{ padding: '10px 12px', color: '#64748B' }}>
+                        <td style={{ padding: '10px 12px', color: 'var(--gray-500, #64748B)' }}>
                           {art.category?.name || 'Chung'}
                         </td>
                         <td style={{ padding: '10px 12px' }}>
@@ -324,7 +324,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             {art.status === 'published' ? 'Đã đăng' : 'Bản nháp'}
                           </span>
                         </td>
-                        <td style={{ padding: '10px 12px', color: '#64748B' }}>
+                        <td style={{ padding: '10px 12px', color: 'var(--gray-500, #64748B)' }}>
                           {art.viewCount || 0}
                         </td>
                         <td style={{ padding: '10px 12px', textAlign: 'center' }}>
@@ -352,7 +352,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           {/* TAB 3: NEW ARTICLE */}
           {currentUser && activeTab === 'new-article' && (
             <form onSubmit={handleCreateArticle}>
-              <h4 style={{ fontSize: '16px', color: '#162D61', fontWeight: 700, marginBottom: '16px' }}>
+              <h4 style={{ fontSize: '16px', color: '#4DBCE6', fontWeight: 700, marginBottom: '16px' }}>
                 Đăng bài viết mới lên Delta News Portal
               </h4>
 
@@ -426,7 +426,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                     padding: '10px 20px',
                     borderRadius: '6px',
                     border: '1px solid #CBD5E1',
-                    color: '#475569',
+                    color: 'var(--gray-600, #475569)',
                     fontWeight: 600,
                   }}
                 >
@@ -442,14 +442,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           {/* TAB 4: CATEGORIES */}
           {currentUser && activeTab === 'categories' && (
             <div>
-              <h4 style={{ fontSize: '16px', color: '#162D61', fontWeight: 700, marginBottom: '16px' }}>
+              <h4 style={{ fontSize: '16px', color: '#4DBCE6', fontWeight: 700, marginBottom: '16px' }}>
                 Quản lý Chuyên mục
               </h4>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                 {/* Category List */}
                 <div>
-                  <h5 style={{ fontSize: '14px', marginBottom: '12px', color: '#334155' }}>
+                  <h5 style={{ fontSize: '14px', marginBottom: '12px', color: 'var(--gray-700, #334155)' }}>
                     Danh sách chuyên mục hiện tại
                   </h5>
                   <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -470,7 +470,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           <strong>{cat.name}</strong>
                           <div style={{ fontSize: '12px', color: '#94A3B8' }}>slug: {cat.slug}</div>
                         </div>
-                        <span style={{ fontSize: '12px', color: '#64748B' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--gray-500, #64748B)' }}>
                           {cat.articleCount || 0} bài
                         </span>
                       </li>
@@ -480,7 +480,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                 {/* Add New Category */}
                 <form onSubmit={handleCreateCategory} style={{ background: '#F8FAFC', padding: '16px', borderRadius: '8px' }}>
-                  <h5 style={{ fontSize: '14px', marginBottom: '12px', color: '#162D61', fontWeight: 700 }}>
+                  <h5 style={{ fontSize: '14px', marginBottom: '12px', color: '#4DBCE6', fontWeight: 700 }}>
                     Thêm chuyên mục mới
                   </h5>
                   <div className="form-group">

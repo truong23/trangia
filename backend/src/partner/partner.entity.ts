@@ -36,6 +36,9 @@ export class Partner {
   thumbnail: string;
 
   @Column({ nullable: true, type: 'text' })
+  logo: string;
+
+  @Column({ nullable: true, type: 'text' })
   projects: string; // Comma-separated or JSON list of project names
 
   @Column({ nullable: true, type: 'text' })

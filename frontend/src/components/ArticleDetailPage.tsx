@@ -213,6 +213,20 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
     return activeLang === 'en' ? `${minutes} min read` : `${minutes} phút đọc`;
   };
 
+  const isFromAdmin = new URLSearchParams(window.location.search).get('from') === 'admin';
+
+  const handleGoBack = () => {
+    if (isFromAdmin) {
+      onNavigate('/admin?tab=articles');
+      return;
+    }
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      onNavigate('/#news');
+    }
+  };
+
   const handleCopyLink = async () => {
     try {
       const url = window.location.href;
@@ -278,13 +292,27 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
       <div className="tg-article-breadcrumb-bar">
         <div className="container">
           <nav className="tg-breadcrumb-nav" aria-label="Breadcrumb">
-            <button onClick={() => onNavigate('/')} className="breadcrumb-link">
-              {t.nav.home}
-            </button>
-            <ChevronRight size={14} className="breadcrumb-separator" />
-            <button onClick={() => onNavigate('/#news')} className="breadcrumb-link">
-              {t.nav.news}
-            </button>
+            {isFromAdmin ? (
+              <>
+                <button onClick={() => onNavigate('/admin?tab=overview')} className="breadcrumb-link">
+                  Quản trị
+                </button>
+                <ChevronRight size={14} className="breadcrumb-separator" />
+                <button onClick={() => onNavigate('/admin?tab=articles')} className="breadcrumb-link">
+                  Quản lý Bài viết
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => onNavigate('/')} className="breadcrumb-link">
+                  {t.nav.home}
+                </button>
+                <ChevronRight size={14} className="breadcrumb-separator" />
+                <button onClick={() => onNavigate('/#news')} className="breadcrumb-link">
+                  {t.nav.news}
+                </button>
+              </>
+            )}
             {article?.category && (
               <>
                 <ChevronRight size={14} className="breadcrumb-separator" />
@@ -310,7 +338,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
           {isLoading ? (
             <div className="tg-loading-box">
               <Loader2 size={40} className="animate-spin text-amber" />
-              <p style={{ marginTop: '16px', fontSize: '15px', color: '#64748B' }}>
+              <p style={{ marginTop: '16px', fontSize: '15px', color: 'var(--gray-500, #64748B)' }}>
                 {t.news.loading}
               </p>
             </div>
@@ -318,16 +346,16 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
             <div className="tg-empty-state tg-article-not-found">
               <AlertCircle size={48} className="text-amber" style={{ margin: '0 auto 16px' }} />
               <h2>{loadError || 'Không tìm thấy bài viết'}</h2>
-              <p style={{ maxWidth: '500px', margin: '8px auto 24px', color: '#64748B' }}>
+              <p style={{ maxWidth: '500px', margin: '8px auto 24px', color: 'var(--gray-500, #64748B)' }}>
                 Bài viết bạn đang tìm kiếm có thể đã được chuyển đổi địa chỉ hoặc không tồn tại trên hệ thống.
               </p>
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                <button onClick={() => onNavigate('/')} className="tg-btn primary-solid">
+                <button onClick={handleGoBack} className="tg-btn primary-solid">
                   <ArrowLeft size={16} />
-                  <span>Quay lại trang chủ</span>
+                  <span>{isFromAdmin ? 'Quay lại Quản trị' : 'Quay lại trang chủ'}</span>
                 </button>
-                <button onClick={() => onNavigate('/#news')} className="tg-btn outline-btn">
-                  <span>Xem các bài viết khác</span>
+                <button onClick={() => onNavigate(isFromAdmin ? '/admin?tab=articles' : '/#news')} className="tg-btn outline-btn">
+                  <span>{isFromAdmin ? 'Danh sách bài viết' : 'Xem các bài viết khác'}</span>
                 </button>
               </div>
             </div>
@@ -469,7 +497,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
                   </div>
 
                   <div className="article-share-actions">
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748B' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--gray-500, #64748B)' }}>
                       {t.news.share}:
                     </span>
                     <button
@@ -481,11 +509,11 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
                     </button>
 
                     <button
-                      onClick={() => onNavigate('/#news')}
+                      onClick={handleGoBack}
                       className="tg-btn outline-btn small"
                     >
                       <ArrowLeft size={14} />
-                      <span>Quay lại Tin tức</span>
+                      <span>{isFromAdmin ? 'Quay lại Quản trị' : 'Quay lại Tin tức'}</span>
                     </button>
                   </div>
                 </div>

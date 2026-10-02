@@ -154,7 +154,7 @@ const PDF_EXTRACTED_PROJECTS = [
 ];
 
 export const ProfileViewerModal: React.FC<ProfileViewerModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<TabType>('all');
+  const [activeTab, setActiveTab] = useState<TabType>('pdf');
 
   if (!isOpen) return null;
 
@@ -203,6 +203,13 @@ export const ProfileViewerModal: React.FC<ProfileViewerModalProps> = ({ isOpen, 
         {/* Navigation Tabs: Điều hướng ngang đơn giản, không rườm rà */}
         <div className="eprofile-nav-tabs">
           <button
+            className={`eprofile-tab-btn eprofile-tab-pdf ${activeTab === 'pdf' ? 'active' : ''}`}
+            onClick={() => setActiveTab('pdf')}
+          >
+            <Eye size={15} />
+            <span>Xem PDF gốc (36 trang)</span>
+          </button>
+          <button
             className={`eprofile-tab-btn ${activeTab === 'all' ? 'active' : ''}`}
             onClick={() => setActiveTab('all')}
           >
@@ -243,13 +250,6 @@ export const ProfileViewerModal: React.FC<ProfileViewerModalProps> = ({ isOpen, 
           >
             <ShieldCheck size={15} />
             <span>Đối tác chiến lược</span>
-          </button>
-          <button
-            className={`eprofile-tab-btn eprofile-tab-pdf ${activeTab === 'pdf' ? 'active' : ''}`}
-            onClick={() => setActiveTab('pdf')}
-          >
-            <Eye size={15} />
-            <span>Xem PDF gốc (36 trang)</span>
           </button>
         </div>
 

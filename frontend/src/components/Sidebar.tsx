@@ -111,12 +111,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* 4. Tran Gia Hotline Widget */}
       <div className="sidebar-box hotline-box">
         <div className="hotline-header">
-          <PhoneCall size={24} color="#0284C7" />
+          <PhoneCall size={24} color="#FFFFFF" />
           <span>TỔNG ĐÀI TRẦN GIA</span>
         </div>
         <div className="hotline-phone-number">{hotlinePhone}</div>
         <div className="hotline-email-row">
-          <Mail size={14} color="#94A3B8" />
+          <Mail size={14} color="#FFFFFF" />
           <span>{hotlineEmail}</span>
         </div>
       </div>

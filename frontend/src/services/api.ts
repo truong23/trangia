@@ -71,6 +71,7 @@ export const api = {
   createApplication: applicationService.createApplication.bind(applicationService),
   updateApplicationStatus: applicationService.updateApplicationStatus.bind(applicationService),
   updateApplicationNote: applicationService.updateApplicationNote.bind(applicationService),
+  deleteApplication: applicationService.deleteApplication.bind(applicationService),
 
   // Contact & Quotations Service
   getContacts: contactService.getContacts.bind(contactService),

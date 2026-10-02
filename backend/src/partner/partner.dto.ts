@@ -28,6 +28,10 @@ export class CreatePartnerDto {
 
   @IsOptional()
   @IsString()
+  logo?: string;
+
+  @IsOptional()
+  @IsString()
   projects?: string;
 
   @IsOptional()
@@ -71,6 +75,10 @@ export class UpdatePartnerDto {
   @IsOptional()
   @IsString()
   thumbnail?: string;
+
+  @IsOptional()
+  @IsString()
+  logo?: string;
 
   @IsOptional()
   @IsString()

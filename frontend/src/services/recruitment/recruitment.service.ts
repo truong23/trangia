@@ -55,13 +55,25 @@ export const jobService = {
 };
 
 export const applicationService = {
-  async getApplications(jobId: string): Promise<Application[]> {
-    const res = await fetch(`${API_BASE_URL}/applications?jobId=${jobId}`, {
+  async getApplications(jobId?: string): Promise<Application[]> {
+    const url = jobId ? `${API_BASE_URL}/applications?jobId=${jobId}` : `${API_BASE_URL}/applications`;
+    const res = await fetch(url, {
       headers: {
         ...getAuthHeader(),
       },
     });
     if (!res.ok) throw new Error('Failed to fetch applications');
+    return await res.json();
+  },
+
+  async deleteApplication(id: string): Promise<{ success: boolean; message: string }> {
+    const res = await fetch(`${API_BASE_URL}/applications/${id}`, {
+      method: 'DELETE',
+      headers: {
+        ...getAuthHeader(),
+      },
+    });
+    if (!res.ok) throw new Error('Failed to delete application');
     return await res.json();
   },
 

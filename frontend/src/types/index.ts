@@ -204,6 +204,7 @@ export interface Application {
   cvUrl: string;
   hrNote?: string;
   status: 'pending' | 'passed' | 'rejected';
+  job?: Job;
   createdAt?: string;
   updatedAt?: string;
 }
